@@ -73,7 +73,6 @@ public class EntangleCraft implements IConnectionHandler {
 
 	@PreInit
 	public void preLoad(FMLPreInitializationEvent event) {
-		proxy.registerClientSide();
 		proxy.registerDistanceSaver(dhInstance);
 		System.out.println("Tried to do dat preload");
 	}
@@ -81,6 +80,7 @@ public class EntangleCraft implements IConnectionHandler {
 	@Init
 	public void load(FMLInitializationEvent event) {
 		instance = this;
+		proxy.registerClientSide();
 		MinecraftForgeClient.preloadTexture("/lambdaTextures.png");
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 

@@ -12,7 +12,9 @@ import net.minecraftforge.common.MinecraftForge;
 public class ClientProxy extends CommonProxy{
 	
 	public static boolean isServer = false;
-	public static void registerClientSide() {
+	
+	@Override
+	public void registerClientSide() {
 		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());
 		KeyBindingRegistry.registerKeyBinding(new KeyHandling());
 		System.out.println("Tried to register clientside stuff");

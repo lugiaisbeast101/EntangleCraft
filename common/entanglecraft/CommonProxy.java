@@ -19,7 +19,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class CommonProxy implements IGuiHandler
 {
 	public static boolean isServer = true;
-	public static void registerClientSide(){
+	public void registerClientSide(){
 	}
 	
 	public static void registerDistanceSaver(DistanceHandler dh) {
