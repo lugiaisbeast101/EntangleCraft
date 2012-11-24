@@ -96,7 +96,7 @@ public class ContainerLambdaMiner extends Container{
 			}
 
 			if (itemstack1.stackSize != itemstack.stackSize) {
-				slot.onPickupFromSlot(itemstack1);
+				slot.onPickupFromSlot(null, itemstack1);
 			} else {
 				return null;
 			}
