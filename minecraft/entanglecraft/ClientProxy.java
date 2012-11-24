@@ -17,8 +17,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 
-	public static boolean isServer = false;
-
 	@Override
 	public void registerClientSide() {
 		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());

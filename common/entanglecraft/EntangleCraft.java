@@ -128,7 +128,7 @@ public class EntangleCraft implements IConnectionHandler {
 
 	public static void teleport(EntityPlayer par3EntityPlayer, int channel) {
 		// This method is disgusting to read just hide it
-		if (EntangleCraft.proxy.isServer) {
+		if (!par3EntityPlayer.worldObj.isRemote) {
 			ArrayList dests = channelDests[channel];
 			if (dests.size() != 0) {
 				Destination dest = closestDest(par3EntityPlayer, dests);

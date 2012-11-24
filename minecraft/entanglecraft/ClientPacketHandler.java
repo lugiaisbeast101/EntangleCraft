@@ -152,7 +152,7 @@ public class ClientPacketHandler implements IPacketHandler {
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player) {
 		EntityPlayer thePlayer = (EntityPlayer) player;
-		if (!EntangleCraft.proxy.isServer) {
+		if (!thePlayer.worldObj.isRemote) {
 			thePlayer.addChatMessage("CLIENT SIDE PACKET");
 			System.out.println("Recieved a packet bre");
 			DataInputStream dataStream = new DataInputStream(new java.io.ByteArrayInputStream(packet.data));
