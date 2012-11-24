@@ -64,7 +64,7 @@ public class EntangleCraft implements IConnectionHandler
 	@Instance
 	public static EntangleCraft instance;
 	
-	@SidedProxy(clientSide = "net.minecraft.src.entanglecraft.ClientProxy", serverSide = "net.minecraft.src.entanglecraft.CommonProxy")
+	@SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
 	public static CommonProxy proxy;
 	
 	private static ArrayList destinations = new ArrayList();
