@@ -153,7 +153,7 @@ public class ClientPacketHandler implements IPacketHandler {
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player) {
 		EntityPlayer thePlayer = (EntityPlayer) player;
 		
-		thePlayer.addChatMessage("CLIENT SIDE PACKET");
+		//thePlayer.addChatMessage("CLIENT SIDE PACKET");
 		DataInputStream dataStream = new DataInputStream(new java.io.ByteArrayInputStream(packet.data));
 		int task = -1;
 		try {

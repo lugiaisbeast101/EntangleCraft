@@ -40,9 +40,4 @@ public class ClientProxy extends CommonProxy {
 		} else
 			return null;
 	}
-	
-	@Override
-	public void playSound(World theWorld, String soundName, double[] destination, boolean randomFloats)
-	{
-	}
 }

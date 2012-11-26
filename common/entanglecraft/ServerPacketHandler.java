@@ -41,12 +41,12 @@ public class ServerPacketHandler implements IPacketHandler {
 
 		sendAPacket(new Packet250CustomPayload(), bytes);
 	}
-
+	
 	public static void playSoundToClients(double[] dest, float volume, float pitch, String sound) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream DOS = new DataOutputStream(bytes);
 		try {
-			DOS.writeInt(1); // 0 for TP sound packet
+			DOS.writeInt(1); // 1 for sound packet
 			DOS.writeUTF(sound);
 			DOS.writeFloat(volume);
 			DOS.writeFloat(pitch);
@@ -64,7 +64,7 @@ public class ServerPacketHandler implements IPacketHandler {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream DOS = new DataOutputStream(bytes);
 		try {
-			DOS.writeInt(4); // 4 for TP particle packet
+			DOS.writeInt(4); // 4 for particle packet
 			DOS.writeUTF(particle);
 			DOS.writeDouble(dest[0]);
 			DOS.writeDouble(dest[1]);
@@ -151,7 +151,7 @@ public class ServerPacketHandler implements IPacketHandler {
 		EntityPlayer thePlayer = (EntityPlayer) player;
 		
 		if (!thePlayer.worldObj.isRemote) {
-			thePlayer.addChatMessage("SERVER PACKET");
+			//thePlayer.addChatMessage("SERVER PACKET");
 			int ID = -1;
 			DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
 			try {

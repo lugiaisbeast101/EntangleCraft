@@ -15,6 +15,7 @@ import net.minecraft.src.MovingObjectPosition;
 import net.minecraft.src.World;
 import entanglecraft.EntangleCraft;
 import entanglecraft.ServerPacketHandler;
+import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.blocks.EntangleCraftBlocks;
 
 public class ItemShard extends Item {
@@ -48,8 +49,8 @@ public class ItemShard extends Item {
 					double expY = thePlayer.posY;
 					double expZ = thePlayer.posZ;
 					placePlayer(theCoords.posX, theCoords.posY, theCoords.posZ, world, thePlayer);
-					ServerPacketHandler.playSoundToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 },
-							world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F, "tpScroll");
+					LambdaSoundHandler.playSound(world, "tpScroll", new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 },
+							world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F);
 					ServerPacketHandler.spawnParticleToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 }, "largeexplode");
 
 					double distance = EntangleCraft.getDistance(new double[] { expX, expY, expZ }, new double[] { thePlayer.posX, thePlayer.posY,
@@ -61,8 +62,8 @@ public class ItemShard extends Item {
 						world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
 					else
 						ServerPacketHandler.spawnParticleToClients(new double[] { expX, expY, expZ }, "largeexplode");
-					ServerPacketHandler.playSoundToClients(new double[] { expX, expY, expZ }, world.rand.nextFloat() * 0.2F + 0.5F,
-							world.rand.nextFloat() * 0.2F + 0.8F, "tpScroll");
+					LambdaSoundHandler.playSound(world, "tpScroll", new double[] { expX, expY, expZ }, world.rand.nextFloat() * 0.2F + 0.5F,
+							world.rand.nextFloat() * 0.2F + 0.8F);
 					par1ItemStack.stackSize--;
 				}
 			}
@@ -90,32 +91,35 @@ public class ItemShard extends Item {
 		}
 
 		else if (type == 3) {
-			ChunkCoordinates coords = thePlayer.getSpawnChunk();
-			if (coords != null) {
-				ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
-				theCoords = theCoords != null ? theCoords : coords;
-				double expX = thePlayer.posX;
-				double expY = thePlayer.posY;
-				double expZ = thePlayer.posZ;
-				placePlayer(theCoords.posX, theCoords.posY, theCoords.posZ, world, thePlayer);
-				ServerPacketHandler.playSoundToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 },
-						world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F, "tpScroll");
-				ServerPacketHandler.spawnParticleToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 }, "largeexplode");
-
-				double distance = EntangleCraft.getDistance(new double[] { expX, expY, expZ }, new double[] { thePlayer.posX, thePlayer.posY,
-						thePlayer.posZ });
-				distance = distance < 30 ? 0 : distance < 96 ? (double) (int) Math.log(distance) * 0.7
-						: distance < 256 ? (double) (int) Math.log(distance) * 1.5 : (double) (int) Math.log(distance) * 2.5;
-
-				if (distance != 0)
-					world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
-				else
-					ServerPacketHandler.spawnParticleToClients(new double[] { expX, expY, expZ }, "largeexplode");
-				ServerPacketHandler.playSoundToClients(new double[] { expX, expY, expZ }, world.rand.nextFloat() * 0.2F + 0.5F,
-						world.rand.nextFloat() * 0.2F + 0.8F, "tpScroll");
-				par1ItemStack.stackSize--;
-			} else
-				shouldDamage = false;
+			if (!world.isRemote)
+			{
+				ChunkCoordinates coords = thePlayer.getSpawnChunk();
+				if (coords != null) {
+					ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
+					theCoords = theCoords != null ? theCoords : coords;
+					double expX = thePlayer.posX;
+					double expY = thePlayer.posY;
+					double expZ = thePlayer.posZ;
+					placePlayer(theCoords.posX, theCoords.posY, theCoords.posZ, world, thePlayer);
+					LambdaSoundHandler.playSound(world, "tpScroll", new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 },
+							world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F);
+					ServerPacketHandler.spawnParticleToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 }, "largeexplode");
+	
+					double distance = EntangleCraft.getDistance(new double[] { expX, expY, expZ }, new double[] { thePlayer.posX, thePlayer.posY,
+							thePlayer.posZ });
+					distance = distance < 30 ? 0 : distance < 96 ? (double) (int) Math.log(distance) * 0.7
+							: distance < 256 ? (double) (int) Math.log(distance) * 1.5 : (double) (int) Math.log(distance) * 2.5;
+	
+					if (distance != 0)
+						world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
+					else
+						ServerPacketHandler.spawnParticleToClients(new double[] { expX, expY, expZ }, "largeexplode");
+					LambdaSoundHandler.playSound(world, "tpScroll", new double[] { expX, expY, expZ }, world.rand.nextFloat() * 0.2F + 0.5F,
+							world.rand.nextFloat() * 0.2F + 0.8F);
+					par1ItemStack.stackSize--;
+				} else
+					shouldDamage = false;
+			}
 		}
 		int damageAmount = type == 3 ? 2 : 1;
 		if (shouldDamage)

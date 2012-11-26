@@ -24,6 +24,7 @@ import net.minecraftforge.common.ISidedInventory;
 import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
 import entanglecraft.ServerPacketHandler;
+import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.items.EntangleCraftItems;
 
 public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISidedInventory {
@@ -507,10 +508,11 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 				}
 			}
-			ServerPacketHandler.playSoundToClients(new double[] { (double) xCoord, (double) yCoord, (double) zCoord },
-					this.worldObj.rand.nextFloat() * 0.05F + 0.05F, minerSoundPitch, minerSound);
-			ServerPacketHandler.playSoundToClients(new double[] { (double) xCoord, (double) this.layerToMine, (double) zCoord },
-					this.worldObj.rand.nextFloat() * 0.2F + 0.7F, minerSoundPitch, minerSound);
+			LambdaSoundHandler.playSound(this.worldObj, minerSound, new double[] { (double) xCoord, (double) yCoord, (double) zCoord },
+					this.worldObj.rand.nextFloat() * 0.05F + 0.05F, minerSoundPitch);
+			
+			LambdaSoundHandler.playSound(this.worldObj, minerSound, new double[] { (double) xCoord, (double) this.layerToMine, (double) zCoord },
+					this.worldObj.rand.nextFloat() * 0.2F + 0.7F, minerSoundPitch);
 		}
 	}
 

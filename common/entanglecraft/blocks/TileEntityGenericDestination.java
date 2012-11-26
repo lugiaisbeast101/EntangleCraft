@@ -23,6 +23,7 @@ import entanglecraft.DestinationSaveMethods;
 import entanglecraft.EntangleCraft;
 import entanglecraft.NBTSaver;
 import entanglecraft.ServerPacketHandler;
+import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.items.EntangleCraftItems;
 
 public class TileEntityGenericDestination extends TileEntity implements IInventory, ISidedInventory {
@@ -226,9 +227,9 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 					this.gdProcessTime = 0;
 					ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityGenericDestination", "gdProcessTime");
 					this.smeltItem();
-					ServerPacketHandler.playSoundToClients(new double[] { (double) this.destinationCoords[0], (double) this.destinationCoords[1],
+					LambdaSoundHandler.playSound(this.worldObj, this.beepSound, new double[] { (double) this.destinationCoords[0], (double) this.destinationCoords[1],
 							(double) this.destinationCoords[2] }, this.worldObj.rand.nextFloat() * 0.05F + 0.02F,
-							(((float) this.speedMultiplier) / 16.0F) * 0.4F + 0.6F, this.beepSound);
+							(((float) this.speedMultiplier) / 16.0F) * 0.4F + 0.6F);
 
 					aBoolean = true;
 				}

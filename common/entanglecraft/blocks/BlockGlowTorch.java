@@ -2,6 +2,8 @@ package entanglecraft.blocks;
 
 import java.util.Random;
 
+import entanglecraft.SoundHandling.LambdaSoundHandler;
+
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockStairs;
 import net.minecraft.src.BlockTorch;
@@ -17,7 +19,7 @@ public class BlockGlowTorch extends BlockTorch{
 	
 	@Override
 	public void onBlockAdded(World par1World, int x,int y,int z){
-		par1World.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "poof", 0.6F + par1World.rand.nextFloat()*0.2F, par1World.rand.nextFloat() * 0.3F + 0.8F);
+		LambdaSoundHandler.playSound(par1World, "poof1", new double[] {(double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D} , 0.6F + par1World.rand.nextFloat()*0.2F, par1World.rand.nextFloat() * 0.3F + 0.8F);
 	}
 	
 	public String getTextureFile(){

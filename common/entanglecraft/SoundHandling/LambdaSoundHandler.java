@@ -2,10 +2,13 @@ package entanglecraft.SoundHandling;
 
 import java.io.File;
 
+import entanglecraft.ServerPacketHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
 import net.minecraft.src.SoundManager;
 import net.minecraft.src.SoundPoolEntry;
+import net.minecraft.src.World;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 
@@ -39,9 +42,18 @@ public class LambdaSoundHandler{
 				System.out.println(soundFiles[i] + " failed to load! :(\n");
 			}
 		}
+		
+		
 	}
 	
 
+	public static void playSound(World theWorld, String soundName, double[] destination, float volume, float pitch)
+	{
+		if (!theWorld.isRemote){
+			ServerPacketHandler.playSoundToClients(destination, volume, pitch, soundName);
+			System.out.println("Tried to play sound '" + soundName + "'\n");
+		}
+	}
 
 
 }
