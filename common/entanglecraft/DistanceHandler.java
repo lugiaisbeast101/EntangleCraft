@@ -22,12 +22,12 @@ public class DistanceHandler {
 
 	public static void addToDistance(int index, double amount) {
 		distances[index] += (int) amount;
-		onDistanceChanged(index);
+		//onDistanceChanged(index);
 	}
 
 	public static void setDistance(int index, double amount) {
 		distances[index] = (int) amount;
-		onDistanceChanged(index);
+		//onDistanceChanged(index);
 	}
 
 	public static String getStringDistance(int index) {
@@ -49,7 +49,7 @@ public class DistanceHandler {
 	public static void subtractDistance(int index, double amount) {
 		if (distances[index] >= (int) amount) {
 			distances[index] -= (int) amount;
-			onDistanceChanged(index);
+			//onDistanceChanged(index);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class DistanceHandler {
 			e.printStackTrace();
 		}
 
-		ServerPacketHandler.sendAPacket(new Packet250CustomPayload(), bytes);
+		//ServerPacketHandler.sendAPacket(new Packet250CustomPayload(), bytes);
 	}
 
 	@ForgeSubscribe

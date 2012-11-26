@@ -152,27 +152,27 @@ public class ClientPacketHandler implements IPacketHandler {
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player) {
 		EntityPlayer thePlayer = (EntityPlayer) player;
-		if (!thePlayer.worldObj.isRemote) {
-			thePlayer.addChatMessage("CLIENT SIDE PACKET");
-			System.out.println("Recieved a packet bre");
-			DataInputStream dataStream = new DataInputStream(new java.io.ByteArrayInputStream(packet.data));
-			int task = -1;
-			try {
-				task = dataStream.readInt();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-
-			if (task == 0)
-				playTPSoundFromPacket(network, dataStream);
-			else if (task == 1)
-				playSoundFromPacket(network, dataStream);
-			else if (task == 2)
-				updateTileEntityField(network, dataStream);
-			else if (task == 3)
-				distanceHandlerUpdate(network, dataStream);
-			else if (task == 4)
-				spawnParticleFromPacket(network, dataStream);
+		
+		thePlayer.addChatMessage("CLIENT SIDE PACKET");
+		DataInputStream dataStream = new DataInputStream(new java.io.ByteArrayInputStream(packet.data));
+		int task = -1;
+		try {
+			task = dataStream.readInt();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
+
+		System.out.println("Recieved packet for task " + task);
+		
+		if (task == 0)
+			playTPSoundFromPacket(network, dataStream);
+		else if (task == 1)
+			playSoundFromPacket(network, dataStream);
+		else if (task == 2)
+			updateTileEntityField(network, dataStream);
+		else if (task == 3)
+			distanceHandlerUpdate(network, dataStream);
+		else if (task == 4)
+			spawnParticleFromPacket(network, dataStream);
 	}
 }

@@ -329,7 +329,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				else if (fieldName.equals("isMining")) {
 					try {
 						boolean theValue = dataStream.readBoolean();
-						this.setIsMining(theValue);
+						theField.setBoolean(this, theValue);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -460,7 +460,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	}
 
 	public void setIsMining(boolean a) {
-		if (!worldObj.isRemote) {
+		if (!worldObj.isRemote){
 			if (this.isMining != a) {
 				this.isMining = a;
 				int i = 0;

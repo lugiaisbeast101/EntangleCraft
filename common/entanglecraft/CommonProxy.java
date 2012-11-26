@@ -28,6 +28,17 @@ public class CommonProxy implements IGuiHandler {
 		File workingDir = new File(".\\\\world\\");
 		return workingDir;
 	}
+	
+	public void playSound(World theWorld, String soundName, double[] destination, boolean randomFloats)
+	{
+		if (!theWorld.isRemote){
+			float baseValue = 1F;
+			float variance = 0.2F;
+			float volume = randomFloats ? (theWorld.rand.nextFloat() * variance + (baseValue - variance)) : baseValue;
+			float pitch = randomFloats ? (theWorld.rand.nextFloat() * variance + (baseValue - variance)) : baseValue;
+			theWorld.playSound(destination[0], destination[1], destination[2], soundName, volume, pitch);
+		}
+	}
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {

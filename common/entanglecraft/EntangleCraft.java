@@ -73,8 +73,8 @@ public class EntangleCraft implements IConnectionHandler {
 
 	@PreInit
 	public void preLoad(FMLPreInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());
 		proxy.registerDistanceSaver(dhInstance);
-		System.out.println("Tried to do dat preload");
 	}
 
 	@Init
@@ -150,6 +150,8 @@ public class EntangleCraft implements IConnectionHandler {
 								destinationPoints[2],
 								par3EntityPlayer.rotationYaw,
 								par3EntityPlayer.rotationPitch);
+						
+						
 						ServerPacketHandler.playTPSoundToClients(thePlayer,
 								destinationPoints, "teleport");
 						ServerPacketHandler.spawnParticleToClients(

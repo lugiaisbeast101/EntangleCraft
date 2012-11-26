@@ -19,9 +19,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerClientSide() {
-		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());
 		KeyBindingRegistry.registerKeyBinding(new KeyHandling());
-		System.out.println("Tried to register clientside stuff");
 	}
 
 	public File getWorldSaveDir(World world) {
@@ -41,5 +39,10 @@ public class ClientProxy extends CommonProxy {
 			return new GuiLambdaMiner(player.inventory, tileEntitylM);
 		} else
 			return null;
+	}
+	
+	@Override
+	public void playSound(World theWorld, String soundName, double[] destination, boolean randomFloats)
+	{
 	}
 }

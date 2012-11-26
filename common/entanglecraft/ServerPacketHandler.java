@@ -149,8 +149,9 @@ public class ServerPacketHandler implements IPacketHandler {
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player) {
 		EntityPlayer thePlayer = (EntityPlayer) player;
-		thePlayer.addChatMessage("SERVER PACKET");
+		
 		if (!thePlayer.worldObj.isRemote) {
+			thePlayer.addChatMessage("SERVER PACKET");
 			int ID = -1;
 			DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
 			try {

@@ -215,33 +215,31 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 		super.updateEntity();
 		boolean aBoolean = false;
 
-		{
-			this.transform();
-			this.reverseTransform();
-			if (canSmelt()) {
-				++this.gdProcessTime;
-				int goal = 200 / this.speedMultiplier;
-				if (this.gdProcessTime == goal || this.gdProcessTime > goal) {
-					if (!worldObj.isRemote) {
-						this.gdProcessTime = 0;
-						ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityGenericDestination", "gdProcessTime");
-						this.smeltItem();
-						ServerPacketHandler.playSoundToClients(new double[] { (double) this.destinationCoords[0], (double) this.destinationCoords[1],
-								(double) this.destinationCoords[2] }, this.worldObj.rand.nextFloat() * 0.05F + 0.02F,
-								(((float) this.speedMultiplier) / 16.0F) * 0.4F + 0.6F, this.beepSound);
+		this.transform();
+		this.reverseTransform();
+		if (canSmelt()) {
+			++this.gdProcessTime;
+			int goal = 200 / this.speedMultiplier;
+			if (this.gdProcessTime == goal || this.gdProcessTime > goal) {
+				if (!worldObj.isRemote)
+				{
+					this.gdProcessTime = 0;
+					ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityGenericDestination", "gdProcessTime");
+					this.smeltItem();
+					ServerPacketHandler.playSoundToClients(new double[] { (double) this.destinationCoords[0], (double) this.destinationCoords[1],
+							(double) this.destinationCoords[2] }, this.worldObj.rand.nextFloat() * 0.05F + 0.02F,
+							(((float) this.speedMultiplier) / 16.0F) * 0.4F + 0.6F, this.beepSound);
 
-						aBoolean = true;
-					}
+					aBoolean = true;
 				}
-			} else {
-				this.gdProcessTime = 0;
 			}
+		} else {
+			this.gdProcessTime = 0;
 		}
 
 		if (aBoolean) {
 			this.onInventoryChanged();
 		}
-
 	}
 
 	public boolean canTransform() {
@@ -273,16 +271,18 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	}
 
 	public void smeltItem() {
-		if (this.canSmelt()) {
-			this.beepSound = "beep";
-			if (this.gdItemStacks[0].itemID == (Integer) (validStacks.get(1))) {
-				this.changeTeleportsEarned(1);
-			} else if (this.gdItemStacks[0].itemID == (Integer) validStacks.get(2)) {
-				this.changeTeleportsEarned(2);
-				this.beepSound = "superBeep";
-			} else {
-				this.decrStackSize(0, 1);
-				this.changeTeleportsEarned(1);
+		if (!worldObj.isRemote){
+			if (this.canSmelt()) {
+				this.beepSound = "beep";
+				if (this.gdItemStacks[0].itemID == (Integer) (validStacks.get(1))) {
+					this.changeTeleportsEarned(1);
+				} else if (this.gdItemStacks[0].itemID == (Integer) validStacks.get(2)) {
+					this.changeTeleportsEarned(2);
+					this.beepSound = "superBeep";
+				} else {
+					this.decrStackSize(0, 1);
+					this.changeTeleportsEarned(1);
+				}
 			}
 		}
 	}
@@ -309,15 +309,16 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 
 	public void onInventoryChanged() {
 		super.onInventoryChanged();
-
-		if (!worldObj.isRemote) {
+		
+		if (!worldObj.isRemote)
+		{
 			int howMany = 0;
 			boolean isItemValid = false;
 			boolean isItemLambdaCore = false;
-
+	
 			try {
 				ItemStack gdItem = this.gdItemStacks[0];
-
+	
 				for (Object ID : validStacks) {
 					Integer intID = (Integer) ID;
 					isItemValid = isItemValid | gdItem.itemID == intID;
@@ -339,7 +340,8 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	}
 
 	public void changeTeleportsEarned(int amount) {
-		if (!worldObj.isRemote) {
+		if (!worldObj.isRemote)
+		{
 			this.teleportsEarned = this.teleportsEarned + amount;
 			if (this.teleportsEarned == 1 && amount > 0) {
 				this.addOrRemoveThisDest("add");
@@ -386,52 +388,55 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 
 	public void recieveUpdateFromServer(INetworkManager network, DataInputStream dataStream, String fieldName) throws IllegalArgumentException,
 			IllegalAccessException {
-		Class<?> c = this.getClass();
-		Field theField = null;
-		boolean shouldUpdate = true;
-		try {
-			theField = c.getDeclaredField(fieldName);
-			if (theField != null)
-				theField.setAccessible(true);
-		} catch (NoSuchFieldException e1) {
-			shouldUpdate = false;
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			shouldUpdate = false;
-			e1.printStackTrace();
-		}
-
-		if (shouldUpdate) {
-			if (theField.get(this) instanceof Integer) {
-				try {
-					int fieldValue = dataStream.readInt();
-					theField.setInt(this, fieldValue);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		
+		if (worldObj.isRemote)
+			{
+			Class<?> c = this.getClass();
+			Field theField = null;
+			boolean shouldUpdate = true;
+			try {
+				theField = c.getDeclaredField(fieldName);
+				if (theField != null)
+					theField.setAccessible(true);
+			} catch (NoSuchFieldException e1) {
+				shouldUpdate = false;
+				e1.printStackTrace();
+			} catch (SecurityException e1) {
+				shouldUpdate = false;
+				e1.printStackTrace();
 			}
-
-			else if (theField.get(this) instanceof int[]) {
-				try {
-					int arrSize = dataStream.readInt();
-					int[] fieldValue = new int[arrSize];
-					for (int i = 0; i < arrSize; i++) {
-						fieldValue[i] = dataStream.readInt();
+	
+			if (shouldUpdate) {
+				if (theField.get(this) instanceof Integer) {
+					try {
+						int fieldValue = dataStream.readInt();
+						theField.setInt(this, fieldValue);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-				;
-			} else if (theField.get(this) instanceof Boolean) {
-				boolean fieldValue;
-				try {
-					fieldValue = dataStream.readBoolean();
-					theField.setBoolean(this, fieldValue);
-				} catch (IOException e) {
-					e.printStackTrace();
+	
+				else if (theField.get(this) instanceof int[]) {
+					try {
+						int arrSize = dataStream.readInt();
+						int[] fieldValue = new int[arrSize];
+						for (int i = 0; i < arrSize; i++) {
+							fieldValue[i] = dataStream.readInt();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					;
+				} else if (theField.get(this) instanceof Boolean) {
+					boolean fieldValue;
+					try {
+						fieldValue = dataStream.readBoolean();
+						theField.setBoolean(this, fieldValue);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
-
 	}
 }
