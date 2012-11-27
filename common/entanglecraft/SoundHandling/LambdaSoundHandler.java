@@ -51,7 +51,6 @@ public class LambdaSoundHandler{
 	{
 		if (!theWorld.isRemote){
 			ServerPacketHandler.playSoundToClients(destination, volume, pitch, soundName);
-			System.out.println("Tried to play sound '" + soundName + "'\n");
 		}
 	}
 

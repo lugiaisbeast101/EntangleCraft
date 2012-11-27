@@ -19,7 +19,7 @@ public class WorldGenForerunnerDungeon extends WorldGenerator
     int chest = Block.chest.blockID;
     int[] destinations = {destination, bluDestination, redDestination, yelDestination};
     int size;
-    boolean haveGeneratedForerunnerDungeon = true;
+    private boolean shouldGenerate = true;
     
         public WorldGenForerunnerDungeon()
         {
@@ -27,14 +27,16 @@ public class WorldGenForerunnerDungeon extends WorldGenerator
 
         public boolean generate(World world, Random random, int x, int y, int z)
         {		
-                createForerunnerDungeon(world, random, x,y,z);
-                
+        		if (shouldGenerate)
+        		{
+        			shouldGenerate = false;
+        			createForerunnerDungeon(world, random, x,y,z);
+        		}
                 return true;
         }
         
         private void createForerunnerDungeon(World world, Random random, int x, int y, int z){
         	this.size = 16;
-            this.haveGeneratedForerunnerDungeon = true;
             WorldGenFunctions.placeFloorBlock(world,x, y, z, WorldGenFunctions.chooseRandomItem(random,destinations),obsidian,size);
             WorldGenFunctions.placeHole(world,x,y,z,16);
             placeStructurePortion(world,x,y,z,new int[] {1,0,0});

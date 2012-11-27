@@ -82,7 +82,7 @@ public class DistanceHandler {
 			e.printStackTrace();
 		}
 
-		//ServerPacketHandler.sendAPacket(new Packet250CustomPayload(), bytes);
+		ServerPacketHandler.sendAPacket(new Packet250CustomPayload(), bytes);
 	}
 
 	@ForgeSubscribe

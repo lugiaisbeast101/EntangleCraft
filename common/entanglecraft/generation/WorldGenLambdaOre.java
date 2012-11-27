@@ -7,6 +7,7 @@ import entanglecraft.blocks.EntangleCraftBlocks;
 
 public class WorldGenLambdaOre {
 	private int[] ores = {EntangleCraftBlocks.BlockRedShard.blockID,EntangleCraftBlocks.BlockYelShard.blockID,EntangleCraftBlocks.BlockBluShard.blockID};
+	private int oreGenCount = 0;
     public WorldGenLambdaOre()
     {
     }
@@ -22,9 +23,11 @@ public class WorldGenLambdaOre {
         i1 = i + random.nextInt(256) - random.nextInt(256);
         j1 = j + random.nextInt(16) - random.nextInt(16);
         k1 = k + random.nextInt(256) - random.nextInt(256);
-	        
-		world.setBlockWithNotify(i1, j1, k1,blockToGen);
-		System.out.println("Ore generated at " + i1 + " " + j1 + " " + k1);
+	    
+        if (world.blockExists(i1, j1, k1) && world.getBlockId(i1, j1, k1) != EntangleCraftBlocks.BlockFObsidian.blockID){
+        	world.setBlockWithNotify(i1, j1, k1,blockToGen);
+			oreGenCount += 1;
+        }
     		
     	return true;
     }

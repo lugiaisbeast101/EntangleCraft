@@ -111,9 +111,9 @@ public class EntangleCraft implements IConnectionHandler {
 					minDistance = newDistance;
 					destination = newPoints;
 				}
-				System.out.println("new minimum distance calculated as "
-						+ minDistance);
 			}
+			System.out.println("Minimum distance calculated as "
+					+ minDistance);
 		}
 		return destination;
 	}

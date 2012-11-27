@@ -222,18 +222,21 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 			++this.gdProcessTime;
 			int goal = 200 / this.speedMultiplier;
 			if (this.gdProcessTime == goal || this.gdProcessTime > goal) {
-				if (!worldObj.isRemote)
+				//if (!worldObj.isRemote)
 				{
 					this.gdProcessTime = 0;
-					ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityGenericDestination", "gdProcessTime");
 					this.smeltItem();
-					LambdaSoundHandler.playSound(this.worldObj, this.beepSound, new double[] { (double) this.destinationCoords[0], (double) this.destinationCoords[1],
-							(double) this.destinationCoords[2] }, this.worldObj.rand.nextFloat() * 0.05F + 0.02F,
+					//LambdaSoundHandler.playSound(this.worldObj, this.beepSound, new double[] { (double) this.destinationCoords[0], (double) this.destinationCoords[1],
+							//(double) this.destinationCoords[2] }, this.worldObj.rand.nextFloat() * 0.05F + 0.02F,
+							//(((float) this.speedMultiplier) / 16.0F) * 0.4F + 0.6F);
+					this.worldObj.playSound((double) this.destinationCoords[0], (double) this.destinationCoords[1],
+							(double) this.destinationCoords[2], this.beepSound, this.worldObj.rand.nextFloat() * 0.05F + 0.02F,
 							(((float) this.speedMultiplier) / 16.0F) * 0.4F + 0.6F);
-
+					
 					aBoolean = true;
 				}
 			}
+			
 		} else {
 			this.gdProcessTime = 0;
 		}
@@ -272,7 +275,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	}
 
 	public void smeltItem() {
-		if (!worldObj.isRemote){
+		//if (!worldObj.isRemote){
 			if (this.canSmelt()) {
 				this.beepSound = "beep";
 				if (this.gdItemStacks[0].itemID == (Integer) (validStacks.get(1))) {
@@ -285,7 +288,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 					this.changeTeleportsEarned(1);
 				}
 			}
-		}
+		//}
 	}
 
 	public void transform() {

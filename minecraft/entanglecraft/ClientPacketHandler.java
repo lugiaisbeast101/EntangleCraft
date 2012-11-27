@@ -162,7 +162,7 @@ public class ClientPacketHandler implements IPacketHandler {
 			e1.printStackTrace();
 		}
 
-		System.out.println("Recieved packet for task " + task);
+		//System.out.println("Recieved packet for task " + task);
 		
 		if (task == 0)
 			playTPSoundFromPacket(network, dataStream);
