@@ -2,6 +2,9 @@ package entanglecraft.generation;
 
 import java.util.Random;
 
+import cpw.mods.fml.common.IWorldGenerator;
+
+import net.minecraft.src.IChunkProvider;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.TileEntityChest;
@@ -10,13 +13,26 @@ import entanglecraft.EntangleCraft;
 import entanglecraft.blocks.EntangleCraftBlocks;
 import entanglecraft.items.EntangleCraftItems;
 
-public class WorldGenFunctions {
+public class WorldGenFunctions implements IWorldGenerator{
+	private WorldGenSkyFortress skyFortressMaker = new WorldGenSkyFortress();
+	private static boolean shouldGenerateSkyFortress = true;
+	
     public static int getLeftAndRight(int[] direction){
     	if (direction[0] == 0){
     		return 0;
     	}
     	else return 2;
     }
+    
+	@Override
+	public void generate(Random rand, int chunkX, int chunkZ, World world,
+			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+		
+		int x = chunkX + rand.nextInt(16); int y = 192; int z = chunkZ + rand.nextInt(16); 
+		skyFortressMaker.generate(world, rand, x, y, z); 
+		new WorldGenLambdaOre().generate(world, rand, chunkX, 32, chunkZ); 
+		
+	}
     
     public static void placeFloorBlock(World world, int x, int y, int z, int block,int roofBlock,int roofHeight){
     	world.setBlockWithNotify(x,y,z,block);

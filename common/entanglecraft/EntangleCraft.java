@@ -63,10 +63,9 @@ public class EntangleCraft implements IConnectionHandler {
 	private static ArrayList destinations = new ArrayList();
 	private static ArrayList[] channelDests = { new ArrayList(),
 			new ArrayList(), new ArrayList(), new ArrayList() };
-	private static boolean shouldGenerateSkyFortress = true;
 
 	public static DistanceHandler dhInstance = new DistanceHandler();
-	private WorldGenSkyFortress skyFortressMaker = new WorldGenSkyFortress();
+
 
 	public static final KeyBinding incrementDeviceChannel = new KeyBinding(
 			"incrementDeviceChannel", 34);
@@ -83,18 +82,11 @@ public class EntangleCraft implements IConnectionHandler {
 		proxy.registerClientSide();
 		MinecraftForgeClient.preloadTexture("/lambdaTextures.png");
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-
+		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
 		EntangleCraftBlocks.addBlocks();
 		EntangleCraftItems.addItems();
 
 	}
-
-	/*
-	 * @ForgeSubscribe public void generateSurface(World world, Random rand, int
-	 * chunkX, int chunkZ) { int x = chunkX + rand.nextInt(16); int y = 192; int
-	 * z = chunkZ + rand.nextInt(16); skyFortressMaker.generate(world, rand, x,
-	 * y, z); new WorldGenOre().generate(world, rand, chunkX, 100, chunkZ); }
-	 */
 
 	private static Destination closestDest(EntityPlayer playerEntity,
 			ArrayList dests) {

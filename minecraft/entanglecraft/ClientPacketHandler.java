@@ -126,10 +126,10 @@ public class ClientPacketHandler implements IPacketHandler {
 		if (shouldPlayPlayerSound)
 			shouldPlayPlayerSound = EntangleCraft.getDistance(thisPlayerPos, playerPos) < 30.0D;
 		if (shouldPlayPlayerSound) {
-			world.playSound(player.posX, player.posY, player.posZ, "teleport", world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F);
+			world.playSound(player.posX, player.posY, player.posZ, "teleport", world.rand.nextFloat() * 0.2F + 0.3F, world.rand.nextFloat() * 0.2F + 0.8F);
 		}
 		if ((shouldPlayDestSound) && (EntangleCraft.getDistance(playerPos, dest) > 10.0D)) {
-			world.playSound(dest[0], dest[1], dest[2], "teleport", world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F);
+			world.playSound(dest[0], dest[1], dest[2], "teleport", world.rand.nextFloat() * 0.2F + 0.3F, world.rand.nextFloat() * 0.2F + 0.8F);
 		}
 	}
 
