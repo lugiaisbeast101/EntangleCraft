@@ -28,7 +28,7 @@ import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.items.EntangleCraftItems;
 
 public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISidedInventory {
-	public int channel = 0;
+	public int channel;
 	public int processTime;
 	public int layerToMine;
 	public int[] blockCoords;

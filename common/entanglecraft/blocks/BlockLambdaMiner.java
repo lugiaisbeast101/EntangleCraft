@@ -140,7 +140,7 @@ public class BlockLambdaMiner extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return new TileEntityLambdaMiner();
+		return new TileEntityLambdaMiner(channel);
 	}
 	
 }
