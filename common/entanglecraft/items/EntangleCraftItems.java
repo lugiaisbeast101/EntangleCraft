@@ -23,14 +23,18 @@ public class EntangleCraftItems {
 	  public static final Item ItemBlueShard = new ItemShard(8611,0).setIconIndex(83).setItemName("ItemBlueShard").setMaxDamage(256);
 	  public static final Item ItemRedShard = new ItemShard(8612,1).setIconIndex(84).setItemName("ItemRedShard").setMaxDamage(256);
 	  public static final Item ItemYelShard = new ItemShard(8613,2).setIconIndex(85).setItemName("ItemYelShard").setMaxDamage(256);
-	  public static final Item ItemImbuedShard = new ItemLambda(8614).setIconIndex(94).setItemName("ItemImbuedShard");
+	  public static final Item ItemImbuedShard = new ItemShard(8614,4).setIconIndex(94).setItemName("ItemImbuedShard");
 	  public static final Item ItemInductionCircuit = new ItemLambda(8615).setIconIndex(95).setItemName("ItemInductionCircuit").setMaxStackSize(1);
 	  public static final Item ItemCircuit = new ItemLambda(8616).setIconIndex(96).setItemName("ItemCircuit");
 	  public static final Item ItemInclusiveFilter = new ItemLambda(8617).setIconIndex(97).setItemName("ItemInclusiveFilter").setMaxStackSize(1);
 	  public static final Item ItemExclusiveFilter = new ItemLambda(8618).setIconIndex(98).setItemName("ItemExclusiveFilter").setMaxStackSize(1);
 	  public static final Item ItemSuperInductionCircuit = new ItemLambda(8619).setIconIndex(99).setItemName("ItemSuperInductionCircuit").setMaxStackSize(1);
 	  public static final Item ItemTPScroll = new ItemShard(8620,3).setIconIndex(101).setItemName("ItemTPScroll").setMaxDamage(1);
-
+	  public static final Item ItemShardPickG = new ItemLambda(8621).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(1);
+	  public static final Item ItemShardPickR = new ItemLambda(8622).setIconIndex(103).setItemName("ItemShardPickR").setMaxDamage(1);
+	  public static final Item ItemShardPickB = new ItemLambda(8623).setIconIndex(104).setItemName("ItemShardPickB").setMaxDamage(1);
+	  public static final Item ItemShardPickY = new ItemLambda(8624).setIconIndex(105).setItemName("ItemShardPickY").setMaxDamage(1);
+	  
 public static void addItems(){
     ((ItemDevice)ItemDev).setChannel(0);
     ((ItemDevice)ItemDeviceRed).setChannel(1);
@@ -58,6 +62,10 @@ public static void addItems(){
     LanguageRegistry.addName(ItemInclusiveFilter,"'Mine only x' Filter Device");
     LanguageRegistry.addName(ItemExclusiveFilter, "Exclusive Filter Device");
     LanguageRegistry.addName(ItemTPScroll, "TP Scroll");
+    LanguageRegistry.addName(ItemShardPickG, "Displacement Pick : G");
+    LanguageRegistry.addName(ItemShardPickR, "Displacement Pick : R");
+    LanguageRegistry.addName(ItemShardPickB, "Displacement Pick : B");
+    LanguageRegistry.addName(ItemShardPickY, "Displacement Pick : Y");
     GameRegistry.addSmelting(Block.netherrack.blockID, new ItemStack(ItemNetherEssence, 1),1F);
     GameRegistry.addSmelting(Block.obsidian.blockID, new ItemStack(EntangleCraftBlocks.BlockFObsidian, 1),1F);
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockRLD, 1), new Object[] { "NRN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGenericDestination, Character.valueOf('R'), Item.redstone });
@@ -82,7 +90,7 @@ public static void addItems(){
     GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockRLM,1), new Object[]{EntangleCraftBlocks.BlockLambdaMiner,ItemRedShard});
     GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockYLM,1), new Object[] {EntangleCraftBlocks.BlockLambdaMiner,ItemYelShard});
     GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockBLM,1), new Object[] {EntangleCraftBlocks.BlockLambdaMiner,ItemBlueShard});
-    GameRegistry.addShapelessRecipe(new ItemStack(ItemFrShard,8), new Object[]{EntangleCraftBlocks.BlockFObsidian});
+    GameRegistry.addShapelessRecipe(new ItemStack(ItemFrShard,1), new Object[]{Block.obsidian}); // THIS RECIPE IS TEMPORARY, SHOULD BE BlockFObsidian AFTER WORLD GENEREATION RE-IMPLEMENTED AND SHOULD GRANT 8 INSTEAD OF 1
     GameRegistry.addShapelessRecipe(new ItemStack(ItemRedShard,1), new Object[]{ItemFrShard,Item.redstone});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemYelShard,1), new Object[]{ItemFrShard,Item.lightStoneDust});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemBlueShard,1), new Object[]{ItemFrShard,new ItemStack(Item.dyePowder,1,4)});

@@ -24,7 +24,7 @@ public class WorldGenLambdaOre {
         j1 = j + random.nextInt(16) - random.nextInt(16);
         k1 = k + random.nextInt(256) - random.nextInt(256);
 	    
-        if (world.blockExists(i1, j1, k1) && world.getBlockId(i1, j1, k1) != EntangleCraftBlocks.BlockFObsidian.blockID){
+        if (world.getBlockId(i1, j1, k1) != 0 && world.getBlockId(i1, j1, k1) != EntangleCraftBlocks.BlockFObsidian.blockID){
         	world.setBlockWithNotify(i1, j1, k1,blockToGen);
 			oreGenCount += 1;
         }

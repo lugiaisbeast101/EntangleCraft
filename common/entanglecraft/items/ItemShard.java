@@ -13,12 +13,18 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MovingObjectPosition;
 import net.minecraft.src.World;
+import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
 import entanglecraft.ServerPacketHandler;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.blocks.EntangleCraftBlocks;
 
 public class ItemShard extends Item {
+	
+	private double imbuedLastDistance = -1;
+	private int closerCount = 0;
+	private String[] closerSounds = {"closer", "closerAgainOne", "closerAgainTwo", "closerAgainThree", "closerAgainFour", "closerAgainFive", "closerAgainSix"};
+	
 	private int type;
 
 	public ItemShard(int par1, int type) {
@@ -67,6 +73,12 @@ public class ItemShard extends Item {
 					par1ItemStack.stackSize--;
 				}
 			}
+			
+			else if (type == 4) 
+			{
+				this.imbuedShardRespond(world, thePlayer, (int)thePlayer.posX, (int)thePlayer.posY, (int)thePlayer.posZ);
+			}
+			
 		}
 		return par1ItemStack;
 	}
@@ -121,6 +133,12 @@ public class ItemShard extends Item {
 					shouldDamage = false;
 			}
 		}
+		
+		else if (type == 4) 
+		{
+			this.imbuedShardRespond(world, thePlayer, x, y, z);
+		}
+		
 		int damageAmount = type == 3 ? 2 : 1;
 		if (shouldDamage)
 			thePlayer.getCurrentEquippedItem().damageItem(damageAmount, thePlayer);
@@ -140,6 +158,47 @@ public class ItemShard extends Item {
 			}
 			thePlayer.setPositionAndUpdate(posX + 0.5, posY, posZ + 0.5);
 			thePlayer.motionX = thePlayer.motionY = thePlayer.motionZ = 0.0D;
+		}
+	}
+	
+	private void imbuedShardRespond(World theWorld, EntityPlayer thePlayer, int x, int y, int z)
+	{
+		if (!theWorld.isRemote)
+		{
+			if (DistanceHandler.dungeonCoords != null)
+			{
+				double[] coords = new double[] {DistanceHandler.dungeonCoords[0], DistanceHandler.dungeonCoords[2]};
+				double thisDistance = DistanceHandler.calculateXZDistance(coords, new double[] {x,z});
+				if (thisDistance <= this.imbuedLastDistance || this.imbuedLastDistance == -1)
+				{
+					this.imbuedLastDistance = thisDistance;
+					if (thisDistance <= 8)
+					{
+						LambdaSoundHandler.playSound(theWorld, "foundIt", new double[] {x,y,z}, theWorld.rand.nextFloat() * 0.2F + 0.5F, 1F);
+						thePlayer.addChatMessage("The Dungeon lies below");
+					}
+					
+					else
+					{
+						LambdaSoundHandler.playSound(theWorld, closerSounds[closerCount], new double[] {x,y,z}, theWorld.rand.nextFloat() * 0.2F + 0.5F, 1F);
+						closerCount = closerCount == (closerSounds.length-1) ? (closerSounds.length-1) : closerCount + 1;
+						thePlayer.addChatMessage("Closer");
+					}
+				}
+				
+				else
+				{
+					this.imbuedLastDistance = thisDistance;
+					LambdaSoundHandler.playSound(theWorld, "further", new double[] {x,y,z}, theWorld.rand.nextFloat() * 0.2F + 0.5F, theWorld.rand.nextFloat() * 0.05F + 0.95F);
+					thePlayer.addChatMessage("Further");
+					closerCount = 0;
+				}
+			}
+			
+			else
+			{
+				System.out.println("No Dungeon Found.");
+			}
 		}
 	}
 

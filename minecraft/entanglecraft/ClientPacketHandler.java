@@ -87,6 +87,7 @@ public class ClientPacketHandler implements IPacketHandler {
 			double posY = dataStream.readDouble();
 			double posZ = dataStream.readDouble();
 			ModLoader.getMinecraftInstance().theWorld.playSound(posX, posY, posZ, soundName, vol, pitch);
+			System.out.println("Sound packet recieved");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

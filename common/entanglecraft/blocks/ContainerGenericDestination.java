@@ -49,30 +49,43 @@ public class ContainerGenericDestination extends Container{
 	 * Called to transfer a stack from one inventory to the other eg. when shift
 	 * clicking.
 	 */
-	public ItemStack transferStackInSlot(int slotNumber) {
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer thePlayer, int slotNumber) {
+		
 		ItemStack itemstack = null;
 		Slot slot = (Slot) inventorySlots.get(slotNumber);
-
+		
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 			
-			if (slotNumber == 1 || slotNumber == 0) {
-				if (!mergeItemStack(itemstack1, 2, 38, true)) {
+			if (slotNumber == 1 || slotNumber == 0) 
+			{
+				if (!mergeItemStack(itemstack1, 2, 38, true)) 
+				{
 					return null;
 				}
-			} else if (slotNumber >= 2 && slotNumber < 38){
-				if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemTransformer).itemID || itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer).itemID){
-					if (!mergeItemStack(itemstack1, 1,2, false)){
-						if (!mergeItemStack(itemstack1,0,2,false)){
+			} 
+			
+			else if (slotNumber >= 5 && slotNumber < 38)
+			{
+				if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemTransformer).itemID || itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer).itemID)
+				{
+					if (!mergeItemStack(itemstack1, 1,2, false))
+					{
+						if (!mergeItemStack(itemstack1,0,2,false))
+						{
 						return null;
 						}
 					}
 				}
-				else if (!mergeItemStack(itemstack1, 0,2, false)){
+				
+				else if (!mergeItemStack(itemstack1, 0,2, false))
+				{
 					return null;
 				}
 			}
+			
 
 			if (itemstack1.stackSize == 0) {
 				slot.putStack(null);
@@ -81,10 +94,12 @@ public class ContainerGenericDestination extends Container{
 			}
 
 			if (itemstack1.stackSize != itemstack.stackSize) {
-				slot.onPickupFromSlot(null, itemstack1);
+				slot.onPickupFromSlot(thePlayer, itemstack1);
 			} else {
 				return null;
 			}
+			
+			
 		}
 
 		return itemstack;

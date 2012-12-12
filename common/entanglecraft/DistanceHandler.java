@@ -15,7 +15,12 @@ import net.minecraftforge.event.world.WorldEvent;
 
 public class DistanceHandler {
 	private static Integer[] distances = { 0, 0, 0, 0 };
-
+	
+	public static int[] dungeonCoords;
+	public static int[] skyFortressA;
+	public static int[] skyFortressB;
+	public static int[] skyFortressC;
+	
 	public static Integer getDistance(int index) {
 		return distances[index];
 	}
@@ -52,9 +57,31 @@ public class DistanceHandler {
 			//onDistanceChanged(index);
 		}
 	}
+	
+	public static double calculate3dDistance(double[] a, double[] b) {
+		double x = a[0];
+		double y = a[1];
+		double z = a[2];
+		double x0 = b[0];
+		double y0 = b[1];
+		double z0 = b[2];
+		return Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0) + (z - z0)
+				* (z - z0));
+	}
+	
+	public static double calculateXZDistance(double[] a, double[] b)
+	{
+		double x = a[0];
+		double z = a[1];
+		
+		double x0 = b[0];
+		double z0 = b[1];
+		return Math.sqrt((x - x0) * (x - x0) + (z - z0) * (z - z0));
+	}
 
 	@ForgeSubscribe
 	public void onWorldLoad(WorldEvent.Load event) {
+		System.out.println("onWorldLoad was called");
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTSaver ds = new NBTSaver(event.world, "LambdaMod");
 		nbt = ds.loadData();
@@ -87,6 +114,7 @@ public class DistanceHandler {
 
 	@ForgeSubscribe
 	public void onWorldSave(WorldEvent.Save event) {
+		System.out.println("onWorldSave was called");
 		NBTSaver ds = new NBTSaver(event.world, "LambdaMod");
 		NBTTagCompound nbt = new NBTTagCompound();
 		Integer counter = 0;

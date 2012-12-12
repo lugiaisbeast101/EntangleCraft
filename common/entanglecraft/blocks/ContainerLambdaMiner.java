@@ -57,21 +57,22 @@ public class ContainerLambdaMiner extends Container{
 	 * Called to transfer a stack from one inventory to the other eg. when shift
 	 * clicking.
 	 */
-	public ItemStack transferStackInSlot(int par1) {
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer thePlayer, int slotNumber) {
 		ItemStack itemstack = null;
-		Slot slot = (Slot) inventorySlots.get(par1);
+		Slot slot = (Slot) inventorySlots.get(slotNumber);
 
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (par1 >= 0 && par1 <= 10) {
+			if (slotNumber >= 0 && slotNumber <= 10) {
 				if (!mergeItemStack(itemstack1, 11, 47, true)) {
 					return null;
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
-			} else if (par1 >= 11 && par1 < 47){
+			} else if (slotNumber >= 11 && slotNumber < 47){
 				if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemTransmitter).itemID){
 					if (!mergeItemStack(itemstack1,0,3,false)) return null;
 				}
@@ -96,7 +97,7 @@ public class ContainerLambdaMiner extends Container{
 			}
 
 			if (itemstack1.stackSize != itemstack.stackSize) {
-				slot.onPickupFromSlot(null, itemstack1);
+				slot.onPickupFromSlot(thePlayer, itemstack1);
 			} else {
 				return null;
 			}

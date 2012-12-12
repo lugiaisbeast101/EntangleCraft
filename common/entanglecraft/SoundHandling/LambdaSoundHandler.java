@@ -30,7 +30,16 @@ public class LambdaSoundHandler{
 			"poof4.wav",
 			"poof5.wav",
 			"icePoof.wav",
-			"tpScroll.wav"
+			"tpScroll.wav",
+			"further.wav",
+			"closer.wav",
+			"closerAgainOne.wav",
+			"closerAgainTwo.wav",
+			"closerAgainThree.wav",
+			"closerAgainFour.wav",
+			"closerAgainFive.wav",
+			"closerAgainSix.wav",
+			"foundIt.wav"
 		};
 		for (int i = 0; i < soundFiles.length; i++){
 			try{

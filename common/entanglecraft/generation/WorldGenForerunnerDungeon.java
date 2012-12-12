@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenerator;
+import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
 import entanglecraft.blocks.EntangleCraftBlocks;
 
@@ -45,6 +46,7 @@ public class WorldGenForerunnerDungeon extends WorldGenerator
             placeStructurePortion(world,x,y,z,new int[] {0,0,-1});
          
             System.out.println("Forerunner dungeon created at " + x + " , " + y + " , " + z);
+            DistanceHandler.dungeonCoords = new int[] {x,y,z};
         }
         
         private void placeStructurePortion(World world, int x, int y, int z, int[] direction){
@@ -54,7 +56,7 @@ public class WorldGenForerunnerDungeon extends WorldGenerator
         	leftOf[WorldGenFunctions.getLeftAndRight(direction)] = 1;
         	rightOf[WorldGenFunctions.getLeftAndRight(direction)] = -1;      	
         	
-        	
+        	// This loop creates the main environment
         	 for (int i = 1; i <= size; i++){
         		 WorldGenFunctions.placeFloorBlock(world,x+(direction[0]*i), y+(direction[1]*i), z+(direction[2]*i), fObsidian, obsidian, size);
         		 WorldGenFunctions.placeHole(world,x+(direction[0]*i),y+(direction[1]*i),z+(direction[2]*i),size);
@@ -76,6 +78,7 @@ public class WorldGenForerunnerDungeon extends WorldGenerator
                 		 WorldGenFunctions.placeHole(world,x+(direction[0]*i)+(rightOf[0]*d),y+(direction[1]*i)+(rightOf[1]*d),z+(direction[2]*i)+(rightOf[2]*d),y);
                 		 WorldGenFunctions.placeFloorBlock(world,x+(direction[0]*i)+(leftOf[0]*d),y+(direction[1]*i)+(leftOf[1]*d),z+(direction[2]*i)+(leftOf[2]*d),0,obsidian,size);
                 		 WorldGenFunctions.placeFloorBlock(world,x+(direction[0]*i)+(rightOf[0]*d),y+(direction[1]*i)+(rightOf[1]*d),z+(direction[2]*i)+(rightOf[2]*d),0,obsidian,size);
+                		 
                 	 }
                      n+=1;
                  }
@@ -88,6 +91,26 @@ public class WorldGenForerunnerDungeon extends WorldGenerator
               	 }
                  	
                  }
+        	 
+        	 // This part of the code adds some lighting blocks
+        	 for (int i = 0; (i*4) <= size; i++)
+        	 {
+        		 world.setBlockWithNotify(x +(direction[0]*(size/2))+(leftOf[0])*(i*4), y+1,z+(direction[2]*(size/2))+(leftOf[2])*(i*4), EntangleCraftBlocks.BlockGlowTorch.blockID);
+        		 world.setBlockWithNotify(x +(direction[0]*(size/2))+(rightOf[0])*(i*4), y+1,z+(direction[2]*(size/2))+(rightOf[2])*(i*4), EntangleCraftBlocks.BlockGlowTorch.blockID);
+        	 }
+        	 
+        	 
+        	 // This part of the code adds entrances to the dungeon
+        	 for (int i = 0; i <= (size/4); i ++)
+        	 {
+        		 int dir = 0;
+        		 while (dir <= size/4)
+        		 {
+        			 WorldGenFunctions.placeFloorBlock(world, x +(direction[0]*i)+((leftOf[0])*dir), y + size+2, z + (direction[2]*i) + ((leftOf[2])*dir), 0, Block.sandStone.blockID, 2);
+        			 WorldGenFunctions.placeFloorBlock(world, x +(direction[0]*i)+((rightOf[0])*dir), y + size+2, z + (direction[2]*i) + ((rightOf[2])*dir), 0, Block.sandStone.blockID, 2);
+        			 dir++;
+        		 }
+        	 }
         }
         
 

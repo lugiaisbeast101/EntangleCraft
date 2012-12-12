@@ -73,7 +73,7 @@ public class EntangleCraft implements IConnectionHandler {
 	@PreInit
 	public void preLoad(FMLPreInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());
-		proxy.registerDistanceSaver(dhInstance);
+		MinecraftForge.EVENT_BUS.register(dhInstance);
 	}
 
 	@Init
@@ -82,7 +82,7 @@ public class EntangleCraft implements IConnectionHandler {
 		proxy.registerClientSide();
 		MinecraftForgeClient.preloadTexture("/lambdaTextures.png");
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
+		//GameRegistry.registerWorldGenerator(new WorldGenFunctions());
 		EntangleCraftBlocks.addBlocks();
 		EntangleCraftItems.addItems();
 
