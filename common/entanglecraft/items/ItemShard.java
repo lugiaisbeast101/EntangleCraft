@@ -47,7 +47,7 @@ public class ItemShard extends Item {
 		System.out.println("onItemRightClick got called");
 		if (!world.isRemote) {
 			if (type == 3) {
-				ChunkCoordinates coords = thePlayer.getSpawnChunk();
+				ChunkCoordinates coords = thePlayer.getBedLocation();
 				if (coords != null) {
 					ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
 					theCoords = theCoords != null ? theCoords : coords;
@@ -105,7 +105,7 @@ public class ItemShard extends Item {
 		else if (type == 3) {
 			if (!world.isRemote)
 			{
-				ChunkCoordinates coords = thePlayer.getSpawnChunk();
+				ChunkCoordinates coords = thePlayer.getBedLocation();
 				if (coords != null) {
 					ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
 					theCoords = theCoords != null ? theCoords : coords;
