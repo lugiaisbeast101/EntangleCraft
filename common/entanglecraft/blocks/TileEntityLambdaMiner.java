@@ -23,6 +23,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
+import entanglecraft.InventoryController;
 import entanglecraft.ServerPacketHandler;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.items.EntangleCraftItems;
@@ -37,8 +38,9 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	private ArrayList<Integer> filteredIds;
 	private ItemStack[] lMItemStacks = new ItemStack[11];
 	private int speedMultiplier = 1;
-	private int[] chest;
-	private int chestRecursion = 0;
+	
+	public InventoryController invController;
+	
 	private int[] lastStructStackSizes = new int[] { 0, 0, 0 };
 	private boolean filterInclusive = true;
 	private boolean isMining = false;
@@ -57,42 +59,10 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 	public void setBlockCoords(int[] coords) {
 		this.blockCoords = new int[] { coords[0], coords[1], coords[2] };
+		this.invController = new InventoryController(this,blockCoords);
 	}
 
-	public void setChest(int[] coords) {
-		if (coords != null) {
-			this.chest = new int[] { coords[0], coords[1], coords[2] };
-		} else
-			this.chest = null;
-	}
-
-	public void checkForChest() {
-		int id = Block.chest.blockID;
-		World world = this.worldObj;
-		int x = this.blockCoords[0];
-		int y = this.blockCoords[1];
-		int z = this.blockCoords[2];
-		{
-			if (world.getBlockId(x + 1, y, z) == id) {
-				setChest(new int[] { x + 1, y, z });
-			} else if (world.getBlockId(x - 1, y, z) == id) {
-				setChest(new int[] { x - 1, y, z });
-			} else if (world.getBlockId(x, y, z + 1) == id) {
-				setChest(new int[] { x, y, z + 1 });
-			} else if (world.getBlockId(x, y, z - 1) == id) {
-				setChest(new int[] { x, y, z - 1 });
-			} else
-				setChest(null);
-		}
-	}
-
-	public int[] getChest() {
-		if (this.chest == null) {
-			return null;
-		} else
-			return this.chest;
-	}
-
+	
 	public ArrayList generateLine(int size, int[] start) {
 		ArrayList struct = new ArrayList();
 		for (int i = 0; i < size; i++) {
@@ -169,7 +139,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 			this.speedMultiplier = (int) nbt.getShort("speedMultiplier");
 			this.blockCost = (int) nbt.getShort("blockCost");
 			setBlockCoords(nbt.getIntArray("blockCoords"));
-			this.chest = nbt.getIntArray("chest");
+			this.invController.setChest(nbt.getIntArray("chest"));
 			this.readFiltersFromNBT(nbt);
 			int size = (int) nbt.getShort("layerStructureSize");
 			this.filterInclusive = nbt.getBoolean("filterInclusive");
@@ -207,7 +177,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		nbt.setShort("speedMultiplier", (short) this.speedMultiplier);
 		nbt.setShort("blockCost", (short) this.blockCost);
 		nbt.setIntArray("blockCoords", this.blockCoords);
-		this.writeFieldToNBT(nbt, "int[]", this.chest, "chest");
+		this.writeFieldToNBT(nbt, "int[]", this.invController.getChest(), "chest");
 		this.writeFiltersToNBT(nbt);
 		nbt.setShort("layerStructureSize", (short) (this.layerStructure.size()));
 		nbt.setBoolean("filterInclusive", this.filterInclusive);
@@ -494,10 +464,10 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				if (itemStack != null) {
 					minerSound = itemStack.itemID == new ItemStack(Item.diamond, 1).itemID ? "teleport" : "mineProcess";
 					minerSoundPitch = itemStack.itemID == new ItemStack(Item.diamond, 1).itemID ? 1F : minerSoundPitch;
-					checkForChest();
-					if (getChest() != null) {
-						TileEntityChest theChest = (TileEntityChest) this.worldObj.getBlockTileEntity(chest[0], chest[1], chest[2]);
-						addStackToInventory(theChest, itemStack);
+					invController.checkForChest();
+					if (invController.getChest() != null) {
+						TileEntityChest theChest = invController.getTileEntityChest();
+						invController.addStackToInventory(theChest, itemStack);
 					}
 
 					else {
@@ -523,10 +493,10 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				int[] blockCoords = (int[]) block;
 				int blockID = processBlock(this.worldObj, blockCoords[0], this.layerToMine, blockCoords[2]);
 				if (blockID != 0) {
-					ItemStack result = this.getItemStackFromID(blockID);
+					ItemStack result = invController.getItemStackFromID(blockID);
 
 					if (result != null) {
-						addStackToInventory(inv, this.getItemStackFromID(blockID));
+						invController.addStackToInventory(inv, invController.getItemStackFromID(blockID));
 						DistanceHandler.subtractDistance(channel, this.blockCost);
 					}
 				}
@@ -565,7 +535,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				this.filterInclusive = this.lMItemStacks[10].itemID == new ItemStack(EntangleCraftItems.ItemInclusiveFilter, 1).itemID;
 				for (int i = 4; i < 10; i++) {
 					if (this.lMItemStacks[i] != null) {
-						this.filteredIds.add(this.getBlockIDFromItem(lMItemStacks[i].itemID));
+						this.filteredIds.add(invController.getBlockIDFromItem(lMItemStacks[i].itemID));
 					}
 				}
 			} else
@@ -621,23 +591,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		this.blockCost = cost;
 	}
 
-	private int getBlockIDFromItem(int id) {
-		int result = id;
-		if (id == new ItemStack(Item.diamond, 1).itemID) {
-			result = Block.oreDiamond.blockID;
-		} else if (id == new ItemStack(Item.coal).itemID) {
-			result = Block.oreCoal.blockID;
-		} else if (id == new ItemStack(Item.redstone).itemID) {
-			result = Block.oreRedstone.blockID;
-		} else if (id == new ItemStack(Item.dyePowder, 1, 4).itemID) {
-			result = Block.blockLapis.blockID;
-		} else if (id == Block.cobblestone.blockID) {
-			result = Block.stone.blockID;
-		}
-
-		return result;
-	}
-
 	private int getInclusiveCost(int itemID) {
 		int cost = 4;
 		if (itemID == new ItemStack(Item.diamond, 1).itemID || itemID == Block.oreDiamond.blockID) {
@@ -660,29 +613,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 			cost = 128;
 		}
 		return cost;
-	}
-
-	private ItemStack getItemStackFromID(int blockID) {
-		ItemStack result = null;
-		if (canMine(blockID)) {
-			if (blockID == Block.stone.blockID) {
-				result = new ItemStack(Block.cobblestone, 1);
-			} else if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID || blockID == Block.lavaStill.blockID
-					|| blockID == Block.lavaMoving.blockID) {
-				result = null;
-			} else if (blockID == Block.oreLapis.blockID) {
-				result = new ItemStack(Item.dyePowder, this.worldObj.rand.nextInt(1) + 4, 4);
-			} else if (blockID == Block.oreRedstone.blockID) {
-				result = new ItemStack(Item.redstone, this.worldObj.rand.nextInt(1) + 4);
-			} else if (blockID == Block.oreCoal.blockID) {
-				result = new ItemStack(Item.coal, 1);
-			} else if (blockID == Block.oreDiamond.blockID) {
-				result = new ItemStack(Item.diamond, 1);
-			} else
-				result = new ItemStack(Item.itemsList[blockID], 1);
-		}
-
-		return result;
 	}
 
 	private boolean canMine(int blockID) {
@@ -723,112 +653,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 			canMine = blockID != Block.bedrock.blockID;
 		}
 		return canMine;
-	}
-
-	private void addStackToInventory(InventoryBasic inv, ItemStack itemStack) {
-		int counter = 0;
-		boolean invContainsItem = false;
-		boolean slotOccupied = false;
-		boolean overFlow = false;
-		if (itemStack != null) {
-			ItemStack overFlowStack = itemStack.copy();
-			for (counter = 0; counter < inv.getSizeInventory(); counter++) {
-				slotOccupied = inv.getStackInSlot(counter) != null;
-				if (slotOccupied) {
-					invContainsItem = inv.getStackInSlot(counter).itemID == itemStack.itemID;
-					invContainsItem = invContainsItem && inv.getStackInSlot(counter).stackSize < 64;
-					if (invContainsItem)
-						break;
-				} else {
-					break;
-				}
-			}
-
-			if (invContainsItem) {
-				int sizeOf = inv.getStackInSlot(counter).stackSize;
-				itemStack.stackSize = (itemStack.stackSize + sizeOf) % 64;
-				if (itemStack.stackSize < sizeOf) {
-					overFlow = true;
-					overFlowStack.stackSize = 64;
-				}
-				if (!overFlow)
-					inv.setInventorySlotContents(counter, itemStack);
-				else {
-					inv.setInventorySlotContents(counter, overFlowStack);
-					addStackToInventory(inv, itemStack);
-				}
-			} else {
-				inv.setInventorySlotContents(counter, itemStack);
-			}
-		}
-	}
-
-	private void addStackToInventory(TileEntityChest inv, ItemStack itemStack) {
-		this.chestRecursion += 1;
-		int counter = 0;
-		boolean invContainsItem = false;
-		boolean slotOccupied = false;
-		boolean overFlow = false;
-		boolean stackAdded = false;
-
-		if (itemStack != null) {
-			ItemStack overFlowStack = itemStack.copy();
-			for (counter = 0; counter < inv.getSizeInventory(); counter++) {
-				slotOccupied = inv.getStackInSlot(counter) != null;
-				if (slotOccupied) {
-					invContainsItem = inv.getStackInSlot(counter).itemID == itemStack.itemID;
-					invContainsItem = invContainsItem && inv.getStackInSlot(counter).stackSize < 64;
-					if (invContainsItem)
-						break;
-				} else {
-					break;
-				}
-			}
-
-			if (invContainsItem) {
-				int sizeOf = inv.getStackInSlot(counter).stackSize;
-				itemStack.stackSize = (itemStack.stackSize + sizeOf) % 64;
-				if (itemStack.stackSize < sizeOf) {
-					overFlow = true;
-					overFlowStack.stackSize = 64;
-				}
-				if (!overFlow) {
-					inv.setInventorySlotContents(counter, itemStack);
-					stackAdded = true;
-				} else {
-					inv.setInventorySlotContents(counter, overFlowStack);
-					addStackToInventory(inv, itemStack);
-					stackAdded = true;
-				}
-			} else if (!slotOccupied) {
-				inv.setInventorySlotContents(counter, itemStack);
-				stackAdded = true;
-			}
-
-			if (!stackAdded) {
-				if (chestRecursion < 3) {
-
-					if (inv.adjacentChestXNeg != null)
-						addStackToInventory(inv.adjacentChestXNeg, itemStack);
-					else if (inv.adjacentChestXPos != null)
-						addStackToInventory(inv.adjacentChestXPos, itemStack);
-					else if (inv.adjacentChestZNeg != null)
-						addStackToInventory(inv.adjacentChestZNeg, itemStack);
-					else if (inv.adjacentChestZPosition != null)
-						addStackToInventory(inv.adjacentChestZPosition, itemStack);
-					else {
-						EntityItem e = new EntityItem(this.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
-								(double) this.blockCoords[2] + 0.5, itemStack);
-						e.dropItem(itemStack.itemID, itemStack.stackSize);
-					}
-				} else {
-					EntityItem e = new EntityItem(this.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
-							(double) this.blockCoords[2] + 0.5, itemStack);
-					e.dropItem(itemStack.itemID, itemStack.stackSize);
-				}
-			}
-		}
-		this.chestRecursion = 0;
 	}
 
 	private int processBlock(World world, int x, int y, int z) {

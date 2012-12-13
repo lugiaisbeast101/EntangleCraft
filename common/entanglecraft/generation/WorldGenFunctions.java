@@ -30,8 +30,8 @@ public class WorldGenFunctions implements IWorldGenerator{
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		
 		int x = chunkX + rand.nextInt(16); int y = 192; int z = chunkZ + rand.nextInt(16); 
-		skyFortressMaker.generate(world, rand, x, y, z); 
-		dungeonMaker.generate(world, rand, x, 32, z);
+		//skyFortressMaker.generate(world, rand, x, y, z); 
+		//dungeonMaker.generate(world, rand, x, 32, z);
 		new WorldGenLambdaOre().generate(world, rand, chunkX, 32, chunkZ); 
 		
 	}

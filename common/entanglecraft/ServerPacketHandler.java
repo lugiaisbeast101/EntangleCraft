@@ -19,6 +19,9 @@ import net.minecraft.src.TileEntity;
 import entanglecraft.blocks.TileEntityGenericDestination;
 import entanglecraft.blocks.TileEntityLambdaMiner;
 import entanglecraft.gui.EnumGui;
+import entanglecraft.items.EntangleCraftItems;
+import entanglecraft.items.IChanneled;
+import entanglecraft.items.ItemChanneled;
 import entanglecraft.items.ItemDevice;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
@@ -174,7 +177,7 @@ public class ServerPacketHandler implements IPacketHandler {
 		ItemStack itemInUse = thePlayer.getCurrentEquippedItem();
 		InventoryPlayer inv = thePlayer.inventory;
 		int x = itemInUse.stackSize;
-		inv.setInventorySlotContents(inv.currentItem, new ItemStack((((ItemDevice) itemInUse.getItem()).incrementChannel()), x));
+		inv.setInventorySlotContents(inv.currentItem, new ItemStack(((IChanneled) itemInUse.getItem()).incrementChannel(), x));
 		System.out.println("Changed Channel");
 	}
 

@@ -10,10 +10,10 @@ import entanglecraft.blocks.EntangleCraftBlocks;
 
 public class EntangleCraftItems {
 	  public static final Item ItemNetherEssence = new ItemLambda(8600).setIconIndex(87).setItemName("ItemNetherEssence");
-	  public static final Item ItemDev = new ItemDevice(8601).setIconIndex(90).setItemName("ItemDev");
-	  public static final Item ItemDeviceRed = new ItemDevice(8602).setIconIndex(91).setItemName("ItemDeviceRed");
-	  public static final Item ItemDeviceYellow = new ItemDevice(8603).setIconIndex(92).setItemName("ItemDeviceYellow");
-	  public static final Item ItemDeviceBlue = new ItemDevice(8604).setIconIndex(93).setItemName("ItemDeviceBlue");
+	  public static final Item ItemDeviceG = new ItemDevice(8601).setIconIndex(90).setItemName("ItemDeviceG");
+	  public static final Item ItemDeviceR = new ItemDevice(8602).setIconIndex(91).setItemName("ItemDeviceR");
+	  public static final Item ItemDeviceY = new ItemDevice(8603).setIconIndex(92).setItemName("ItemDeviceY");
+	  public static final Item ItemDeviceB = new ItemDevice(8604).setIconIndex(93).setItemName("ItemDeviceB");
 	  public static final Item ItemNethermonicDiamond = new ItemLambda(8605).setIconIndex(88).setItemName("ItemNethermonicDiamond");
 	  public static final Item ItemLambdaCore = new ItemLambda(8606).setIconIndex(89).setItemName("ItemLambdaCore");
 	  public static final Item ItemTransformer = new ItemLambda(8607).setIconIndex(80).setItemName("ItemTransformer");
@@ -30,21 +30,18 @@ public class EntangleCraftItems {
 	  public static final Item ItemExclusiveFilter = new ItemLambda(8618).setIconIndex(98).setItemName("ItemExclusiveFilter").setMaxStackSize(1);
 	  public static final Item ItemSuperInductionCircuit = new ItemLambda(8619).setIconIndex(99).setItemName("ItemSuperInductionCircuit").setMaxStackSize(1);
 	  public static final Item ItemTPScroll = new ItemShard(8620,3).setIconIndex(101).setItemName("ItemTPScroll").setMaxDamage(1);
-	  public static final Item ItemShardPickG = new ItemLambda(8621).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(1);
-	  public static final Item ItemShardPickR = new ItemLambda(8622).setIconIndex(103).setItemName("ItemShardPickR").setMaxDamage(1);
-	  public static final Item ItemShardPickB = new ItemLambda(8623).setIconIndex(104).setItemName("ItemShardPickB").setMaxDamage(1);
-	  public static final Item ItemShardPickY = new ItemLambda(8624).setIconIndex(105).setItemName("ItemShardPickY").setMaxDamage(1);
+	  public static final Item ItemShardPickG = new ItemShardPick(8621).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(1).setMaxDamage(0);
+	  public static final Item ItemShardPickR = new ItemShardPick(8622).setIconIndex(103).setItemName("ItemShardPickR").setMaxDamage(1).setMaxDamage(0);
+	  public static final Item ItemShardPickY = new ItemShardPick(8623).setIconIndex(104).setItemName("ItemShardPickY").setMaxDamage(1).setMaxDamage(0);
+	  public static final Item ItemShardPickB = new ItemShardPick(8624).setIconIndex(105).setItemName("ItemShardPickB").setMaxDamage(1).setMaxDamage(0);
 	  
 public static void addItems(){
-    ((ItemDevice)ItemDev).setChannel(0);
-    ((ItemDevice)ItemDeviceRed).setChannel(1);
-    ((ItemDevice)ItemDeviceYellow).setChannel(2);
-    ((ItemDevice)ItemDeviceBlue).setChannel(3);
+	itemInitializing();
 	
-    LanguageRegistry.addName(ItemDev, "Lambda Device");
-    LanguageRegistry.addName(ItemDeviceRed, "Lambda Device; Red");
-    LanguageRegistry.addName(ItemDeviceYellow, "Lambda Device; Yellow");
-    LanguageRegistry.addName(ItemDeviceBlue, "Lambda Device; Blue");
+    LanguageRegistry.addName(ItemDeviceG, "Lambda Device : G");
+    LanguageRegistry.addName(ItemDeviceR, "Lambda Device : R");
+    LanguageRegistry.addName(ItemDeviceY, "Lambda Device : Y");
+    LanguageRegistry.addName(ItemDeviceB, "Lambda Device : B");
     LanguageRegistry.addName(ItemLambdaCore, "Lambda Core");
     LanguageRegistry.addName(ItemNetherEssence, "Nethermonic Essence");
     LanguageRegistry.addName(ItemNethermonicDiamond, "Nethermonic Diamond");
@@ -64,15 +61,15 @@ public static void addItems(){
     LanguageRegistry.addName(ItemTPScroll, "TP Scroll");
     LanguageRegistry.addName(ItemShardPickG, "Displacement Pick : G");
     LanguageRegistry.addName(ItemShardPickR, "Displacement Pick : R");
-    LanguageRegistry.addName(ItemShardPickB, "Displacement Pick : B");
     LanguageRegistry.addName(ItemShardPickY, "Displacement Pick : Y");
+    LanguageRegistry.addName(ItemShardPickB, "Displacement Pick : B");
     GameRegistry.addSmelting(Block.netherrack.blockID, new ItemStack(ItemNetherEssence, 1),1F);
     GameRegistry.addSmelting(Block.obsidian.blockID, new ItemStack(EntangleCraftBlocks.BlockFObsidian, 1),1F);
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockRLD, 1), new Object[] { "NRN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGenericDestination, Character.valueOf('R'), Item.redstone });
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockYLD, 1), new Object[] { "NSN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGenericDestination, Character.valueOf('S'), Item.lightStoneDust });
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockBLD, 1), new Object[] { "NSN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGenericDestination, Character.valueOf('S'), new ItemStack(Item.dyePowder, 1, 4) });
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockFObsidian,8), new Object[] {"OOO","OSO","OOO", Character.valueOf('O'),Block.obsidian, Character.valueOf('S'),ItemFrShard});
-    GameRegistry.addRecipe(new ItemStack(ItemDev, 1), new Object[] { "SOO", "OLO", "OXO", Character.valueOf('O'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore, Character.valueOf('S'), Item.lightStoneDust, Character.valueOf('X'), Item.map});
+    GameRegistry.addRecipe(new ItemStack(ItemDeviceG, 1), new Object[] { "SOO", "OLO", "OXO", Character.valueOf('O'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore, Character.valueOf('S'), Item.lightStoneDust, Character.valueOf('X'), Item.map});
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGenericDestination, 1), new Object[] { "FFF", "FLF", "FFF", Character.valueOf('F'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore });
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGenericDestination, 1), new Object[] { "  D","   ", "   ", Character.valueOf('D'), Block.dirt});
     GameRegistry.addRecipe(new ItemStack(ItemNethermonicDiamond, 1), new Object[] { "NNN", "NDN", "NNN", Character.valueOf('N'), ItemNetherEssence, Character.valueOf('D'), Item.diamond });
@@ -96,5 +93,41 @@ public static void addItems(){
     GameRegistry.addShapelessRecipe(new ItemStack(ItemBlueShard,1), new Object[]{ItemFrShard,new ItemStack(Item.dyePowder,1,4)});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemImbuedShard), new Object[]{ItemYelShard,ItemBlueShard,ItemRedShard});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemTPScroll,8), new Object[]{Item.enderPearl,Item.spiderEye,Item.gunpowder,Item.bone,Item.paper});
+    GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickG,1), new Object[]{Block.dirt});
 }
+
+private static void itemInitializing()
+{
+    
+    Item[] availableChannelsDevices = new Item[] {
+			EntangleCraftItems.ItemDeviceG, 
+			EntangleCraftItems.ItemDeviceR, 
+			EntangleCraftItems.ItemDeviceY, 
+			EntangleCraftItems.ItemDeviceB};
+    
+    Item[] availableChannelsPicks = new Item[] {EntangleCraftItems.ItemShardPickG, 
+    		EntangleCraftItems.ItemShardPickR, 
+    		EntangleCraftItems.ItemShardPickY, 
+    		EntangleCraftItems.ItemShardPickB};
+    
+    Item[][] classOfChannel = new Item[][] {availableChannelsDevices, availableChannelsPicks};
+    
+    for(Object obj : classOfChannel)
+    {
+    	Item[] thisClassOfChannels = (Item[])obj;
+    	
+	    int i = 0;
+	    for(Object o : thisClassOfChannels)
+	    {
+	    	IChanneled thisItemChanneled = (IChanneled)o;
+	    	thisItemChanneled.setAvailableChannels(thisClassOfChannels);
+	    	thisItemChanneled.setChannel(i);
+	    	i += 1;
+	    }
+    }
+  
+
 }
+
+}
+

@@ -27,6 +27,7 @@ import entanglecraft.blocks.*;
 import entanglecraft.gui.EnumGui;
 import entanglecraft.generation.*;
 import entanglecraft.items.EntangleCraftItems;
+import entanglecraft.items.ItemChanneled;
 import entanglecraft.items.ItemDevice;
 import entanglecraft.items.ItemLambda;
 import entanglecraft.items.ItemShard;
@@ -61,7 +62,7 @@ public class EntangleCraft implements IConnectionHandler {
 	public static CommonProxy proxy;
 
 	private static ArrayList destinations = new ArrayList();
-	private static ArrayList[] channelDests = { new ArrayList(),
+	public static ArrayList[] channelDests = { new ArrayList(),
 			new ArrayList(), new ArrayList(), new ArrayList() };
 
 	public static DistanceHandler dhInstance = new DistanceHandler();
@@ -82,30 +83,37 @@ public class EntangleCraft implements IConnectionHandler {
 		proxy.registerClientSide();
 		MinecraftForgeClient.preloadTexture("/lambdaTextures.png");
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-		//GameRegistry.registerWorldGenerator(new WorldGenFunctions());
+		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
 		EntangleCraftBlocks.addBlocks();
 		EntangleCraftItems.addItems();
 
 	}
 
-	private static Destination closestDest(EntityPlayer playerEntity,
+	public static Destination closestDestToPlayer(EntityPlayer playerEntity,
 			ArrayList dests) {
 		Destination destination = null;
-		double[] playerPoints;
+		double[] playerPoints = new double[] { playerEntity.posX, playerEntity.posY,
+				playerEntity.posZ };
+		
+		destination = closestDestToCoord(playerPoints, dests);
+		return destination;
+	}
+	
+	public static Destination closestDestToCoord(double[] coords, ArrayList dests) {
+		Destination destination = null;
+		
 		double minDistance;
 		Iterator iterator;
 		if (dests.size() != 0) {
-			playerPoints = new double[] { playerEntity.posX, playerEntity.posY,
-					playerEntity.posZ };
+			
 			destination = (Destination) dests.get(0);
-
-			minDistance = getDistance(playerPoints,
+			minDistance = getDistance(coords,
 					destination.destinationCoords);
 
 			for (iterator = dests.iterator(); iterator.hasNext();) {
 				Object points = iterator.next();
 				Destination newPoints = (Destination) points;
-				double newDistance = getDistance(playerPoints,
+				double newDistance = getDistance(coords,
 						newPoints.destinationCoords);
 				if (newDistance < minDistance) {
 					minDistance = newDistance;
@@ -123,7 +131,7 @@ public class EntangleCraft implements IConnectionHandler {
 		if (!par3EntityPlayer.worldObj.isRemote) {
 			ArrayList dests = channelDests[channel];
 			if (dests.size() != 0) {
-				Destination dest = closestDest(par3EntityPlayer, dests);
+				Destination dest = closestDestToPlayer(par3EntityPlayer, dests);
 				double[] destinationPoints = dest.destinationCoords;
 
 				double[] playerPoints = { par3EntityPlayer.posX,
@@ -196,6 +204,7 @@ public class EntangleCraft implements IConnectionHandler {
 				* (z - z0));
 	}
 
+	/*
 	public void keyboardEvent(KeyBinding event) {
 		if (ModLoader.getMinecraftInstance().theWorld == null)
 			return;
@@ -204,7 +213,7 @@ public class EntangleCraft implements IConnectionHandler {
 		try {
 			ItemStack itemInUse = ModLoader.getMinecraftInstance().thePlayer
 					.getCurrentEquippedItem();
-			if (((itemInUse.getItem() instanceof ItemDevice))
+			if (((itemInUse.getItem() instanceof ItemChanneled))
 					&& (event == incrementDeviceChannel)) {
 				InventoryPlayer inv = ModLoader.getMinecraftInstance().thePlayer.inventory;
 				int x = itemInUse.stackSize;
@@ -218,6 +227,7 @@ public class EntangleCraft implements IConnectionHandler {
 			e.printStackTrace();
 		}
 	}
+	*/
 
 	@Override
 	public void playerLoggedIn(Player player, NetHandler netHandler,

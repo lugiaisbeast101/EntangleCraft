@@ -8,6 +8,9 @@ import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.ModLoader;
+import entanglecraft.items.EntangleCraftItems;
+import entanglecraft.items.IChanneled;
+import entanglecraft.items.ItemChanneled;
 import entanglecraft.items.ItemDevice;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
@@ -32,10 +35,10 @@ public class KeyHandling extends KeyHandler {
 		System.out.println("Trying to change channel");
 		try {
 			ItemStack itemInUse = ModLoader.getMinecraftInstance().thePlayer.getCurrentEquippedItem();
-			if (((itemInUse.getItem() instanceof ItemDevice)) && (event == increment)) {
+			if (((itemInUse.getItem() instanceof IChanneled)) && (event == increment)) {
 				InventoryPlayer inv = ModLoader.getMinecraftInstance().thePlayer.inventory;
 				int x = itemInUse.stackSize;
-				inv.setInventorySlotContents(inv.currentItem, new ItemStack(((ItemDevice) itemInUse.getItem()).incrementChannel(), x));
+				inv.setInventorySlotContents(inv.currentItem, new ItemStack(((IChanneled) itemInUse.getItem()).incrementChannel(), x));
 				ClientPacketHandler.sendDeviceToggle();
 				System.out.println("Changed Channel");
 			}

@@ -21,6 +21,7 @@ import net.minecraftforge.common.ISidedInventory;
 import entanglecraft.Destination;
 import entanglecraft.DestinationSaveMethods;
 import entanglecraft.EntangleCraft;
+import entanglecraft.InventoryController;
 import entanglecraft.NBTSaver;
 import entanglecraft.ServerPacketHandler;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
@@ -32,7 +33,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	/** The number of ticks that the current item has been cooking for */
 	public int[] blockCoords = new int[3];
 	public double[] destinationCoords = new double[3];
-
+	
 	public int gdProcessTime = 0;
 	public int teleportsEarned = 0;
 	public Destination destination;
@@ -41,6 +42,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	private ArrayList validStacks = new ArrayList();
 	private String beepSound = "beep";
 	private int teleportKbzCost = 32;
+	public InventoryController invController;
 
 	public TileEntityGenericDestination() {
 		gdItemStacks = new ItemStack[2];
@@ -61,6 +63,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 		this.destinationCoords[2] = blockCoords[2] + 0.5;
 		this.channel = channel;
 		createDestination();
+		this.invController = new InventoryController(this,blockCoords);
 	}
 
 	public void createDestination() {
