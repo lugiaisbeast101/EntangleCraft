@@ -13,13 +13,23 @@ import entanglecraft.blocks.TileEntityLambdaMiner;
 import entanglecraft.gui.EnumGui;
 import entanglecraft.gui.GuiGenericDestination;
 import entanglecraft.gui.GuiLambdaMiner;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 
 	@Override
-	public void registerClientSide() {
+	public void registerPreLoad() {
+		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());
+	}
+	
+	@Override
+	public void registerOnLoad() {
 		KeyBindingRegistry.registerKeyBinding(new KeyHandling());
+		MinecraftForgeClient.preloadTexture("/lambdaTextures.png");
+		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());
+		
+		super.registerOnLoad();
 	}
 
 	public File getWorldSaveDir(World world) {

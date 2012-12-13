@@ -52,8 +52,8 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = "EntangleCraft", name = "EntangleCraft", version = "1.0")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, clientPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, packetHandler = ServerPacketHandler.class), connectionHandler = EntangleCraft.class, versionBounds = "[1]")
+@Mod(modid = "EntangleCraft", name = "EntangleCraft", version = "1.0b")
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, clientPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, packetHandler = ServerPacketHandler.class), connectionHandler = EntangleCraft.class)
 public class EntangleCraft implements IConnectionHandler {
 	@Instance
 	public static EntangleCraft instance;
@@ -67,25 +67,19 @@ public class EntangleCraft implements IConnectionHandler {
 
 	public static DistanceHandler dhInstance = new DistanceHandler();
 
-
-	public static final KeyBinding incrementDeviceChannel = new KeyBinding(
-			"incrementDeviceChannel", 34);
-
 	@PreInit
 	public void preLoad(FMLPreInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new LambdaSoundHandler());
+		proxy.registerPreLoad();
 		MinecraftForge.EVENT_BUS.register(dhInstance);
 	}
 
 	@Init
 	public void load(FMLInitializationEvent event) {
 		instance = this;
-		proxy.registerClientSide();
-		MinecraftForgeClient.preloadTexture("/lambdaTextures.png");
+		proxy.registerOnLoad();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
-		EntangleCraftBlocks.addBlocks();
-		EntangleCraftItems.addItems();
+;
 
 	}
 

@@ -9,15 +9,23 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.network.IGuiHandler;
 import entanglecraft.blocks.ContainerGenericDestination;
 import entanglecraft.blocks.ContainerLambdaMiner;
+import entanglecraft.blocks.EntangleCraftBlocks;
 import entanglecraft.blocks.TileEntityGenericDestination;
 import entanglecraft.blocks.TileEntityLambdaMiner;
 import entanglecraft.gui.EnumGui;
 import entanglecraft.gui.GuiGenericDestination;
 import entanglecraft.gui.GuiLambdaMiner;
+import entanglecraft.items.EntangleCraftItems;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy implements IGuiHandler {
-	public void registerClientSide() {
+	
+	public void registerPreLoad() {
+	}
+	
+	public void registerOnLoad() {
+		EntangleCraftBlocks.addBlocks();
+		EntangleCraftItems.addItems();
 	}
 
 	public static void registerDistanceSaver(DistanceHandler dh) {
