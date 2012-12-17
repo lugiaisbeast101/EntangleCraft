@@ -71,7 +71,7 @@ public static void addItems(){
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockFObsidian,8), new Object[] {"OOO","OSO","OOO", Character.valueOf('O'),Block.obsidian, Character.valueOf('S'),ItemFrShard});
     GameRegistry.addRecipe(new ItemStack(ItemDeviceG, 1), new Object[] { "SOO", "OLO", "OXO", Character.valueOf('O'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore, Character.valueOf('S'), Item.lightStoneDust, Character.valueOf('X'), Item.map});
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGenericDestination, 1), new Object[] { "FFF", "FLF", "FFF", Character.valueOf('F'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore });
-    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGenericDestination, 1), new Object[] { "  D","   ", "   ", Character.valueOf('D'), Block.dirt});
+    //GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGenericDestination, 1), new Object[] { "  D","   ", "   ", Character.valueOf('D'), Block.dirt});
     GameRegistry.addRecipe(new ItemStack(ItemNethermonicDiamond, 1), new Object[] { "NNN", "NDN", "NNN", Character.valueOf('N'), ItemNetherEssence, Character.valueOf('D'), Item.diamond });
     GameRegistry.addRecipe(new ItemStack(ItemNethermonicDiamond,12), new Object[] {"DDD","DID","DDD", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('I'), ItemImbuedShard});
     GameRegistry.addRecipe(new ItemStack(ItemLambdaCore, 1), new Object[] { "FBF", "SNS", "FBF", Character.valueOf('S'), Item.lightStoneDust, Character.valueOf('F'), Block.obsidian, Character.valueOf('N'), ItemNethermonicDiamond, Character.valueOf('B'), new ItemStack(Item.dyePowder, 1, 4) });
@@ -93,7 +93,6 @@ public static void addItems(){
     GameRegistry.addShapelessRecipe(new ItemStack(ItemBlueShard,1), new Object[]{ItemFrShard,new ItemStack(Item.dyePowder,1,4)});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemImbuedShard), new Object[]{ItemYelShard,ItemBlueShard,ItemRedShard});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemTPScroll,8), new Object[]{Item.enderPearl,Item.spiderEye,Item.gunpowder,Item.bone,Item.paper});
-    GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickG,1), new Object[]{Block.dirt});
 }
 
 private static void itemInitializing()

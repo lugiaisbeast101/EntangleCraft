@@ -58,7 +58,7 @@ public class ContainerGenericDestination extends Container{
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			
+
 			if (slotNumber == 1 || slotNumber == 0) 
 			{
 				if (!mergeItemStack(itemstack1, 2, 38, true)) 
@@ -67,7 +67,7 @@ public class ContainerGenericDestination extends Container{
 				}
 			} 
 			
-			else if (slotNumber >= 5 && slotNumber < 38)
+			else if (slotNumber >= 2 && slotNumber < 38)
 			{
 				if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemTransformer).itemID || itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer).itemID)
 				{
@@ -79,7 +79,7 @@ public class ContainerGenericDestination extends Container{
 						}
 					}
 				}
-				
+								
 				else if (!mergeItemStack(itemstack1, 0,2, false))
 				{
 					return null;

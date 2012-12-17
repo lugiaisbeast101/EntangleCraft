@@ -20,7 +20,10 @@ public class BlockGlowTorch extends BlockTorch{
 	@Override
 	public void onBlockAdded(World par1World, int x,int y,int z){
 		super.onBlockAdded(par1World, x, y, z);
-		par1World.playSound((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D , "poof", 0.6F + par1World.rand.nextFloat()*0.2F, par1World.rand.nextFloat() * 0.3F + 0.8F);
+		if (!par1World.isRemote)
+		{
+			LambdaSoundHandler.playSound(par1World, new double[] {(double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D} , "poof", 0.6F + par1World.rand.nextFloat()*0.2F, par1World.rand.nextFloat() * 0.3F + 0.8F);
+		}
 	}
 	
 	public String getTextureFile(){

@@ -49,7 +49,7 @@ public class GuiLambdaMiner extends GuiContainer {
 		int var7;
 
 		var7 = this.lMInventory.getCookProgressScaled(24);
-		this.drawTexturedModalRect(x + 79, y + 34, 176, 14, var7 + 1, 16);
+		this.drawTexturedModalRect(x + 79, y + 35, 176, 14, var7 + 1, 16);
 
 	}
 

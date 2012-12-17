@@ -56,7 +56,7 @@ public class LambdaSoundHandler{
 	}
 	
 
-	public static void playSound(World theWorld, String soundName, double[] destination, float volume, float pitch)
+	public static void playSound(World theWorld, double[] destination, String soundName, float volume, float pitch)
 	{
 		if (!theWorld.isRemote){
 			ServerPacketHandler.playSoundToClients(destination, volume, pitch, soundName);

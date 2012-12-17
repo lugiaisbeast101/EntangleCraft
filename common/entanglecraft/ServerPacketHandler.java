@@ -8,14 +8,20 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.InventoryPlayer;
+import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
+import net.minecraft.src.MovingObjectPosition;
 import net.minecraft.src.NetServerHandler;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
+import entanglecraft.SoundHandling.LambdaSoundHandler;
+import entanglecraft.blocks.EntangleCraftBlocks;
 import entanglecraft.blocks.TileEntityGenericDestination;
 import entanglecraft.blocks.TileEntityLambdaMiner;
 import entanglecraft.gui.EnumGui;
@@ -152,22 +158,53 @@ public class ServerPacketHandler implements IPacketHandler {
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player) {
 		EntityPlayer thePlayer = (EntityPlayer) player;
+		MinecraftServer server = ModLoader.getMinecraftServerInstance();
 		
 		if (!thePlayer.worldObj.isRemote) {
 			//thePlayer.addChatMessage("SERVER PACKET");
 			int ID = -1;
 			DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
-			try {
+			try 
+			{
 				ID = dataStream.readInt();
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 			String task = this.getTaskFromEnum(ID);
-			if (task == "increment") {
+			if (task == "increment") 
+			{
 				// Toggle lambdaDevice channel
 				this.toggleChannel(thePlayer);
+			}
+			
+			else if (task == "shardSpell")
+			{
+				Integer x = null;
+				Integer y = null;
+				Integer z = null;
+				Integer side = null;
+				Integer spell = null;
+				try
+				{
+					spell = dataStream.readInt();
+					x = dataStream.readInt();
+					y = dataStream.readInt();
+					z = dataStream.readInt();
+					side = dataStream.readInt();
+					
+				}
+				
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				if (spell != null)
+				{
+					if (spell == 0) this.freeze(server.worldServerForDimension(0), thePlayer, x, y, z, side);
+					if (spell == 1) this.ignite(server.worldServerForDimension(0), thePlayer, x, y, z, side);
+					else if (spell == 2) this.placeTorch(server.worldServerForDimension(0), thePlayer, x, y, z, side);
+				}
 			}
 		}
 
@@ -185,9 +222,105 @@ public class ServerPacketHandler implements IPacketHandler {
 		if (i == 0)
 			return "increment";
 		if (i == 1)
-			return "TEUpdate";
+			return "shardSpell";
 		else
 			return "unknown";
 	}
 
+	
+	private boolean ignite(World theWorld, EntityPlayer thePlayer, Integer x, Integer y, Integer z, Integer side) {
+		{
+			if (x != null && y != null && z != null && side != null)
+			{
+				if (side == 0) 
+				{
+					--y;
+				}
+				if (side == 1) 
+				{
+					++y;
+				}
+				if (side == 2) 
+				{
+					--z;
+				}
+				if (side == 3) 
+				{
+					++z;
+				}
+				if (side == 4) 
+				{
+					--x;
+				}
+				if (side == 5) 
+				{
+					++x;
+				}
+	
+				/*
+				 * if (!thePlayer.canPlayerEdit(x, y, z)) { return false; } else {
+				 */
+				LambdaSoundHandler.playSound(theWorld, new double[] {(double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D}, "fire.ignite", 1.0F, theWorld.rand.nextFloat() * 0.4F + 0.8F);
+				theWorld.setBlockWithNotify(x, y, z, Block.fire.blockID);
+			}
+			return true;
+			// }
+		}
+	}
+	
+
+	private boolean placeTorch(World theWorld, EntityPlayer thePlayer, int x, int y, int z, int side) {
+		if (!theWorld.isRemote)
+		{
+			if (side == 0) {
+				--y;
+			}
+
+			if (side == 1) {
+				++y;
+			}
+
+			if (side == 2) {
+				--z;
+			}
+
+			if (side == 3) {
+				++z;
+			}
+
+			if (side == 4) {
+				--x;
+			}
+
+			if (side == 5) {
+				++x;
+			}
+			/*
+			 * if (!thePlayer.canPlayerEdit(x, y, z)) { return false; }
+			 * 
+			 * else {
+			 */
+			if (theWorld.getBlockId(x, y, z) == Block.waterStill.blockID) {
+				theWorld.setBlockWithNotify(x, y, z, EntangleCraftBlocks.BlockLitWater.blockID);
+			} else if (theWorld.getBlockId(x, y, z) != EntangleCraftBlocks.BlockLitWater.blockID) {
+				theWorld.setBlockWithNotify(x, y, z, EntangleCraftBlocks.BlockGlowTorch.blockID);
+			}
+
+			/*
+			 * }
+			 */
+		}
+
+		return true;
+	}
+	
+	private boolean freeze(World world, EntityPlayer thePlayer, int x, int y, int z, int side)
+	{
+		
+		if (world.getBlockId(x, y, z) == Block.waterStill.blockID) {
+			world.setBlockWithNotify(x, y, z, Block.ice.blockID);
+			LambdaSoundHandler.playSound(world, new double[] {(double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D}, "icePoof", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
+		}
+		return true;
+	}
 }

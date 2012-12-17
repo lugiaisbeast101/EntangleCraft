@@ -23,7 +23,7 @@ public class InventoryController {
 	}
 	
 	public void setChest(int[] coords) {
-		if (coords != null) {
+		if (coords != null && coords.length == 3) {
 			this.chest = new int[] { coords[0], coords[1], coords[2] };
 		} else
 			this.chest = null;
@@ -63,37 +63,69 @@ public class InventoryController {
 	public static ItemStack getItemStackFromID(int blockID) {
 		ItemStack result = null;
 		Random rand = new Random();
-		if (blockID == Block.stone.blockID) {
+		if (blockID == Block.stone.blockID) 
+		{
 			result = new ItemStack(Block.cobblestone, 1);
-		} else if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID || blockID == Block.lavaStill.blockID
-				|| blockID == Block.lavaMoving.blockID) {
+		} 
+		
+		else if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID || blockID == Block.lavaStill.blockID
+				|| blockID == Block.lavaMoving.blockID || blockID == Block.bedrock.blockID) 
+		{
 			result = null;
-		} else if (blockID == Block.oreLapis.blockID) {
+		} 
+		
+		else if (blockID == Block.oreLapis.blockID) 
+		{
 			result = new ItemStack(Item.dyePowder, rand.nextInt(1) + 4, 4);
-		} else if (blockID == Block.oreRedstone.blockID) {
+		} 
+		
+		else if (blockID == Block.oreRedstone.blockID) 
+		{
 			result = new ItemStack(Item.redstone, rand.nextInt(1) + 4);
-		} else if (blockID == Block.oreCoal.blockID) {
+		} 
+		
+		else if (blockID == Block.oreCoal.blockID) 
+		{
 			result = new ItemStack(Item.coal, 1);
-		} else if (blockID == Block.oreDiamond.blockID) {
+		} 
+		
+		else if (blockID == Block.oreDiamond.blockID) 
+		{
 			result = new ItemStack(Item.diamond, 1);
-		} else
+		} 
+		
+		else
+		{
 			result = new ItemStack(Item.itemsList[blockID], 1);
-
+		}
 
 		return result;
 	}
 	
 	public static int getBlockIDFromItem(int id) {
 		int result = id;
-		if (id == new ItemStack(Item.diamond, 1).itemID) {
+		if (id == new ItemStack(Item.diamond, 1).itemID) 
+		{
 			result = Block.oreDiamond.blockID;
-		} else if (id == new ItemStack(Item.coal).itemID) {
+		} 
+		
+		else if (id == new ItemStack(Item.coal).itemID) 
+		{
 			result = Block.oreCoal.blockID;
-		} else if (id == new ItemStack(Item.redstone).itemID) {
+		} 
+		
+		else if (id == new ItemStack(Item.redstone).itemID) 
+		{
 			result = Block.oreRedstone.blockID;
-		} else if (id == new ItemStack(Item.dyePowder, 1, 4).itemID) {
+		} 
+		
+		else if (id == new ItemStack(Item.dyePowder, 1, 4).itemID) 
+		{
 			result = Block.blockLapis.blockID;
-		} else if (id == Block.cobblestone.blockID) {
+		} 
+		
+		else if (id == Block.cobblestone.blockID) 
+		{
 			result = Block.stone.blockID;
 		}
 

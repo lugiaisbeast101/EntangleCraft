@@ -79,7 +79,6 @@ public class EntangleCraft implements IConnectionHandler {
 		proxy.registerOnLoad();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
-;
 
 	}
 

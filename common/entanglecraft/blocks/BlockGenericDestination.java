@@ -122,8 +122,7 @@ public class BlockGenericDestination extends BlockContainer{
    
 	@Override
 	public TileEntity createNewTileEntity(World var1) {
-		TileEntityGenericDestination te = new TileEntityGenericDestination();
-		return (TileEntity)te;
+		return new TileEntityGenericDestination();
 	}
     
     

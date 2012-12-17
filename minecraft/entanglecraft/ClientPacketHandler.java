@@ -149,6 +149,34 @@ public class ClientPacketHandler implements IPacketHandler {
 		packet.length = packet.data.length;
 		ModLoader.sendPacket(packet);
 	}
+		
+	public static void sendShardSpell(int x, int y, int z, int side, int spell)
+	{
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		DataOutputStream DOS = new DataOutputStream(bytes);
+		
+		try
+		{
+			DOS.writeInt(1);
+			DOS.writeInt(spell);
+			DOS.writeInt(x);
+			DOS.writeInt(y);
+			DOS.writeInt(z);
+			DOS.writeInt(side);
+		}
+		
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = "EntangleCraft";
+		packet.data = bytes.toByteArray();
+		packet.length = packet.data.length;
+		ModLoader.sendPacket(packet);
+	}
+	
 
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player) {

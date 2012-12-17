@@ -82,7 +82,8 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	}
 
 	public void generateLayerStructure() {
-		if (!this.worldObj.isRemote) {
+		if (!this.worldObj.isRemote) 
+		{
 			ArrayList theStruct = new ArrayList();
 			ArrayList structLeft = new ArrayList();
 			ArrayList struct = new ArrayList();
@@ -98,30 +99,40 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					: 0;
 			this.lastStructStackSizes = new int[] { scanLeft, scanForward, scanRight };
 			System.out.println("Last struct set to " + scanLeft + " to the left, " + scanForward + " forward, and " + scanRight + " to the right");
-			for (int i = 1; i <= scanLeft; i++) {
+			for (int i = 1; i <= scanLeft; i++) 
+			{
 				ArrayList temp;
 				temp = generateLine(scanForward, new int[] { blockCoords[0] + 1, blockCoords[1], blockCoords[2] - i });
-				for (Object block : temp) {
+				for (Object block : temp) 
+				{
 					structLeft.add((int[]) block);
 				}
 			}
 
 			struct = generateLine(scanForward, new int[] { blockCoords[0] + 1, blockCoords[1], blockCoords[2] });
 
-			for (int i = 1; i <= scanRight; i++) {
+			for (int i = 1; i <= scanRight; i++) 
+			{
 				ArrayList temp;
 				temp = generateLine(scanForward, new int[] { blockCoords[0] + 1, blockCoords[1], blockCoords[2] + i });
-				for (Object block : temp) {
+				for (Object block : temp) 
+				{
 					structRight.add((int[]) block);
 				}
 			}
-			for (Object block : structLeft) {
+			
+			for (Object block : structLeft) 
+			{
 				theStruct.add((int[]) block);
 			}
-			for (Object block : struct) {
+			
+			for (Object block : struct) 
+			{
 				theStruct.add((int[]) block);
 			}
-			for (Object block : structRight) {
+			
+			for (Object block : structRight) 
+			{
 				theStruct.add((int[]) block);
 			}
 			setLayerStructure(theStruct);
@@ -132,7 +143,8 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		super.readFromNBT(nbt);
 		int shouldLoad = (int) nbt.getShort("shouldLoad");
 
-		if (shouldLoad == -1) {
+		if (shouldLoad == -1) 
+		{
 			this.channel = (int) nbt.getShort("channel");
 			this.layerToMine = (int) nbt.getShort("layerToMine");
 			this.processTime = (int) nbt.getShort("processTime");
@@ -149,10 +161,13 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 			NBTTagList tagList = nbt.getTagList("Items");
 			this.lMItemStacks = new ItemStack[this.getSizeInventory()];
 
-			for (int i = 0; i < tagList.tagCount(); ++i) {
+			for (int i = 0; i < tagList.tagCount(); ++i) 
+			{
 				NBTTagCompound itemStack = (NBTTagCompound) tagList.tagAt(i);
 				byte thisByte = itemStack.getByte("Slot");
-				if (thisByte >= 0 && thisByte < this.lMItemStacks.length) {
+				
+				if (thisByte >= 0 && thisByte < this.lMItemStacks.length) 
+				{
 					this.lMItemStacks[thisByte] = ItemStack.loadItemStackFromNBT(itemStack);
 				}
 			}
@@ -160,10 +175,15 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	}
 
 	private void writeFieldToNBT(NBTTagCompound nbt, String field, Object o, String name) {
-		if (field == "int[]") {
-			int[] theArray = (int[]) o;
-			if (theArray != null) {
-				nbt.setIntArray(name, theArray);
+		if (field == "int[]") 
+		{
+			if (o != null)
+			{
+				int[] theArray = (int[]) o;
+				if (theArray != null) 
+				{
+					nbt.setIntArray(name, theArray);
+				}
 			}
 		}
 	}
@@ -383,62 +403,78 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		boolean mined = false;
 		boolean isServer = !worldObj.isRemote;
 		{
-			if (canSmelt()) {
+			if (canSmelt()) 
+			{
 				++this.processTime;
 				int goal = 200 / this.speedMultiplier;
 
-				if (this.isMining == false && isServer) { // Updating the
-															// texture, though
-															// not implemented
-															// yet
+				if (this.isMining == false) 
+				{
+
 					this.setIsMining(true);
 				}
 
-				if (this.processTime == goal || this.processTime > goal && isServer) {
+				if (this.processTime == goal || this.processTime > goal) 
+				{
 					this.processTime = 0;
 					ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityLambdaMiner", "processTime");
 					this.smeltItem();
 
 					mined = true;
 				}
-			} else {
-				if (isServer) {
-					if (this.isMining)
-						this.setIsMining(false);
+			} 
+			
+			else 
+			{
+				if (this.isMining)
+				{
+					this.setIsMining(false);
 				}
+
 			}
 		}
 
-		if (mined) {
+		if (mined) 
+		{
+			this.onInventoryChanged();
 		}
 
 	}
 
 	private void setMetaData(int i) {
 		int x, y, z;
-		if (this.blockCoords != null) {
+		if (this.blockCoords != null) 
+		{
 			x = this.blockCoords[0];
 			y = this.blockCoords[1];
 			z = this.blockCoords[2];
-		} else {
+		} 
+		
+		else 
+		{
 			x = this.xCoord;
 			y = this.yCoord;
 			z = this.zCoord;
 		}
+		
 		int lightValue = i == 0 ? 0 : 1000;
 		this.worldObj.setLightValue(EnumSkyBlock.Block, x, y, z, lightValue);
 		this.worldObj.setBlockMetadataWithNotify(x, y, z, i);
 	}
 
 	public void setIsMining(boolean a) {
-		if (!worldObj.isRemote){
-			if (this.isMining != a) {
+		if (!this.worldObj.isRemote)
+		{
+			
+			if (this.isMining != a) 
+			{
 				this.isMining = a;
 				int i = 0;
 				if (a)
 					i = 1;
-				this.setMetaData(i);
+				//this.setMetaData(i);
 			}
+	
 			ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityLambdaMiner", "isMining");
 		}
 	}
@@ -478,11 +514,11 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 				}
 			}
-			LambdaSoundHandler.playSound(this.worldObj, minerSound, new double[] { (double) xCoord, (double) yCoord, (double) zCoord },
-					this.worldObj.rand.nextFloat() * 0.05F + 0.05F, minerSoundPitch);
+			LambdaSoundHandler.playSound(this.worldObj, new double[] { (double) xCoord, (double) yCoord, (double) zCoord },
+					minerSound, this.worldObj.rand.nextFloat() * 0.05F + 0.05F, minerSoundPitch);
 			
-			LambdaSoundHandler.playSound(this.worldObj, minerSound, new double[] { (double) xCoord, (double) this.layerToMine, (double) zCoord },
-					this.worldObj.rand.nextFloat() * 0.2F + 0.7F, minerSoundPitch);
+			LambdaSoundHandler.playSound(this.worldObj, new double[] { (double) xCoord, (double) this.layerToMine, (double) zCoord },
+					minerSound, this.worldObj.rand.nextFloat() * 0.2F + 0.7F, minerSoundPitch);
 		}
 	}
 
@@ -617,13 +653,17 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 	private boolean canMine(int blockID) {
 		boolean canMine = true;
-		if (this.isFiltering()) {
-			if (this.filterInclusive && this.filteredIds != null) {
+		if (this.isFiltering()) 
+		{
+			if (this.filterInclusive && this.filteredIds != null) 
+			{
 				canMine = false; // Assume you can't mine it for inclusive
 									// filtering
-				for (Object id : this.filteredIds) {
+				for (Object id : this.filteredIds) 
+				{
 					Integer intID = (Integer) id;
-					if (intID == blockID) {
+					if (intID == blockID) 
+					{
 						canMine = true;
 						break;
 					}
@@ -631,35 +671,43 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 			}
 
 			// this part deals with exclusive filters
-			else {
+			else 
+			{
 				ArrayList<Integer> notMineable = new ArrayList<Integer>();
 				notMineable.add(Block.bedrock.blockID);
-				if (filteredIds != null) {
+				if (filteredIds != null) 
+				{
 
-					for (Object id : filteredIds) {
+					for (Object id : filteredIds) 
+					{
 						Integer intID = (Integer) id;
 						notMineable.add(intID);
 					}
-					for (Object id : notMineable) {
+					for (Object id : notMineable) 
+					{
 						Integer intID = (Integer) id;
-						if (intID == blockID) {
+						if (intID == blockID) 
+						{
 							canMine = false;
 							break;
 						}
 					}
 				}
 			}
-		} else {
-			canMine = blockID != Block.bedrock.blockID;
-		}
+		} 
+
+		canMine = canMine && blockID != Block.bedrock.blockID;
+
 		return canMine;
 	}
 
 	private int processBlock(World world, int x, int y, int z) {
 		int blockID = 0;
-		if (world.blockExists(x, y, z)) {
+		if (world.blockExists(x, y, z)) 
+		{
 			blockID = world.getBlockId(x, y, z);
-			if (this.canMine(blockID)) {
+			if (this.canMine(blockID)) 
+			{
 				world.setBlockWithNotify(x, y, z, 0);
 			}
 		}

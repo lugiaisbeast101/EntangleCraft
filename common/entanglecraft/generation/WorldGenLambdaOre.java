@@ -14,20 +14,22 @@ public class WorldGenLambdaOre {
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
-    	int blockToGen = WorldGenFunctions.chooseRandomItem(random, ores);
-    	
-		int i1 = i;
-		int j1 = j;
-		int k1 = k;
-
-        i1 = i + random.nextInt(256) - random.nextInt(256);
-        j1 = j + random.nextInt(16) - random.nextInt(16);
-        k1 = k + random.nextInt(256) - random.nextInt(256);
-	    
-        if (world.getBlockId(i1, j1, k1) != 0 && world.getBlockId(i1, j1, k1) != EntangleCraftBlocks.BlockFObsidian.blockID){
-        	world.setBlockWithNotify(i1, j1, k1,blockToGen);
-			oreGenCount += 1;
-        }
+    	if (random.nextInt(5) == 1)
+    	{
+	    	int blockToGen = WorldGenFunctions.chooseRandomItem(random, ores);
+	    	
+			int i1 = i;
+			int j1 = j;
+			int k1 = k;
+	
+	        i1 = i + random.nextInt(256) - random.nextInt(256);
+	        j1 = j + random.nextInt(16) - random.nextInt(16);
+	        k1 = k + random.nextInt(256) - random.nextInt(256);
+		    
+	        if (world.getBlockId(i1, j1, k1) != 0 && world.getBlockId(i1, j1, k1) != EntangleCraftBlocks.BlockFObsidian.blockID){
+	        	world.setBlockWithNotify(i1, j1, k1,blockToGen);
+	        }
+    	}
     		
     	return true;
     }

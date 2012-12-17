@@ -113,24 +113,17 @@ public class BlockLambdaMiner extends BlockContainer{
 		System.out.println("Lambda Miner: neighbour block changed");
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		TileEntityLambdaMiner teLM = (TileEntityLambdaMiner)te;
-		if(teLM.invController.getChest() == null){
-		if(id == Block.chest.blockID){
-			
-			if (world.getBlockId(x+1, y, z) == id){
-				teLM.invController.setChest(new int[] {x+1,y,z});
+		
+		if(teLM.invController.getChest() == null)
+		{
+			if(id == Block.chest.blockID)
+			{
+				teLM.invController.checkForChest();
+	
 			}
-			else if (world.getBlockId(x-1, y, z) == id){
-				teLM.invController.setChest(new int[] {x-1,y,z});
-			}
-			else if (world.getBlockId(x, y, z+1) == id){
-				teLM.invController.setChest(new int[] {x,y,z+1});
-			}
-			else if (world.getBlockId(x, y, z-1) == id){
-				teLM.invController.setChest(new int[] {x,y,z-1});
-			}
-			else teLM.invController.setChest(null);
 		}
-		}
+		
+		teLM.updateEntity();
 
 	}
 	
