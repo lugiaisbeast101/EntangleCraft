@@ -65,10 +65,23 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	
 	public ArrayList generateLine(int size, int[] start) {
 		ArrayList struct = new ArrayList();
+		int direction = this.blockMetadata;
+		
 		for (int i = 0; i < size; i++) {
 			int x = start[0];
-			x += i;
-			struct.add(new int[] { x, start[1], start[2] });
+			int y = start[1];
+			int z = start[2];
+			
+			if (direction == 5)
+				x += i;
+			else if (direction == 4)
+				x -= i;
+			else if (direction == 3)
+				z += i;
+			else if (direction == 2)
+				z -= i;
+			
+			struct.add(new int[] { x, y, z });
 		}
 		return struct;
 	}
@@ -84,6 +97,12 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	public void generateLayerStructure() {
 		if (!this.worldObj.isRemote) 
 		{
+			int direction = this.blockMetadata;
+			boolean xPlus = direction % 5 == 0;
+			boolean xMinus = direction % 5 == 4;
+			boolean zPlus = direction %3 == 0;
+			boolean zMinus = direction %3 == 2;
+			
 			ArrayList theStruct = new ArrayList();
 			ArrayList structLeft = new ArrayList();
 			ArrayList struct = new ArrayList();
@@ -102,19 +121,19 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 			for (int i = 1; i <= scanLeft; i++) 
 			{
 				ArrayList temp;
-				temp = generateLine(scanForward, new int[] { blockCoords[0] + 1, blockCoords[1], blockCoords[2] - i });
+				temp = generateLine(scanForward, new int[] { blockCoords[0] + (xPlus ? 1 : xMinus ? -1 : zPlus ? i : zMinus ? (i*-1) : 0) , blockCoords[1], blockCoords[2] + (xPlus ? (-1*i) : xMinus ? i : zPlus ? -1 : zMinus ? 1 : 0) });
 				for (Object block : temp) 
 				{
 					structLeft.add((int[]) block);
 				}
 			}
 
-			struct = generateLine(scanForward, new int[] { blockCoords[0] + 1, blockCoords[1], blockCoords[2] });
+			struct = generateLine(scanForward, new int[] { blockCoords[0] + (xPlus ? 1 : xMinus ? -1 : 0), blockCoords[1], blockCoords[2]  + (zPlus ? 1 : zMinus ? -1 : 0) });
 
 			for (int i = 1; i <= scanRight; i++) 
 			{
 				ArrayList temp;
-				temp = generateLine(scanForward, new int[] { blockCoords[0] + 1, blockCoords[1], blockCoords[2] + i });
+				temp = generateLine(scanForward, new int[] { blockCoords[0] + (xPlus ? 1 : xMinus ? -1 : zPlus ? -i : zMinus ? (i) : 0) , blockCoords[1], blockCoords[2] - (xPlus ? (i) : xMinus ? -i : zPlus ? -1 : zMinus ? 1 : 0) });
 				for (Object block : temp) 
 				{
 					structRight.add((int[]) block);

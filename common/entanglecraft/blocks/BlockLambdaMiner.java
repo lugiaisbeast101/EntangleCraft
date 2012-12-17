@@ -6,9 +6,12 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityItem;
+import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
+import net.minecraft.src.MathHelper;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
@@ -31,6 +34,7 @@ public class BlockLambdaMiner extends BlockContainer{
 	
 	public void onBlockAdded(World theWorld, int x, int y, int z){
 		super.onBlockAdded(theWorld, x, y, z);
+		this.setDefaultDirection(theWorld, x, y ,z);
 		TileEntityLambdaMiner te = (TileEntityLambdaMiner)theWorld.getBlockTileEntity(x, y, z);
 		System.out.println("adding a miner at y = " + y);
 		int[] blockCoords = new int[] {x,y,z};
@@ -38,6 +42,69 @@ public class BlockLambdaMiner extends BlockContainer{
 		te.layerToMine = y-1;
 		te.generateLayerStructure(1,new int[] {blockCoords[0]+1,blockCoords[1],blockCoords[2]});
 	}
+	
+    /**
+     * set a blocks direction
+     */
+    private void setDefaultDirection(World par1World, int x, int y, int z)
+    {
+        if (!par1World.isRemote)
+        {
+            int zMinus = par1World.getBlockId(x, y, z - 1);
+            int zPlus = par1World.getBlockId(x, y, z + 1);
+            int xMinus = par1World.getBlockId(x - 1, y, z);
+            int xPlus = par1World.getBlockId(x + 1, y, z);
+            byte directionByte = 3;
+
+            if (Block.opaqueCubeLookup[zMinus] && !Block.opaqueCubeLookup[zPlus])
+            {
+                directionByte = 3;
+            }
+
+            if (Block.opaqueCubeLookup[zPlus] && !Block.opaqueCubeLookup[zMinus])
+            {
+                directionByte = 2;
+            }
+
+            if (Block.opaqueCubeLookup[xMinus] && !Block.opaqueCubeLookup[xPlus])
+            {
+                directionByte = 5;
+            }
+
+            if (Block.opaqueCubeLookup[xPlus] && !Block.opaqueCubeLookup[xMinus])
+            {
+                directionByte = 4;
+            }
+
+            par1World.setBlockMetadataWithNotify(x, y, z, directionByte);
+        }
+    }
+    
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving)
+    {
+        int facing = MathHelper.floor_double((double)(entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+        if (facing == 0)
+        {
+            world.setBlockMetadataWithNotify(x, y, z, 2);
+        }
+
+        if (facing == 1)
+        {
+            world.setBlockMetadataWithNotify(x, y, z, 5);
+        }
+
+        if (facing == 2)
+        {
+            world.setBlockMetadataWithNotify(x, y, z, 3);
+        }
+
+        if (facing == 3)
+        {
+            world.setBlockMetadataWithNotify(x, y, z, 4);
+        }
+    }
+    
 	
 	@Override
 	public void breakBlock(World theWorld, int x,int y, int z, int par5, int par6){
@@ -92,18 +159,25 @@ public class BlockLambdaMiner extends BlockContainer{
     	par5EntityPlayer.openGui(EntangleCraft.instance, 1, par1World, i, j, k);
     	return true;
     }
-	
+    	
 	public int getBlockTextureFromSideAndMetadata(int i, int metaData){
-		if (i == 1){
-			return 17+(6*channel)+(3*metaData);
+		
+		if (i == 1)
+		{
+			return 17+(6*channel);
 		}
-		else if(i == 0){
+		
+		else if(i == 0)
+		{
 			return 16;
 		}
-		else if(i == 5){
-			return 18+(6*channel)+(3*metaData);
+		
+		if(i == metaData)
+		{
+			System.out.println("Tried making face "+ metaData + " the front face");
+			return 18+(6*channel);
 		}
-		else return 19+(6*channel)+(3*metaData);
+		else return 19+(6*channel);
 		
 	}
 	
