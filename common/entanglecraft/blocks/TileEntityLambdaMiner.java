@@ -65,9 +65,10 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	
 	public ArrayList generateLine(int size, int[] start) {
 		ArrayList struct = new ArrayList();
-		int direction = this.blockMetadata;
+		int direction = this.getBlockMetadata();
 		
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) 
+		{
 			int x = start[0];
 			int y = start[1];
 			int z = start[2];
@@ -86,22 +87,14 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		return struct;
 	}
 
-	public void generateLayerStructure(int size, int[] start) {
-		if (!this.worldObj.isRemote) {
-			ArrayList struct = new ArrayList();
-			struct = generateLine(size, start);
-			setLayerStructure(struct);
-		}
-	}
-
 	public void generateLayerStructure() {
 		if (!this.worldObj.isRemote) 
 		{
-			int direction = this.blockMetadata;
-			boolean xPlus = direction % 5 == 0;
-			boolean xMinus = direction % 5 == 4;
-			boolean zPlus = direction %3 == 0;
-			boolean zMinus = direction %3 == 2;
+			int direction = this.getBlockMetadata();
+			boolean xPlus = direction == 5;
+			boolean xMinus = direction == 4;
+			boolean zPlus = direction == 3;
+			boolean zMinus = direction == 2;
 			
 			ArrayList theStruct = new ArrayList();
 			ArrayList structLeft = new ArrayList();
@@ -117,23 +110,26 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					: 0
 					: 0;
 			this.lastStructStackSizes = new int[] { scanLeft, scanForward, scanRight };
-			System.out.println("Last struct set to " + scanLeft + " to the left, " + scanForward + " forward, and " + scanRight + " to the right");
+			
+			int[] coords = new int[] { blockCoords[0] + (xPlus? 1 : xMinus? -1 : 0), blockCoords[1], blockCoords[2] + (zPlus? 1 : zMinus? -1 : 0)};
+			int[][] lr = getLeftAndRightOf(direction);
+			
 			for (int i = 1; i <= scanLeft; i++) 
 			{
 				ArrayList temp;
-				temp = generateLine(scanForward, new int[] { blockCoords[0] + (xPlus ? 1 : xMinus ? -1 : zPlus ? i : zMinus ? (i*-1) : 0) , blockCoords[1], blockCoords[2] + (xPlus ? (-1*i) : xMinus ? i : zPlus ? -1 : zMinus ? 1 : 0) });
+				temp = generateLine(scanForward,new int[] {coords[0] + i*(lr[0][0]), coords[1], coords[2] + i*(lr[0][2])});
 				for (Object block : temp) 
 				{
 					structLeft.add((int[]) block);
 				}
 			}
 
-			struct = generateLine(scanForward, new int[] { blockCoords[0] + (xPlus ? 1 : xMinus ? -1 : 0), blockCoords[1], blockCoords[2]  + (zPlus ? 1 : zMinus ? -1 : 0) });
+			struct = generateLine(scanForward, coords);
 
 			for (int i = 1; i <= scanRight; i++) 
 			{
 				ArrayList temp;
-				temp = generateLine(scanForward, new int[] { blockCoords[0] + (xPlus ? 1 : xMinus ? -1 : zPlus ? -i : zMinus ? (i) : 0) , blockCoords[1], blockCoords[2] - (xPlus ? (i) : xMinus ? -i : zPlus ? -1 : zMinus ? 1 : 0) });
+				temp = generateLine(scanForward, new int[] { coords[0] + i*(lr[1][0]), coords[1], coords[2] + i*(lr[1][2])});
 				for (Object block : temp) 
 				{
 					structRight.add((int[]) block);
@@ -158,6 +154,28 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		}
 	}
 
+	private int[][] getLeftAndRightOf(int direction)
+	{
+		boolean xPlus = direction == 5;
+		boolean xMinus = direction == 4;
+		boolean zPlus = direction == 3;
+		boolean zMinus = direction == 2;
+		int[] l = new int[] {0,0,0};
+		int[] r = new int[] {0,0,0};
+		
+		l[0] = l[0] + (zMinus ? 1 : 0);
+		r[0] = r[0] - (zMinus ? 1 : 0);
+		l[2] = l[2] + (xPlus ? 1 : 0);
+		r[2] = r[2] - (xPlus ? 1 : 0);
+		
+		l[0] = l[0] + (zPlus ? -1 : 0);
+		r[0] = r[0] - (zPlus ? -1 : 0);
+		l[2] = l[2] + (xMinus ? -1 : 0);
+		r[2] = r[2] - (xMinus ? -1 : 0);
+		
+		return new int[][] {l,r};
+	}
+	
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		int shouldLoad = (int) nbt.getShort("shouldLoad");
@@ -460,6 +478,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 	}
 
+	/*
 	private void setMetaData(int i) {
 		int x, y, z;
 		if (this.blockCoords != null) 
@@ -479,7 +498,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		int lightValue = i == 0 ? 0 : 1000;
 		this.worldObj.setLightValue(EnumSkyBlock.Block, x, y, z, lightValue);
 		this.worldObj.setBlockMetadataWithNotify(x, y, z, i);
-	}
+	}*/
 
 	public void setIsMining(boolean a) {
 		if (!this.worldObj.isRemote)

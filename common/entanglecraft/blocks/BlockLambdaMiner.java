@@ -40,7 +40,13 @@ public class BlockLambdaMiner extends BlockContainer{
 		int[] blockCoords = new int[] {x,y,z};
 		te.setBlockCoords(blockCoords);
 		te.layerToMine = y-1;
-		te.generateLayerStructure(1,new int[] {blockCoords[0]+1,blockCoords[1],blockCoords[2]});
+		
+		int direction = te.getBlockMetadata();
+		boolean xPlus = direction == 5;
+		boolean xMinus = direction == 4;
+		boolean zPlus = direction == 3;
+		boolean zMinus = direction == 2;
+		te.generateLayerStructure();
 	}
 	
     /**
@@ -75,7 +81,7 @@ public class BlockLambdaMiner extends BlockContainer{
             {
                 directionByte = 4;
             }
-
+            
             par1World.setBlockMetadataWithNotify(x, y, z, directionByte);
         }
     }
@@ -87,21 +93,25 @@ public class BlockLambdaMiner extends BlockContainer{
         if (facing == 0)
         {
             world.setBlockMetadataWithNotify(x, y, z, 2);
+            System.out.println("metadata of 2");
         }
 
         if (facing == 1)
         {
             world.setBlockMetadataWithNotify(x, y, z, 5);
+            System.out.println("metadata of 5");
         }
 
         if (facing == 2)
         {
             world.setBlockMetadataWithNotify(x, y, z, 3);
+            System.out.println("metadata of 3");
         }
 
         if (facing == 3)
         {
             world.setBlockMetadataWithNotify(x, y, z, 4);
+            System.out.println("metadata of 4");
         }
     }
     
@@ -174,7 +184,6 @@ public class BlockLambdaMiner extends BlockContainer{
 		
 		if(i == metaData)
 		{
-			System.out.println("Tried making face "+ metaData + " the front face");
 			return 18+(6*channel);
 		}
 		else return 19+(6*channel);
