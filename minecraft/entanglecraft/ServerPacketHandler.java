@@ -300,6 +300,8 @@ public class ServerPacketHandler implements IPacketHandler {
 	private boolean shardPickMineBlock(World world, EntityPlayer thePlayer, int x, int y, int z, int side) {
 		
 		int blockID = world.getBlockId(x, y, z);
+
+		int metadata = world.getBlockMetadata(x, y, z);
 		double[] coords = new double[] {x + 0.5D, y + 0.5D, z + 0.5D};
 		ItemStack item = thePlayer.getCurrentEquippedItem();
 		float soundPitch = 1F;
@@ -318,7 +320,7 @@ public class ServerPacketHandler implements IPacketHandler {
 			{
 				TileEntityGenericDestination teGD = (TileEntityGenericDestination)world.getBlockTileEntity(closestDest.blockCoords[0], closestDest.blockCoords[1], closestDest.blockCoords[2]);
 		
-				ItemStack itemStack = InventoryController.getItemStackFromID(blockID);
+				ItemStack itemStack = InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
 				
 				if (itemStack != null)
 				{

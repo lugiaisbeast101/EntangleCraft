@@ -60,7 +60,7 @@ public class InventoryController {
 		return (TileEntityChest) this.tileEntity.worldObj.getBlockTileEntity(chest[0], chest[1], chest[2]);
 	}
 	
-	public static ItemStack getItemStackFromID(int blockID) {
+	public static ItemStack getItemStackFromIDAndMetadata(int blockID, int metadata) {
 		ItemStack result = null;
 		Random rand = new Random();
 		if (blockID == Block.stone.blockID) 
@@ -96,12 +96,13 @@ public class InventoryController {
 		
 		else if (blockID != 0)
 		{
-			result = new ItemStack(Item.itemsList[blockID], 1);
+			Block theBlock = Block.blocksList[blockID];
+			result = new ItemStack(theBlock.idDropped(theBlock.blockID, new Random(), 0), theBlock.quantityDropped(new Random()), theBlock.damageDropped(metadata));
 		}
-
+	
 		return result;
 	}
-	
+			
 	public static int getBlockIDFromItem(int id) {
 		int result = id;
 		if (id == new ItemStack(Item.diamond, 1).itemID) 

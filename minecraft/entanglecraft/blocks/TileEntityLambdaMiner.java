@@ -345,7 +345,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					try {
 						int fieldValue = dataStream.readInt();
 						theField.setInt(this, fieldValue);
-						System.out.println(fieldName + " now equals " + fieldValue);
+						System.out.println(fieldName + " now equals " + fieldValue + " on the client side");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -563,9 +563,16 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					}
 
 					else {
-						EntityItem e = new EntityItem(this.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
-								(double) this.blockCoords[2] + 0.5, itemStack);
-						e.dropItem(itemStack.itemID, itemStack.stackSize);
+						if (itemStack.itemID == -1)
+						{
+							System.out.println(itemStack.getItemName() + " is the bastard culprit");
+						}
+						else
+						{
+							EntityItem e = new EntityItem(this.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
+									(double) this.blockCoords[2] + 0.5, itemStack);
+							e.dropItem(itemStack.itemID, itemStack.stackSize);
+						}
 					}
 
 				}
@@ -588,11 +595,12 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				int blockID = processBlock(this.worldObj, blockToMine[0], this.getLayerToMine(), blockToMine[2]);
 				if (blockID != 0) 
 				{
-					ItemStack result = invController.getItemStackFromID(blockID);
+					int metadata = this.worldObj.getBlockMetadata(blockToMine[0], blockToMine[1], blockToMine[2]);
+					ItemStack result = invController.getItemStackFromIDAndMetadata(blockID, metadata);
 
 					if (result != null) 
 					{
-						invController.addStackToInventory(inv, invController.getItemStackFromID(blockID));
+						invController.addStackToInventory(inv, invController.getItemStackFromIDAndMetadata(blockID, metadata));
 						DistanceHandler.subtractDistance(channel, this.blockCost);
 					}
 				}
@@ -628,7 +636,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				} else if (this.lMItemStacks[3].itemID == new ItemStack(EntangleCraftItems.ItemSuperInductionCircuit, 1).itemID) {
 					setSpeedMultiplier(5);
 				}
-			} else this.speedMultiplier = 1;
+			} else setSpeedMultiplier(1);
 
 			// Handling the filter slots
 			this.filteredIds = new ArrayList();
@@ -669,7 +677,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	public void setSpeedMultiplier(int i) {
 		if (!worldObj.isRemote) {
 			this.speedMultiplier = i;
-			System.out.println("speed multiplier is now " + i);
+			System.out.println("speed multiplier is now " + i + " on the server side");
 			ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityLambdaMiner", "speedMultiplier");
 		}
 	}
