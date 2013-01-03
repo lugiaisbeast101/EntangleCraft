@@ -4,13 +4,13 @@ import java.text.DecimalFormat;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.Container;
-import net.minecraft.src.ContainerFurnace;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiContainer;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.StatCollector;
-import net.minecraft.src.TileEntityFurnace;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerFurnace;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.StatCollector;
+import net.minecraft.tileentity.TileEntityFurnace;
 import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
 import entanglecraft.blocks.BlockLambdaMiner;
@@ -35,7 +35,7 @@ public class GuiLambdaMiner extends GuiContainer {
 		this.fontRenderer.drawString(StatCollector.translateToLocal("Energy Level = " + EntangleCraft.dhInstance.getStringDistance(lMInventory.channel)), 8,
 				59, 4210752);
 		this.fontRenderer.drawString(StatCollector.translateToLocal("-" + this.lMInventory.blockCost), 30, 44, 4210752);
-		this.fontRenderer.drawString(StatCollector.translateToLocal("Y = " + this.lMInventory.layerToMine), 5, 6, 4210752);
+		this.fontRenderer.drawString(StatCollector.translateToLocal("Y = " + this.lMInventory.getLayerToMine()), 5, 6, 4210752);
 	}
 
 	@Override

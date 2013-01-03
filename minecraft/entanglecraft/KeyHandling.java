@@ -4,9 +4,9 @@ import java.util.EnumSet;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.src.ModLoader;
 import entanglecraft.items.EntangleCraftItems;
 import entanglecraft.items.IChanneled;

@@ -4,12 +4,12 @@ import java.text.DecimalFormat;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.src.Container;
-import net.minecraft.src.ContainerFurnace;
-import net.minecraft.src.GuiContainer;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.StatCollector;
-import net.minecraft.src.TileEntityFurnace;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerFurnace;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.StatCollector;
+import net.minecraft.tileentity.TileEntityFurnace;
 import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
 import entanglecraft.blocks.BlockGenericDestination;
@@ -31,7 +31,7 @@ public class GuiGenericDestination extends GuiContainer {
 
 	private void getThisName() {
 		int x = gdInventory.channel;
-		int GLDChannel = ((BlockGenericDestination) EntangleCraftBlocks.BlockGenericDestination).channel;
+		int GLDChannel = ((BlockGenericDestination) EntangleCraftBlocks.BlockGLD).channel;
 		int RLDChannel = ((BlockGenericDestination) EntangleCraftBlocks.BlockRLD).channel;
 		int YLDChannel = ((BlockGenericDestination) EntangleCraftBlocks.BlockYLD).channel;
 		int BLDChannel = ((BlockGenericDestination) EntangleCraftBlocks.BlockBLD).channel;

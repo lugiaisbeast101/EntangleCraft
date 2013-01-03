@@ -5,12 +5,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.INetworkManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.INetworkManager;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.Packet250CustomPayload;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import entanglecraft.blocks.TileEntityGenericDestination;
 import entanglecraft.blocks.TileEntityLambdaMiner;
 import entanglecraft.gui.EnumGui;
@@ -79,16 +79,18 @@ public class ClientPacketHandler implements IPacketHandler {
 	}
 
 	public void playSoundFromPacket(INetworkManager network, DataInputStream dataStream) {
-		try {
+		try 
+		{
 			String soundName = dataStream.readUTF();
 			float vol = dataStream.readFloat();
 			float pitch = dataStream.readFloat();
 			double posX = dataStream.readDouble();
 			double posY = dataStream.readDouble();
 			double posZ = dataStream.readDouble();
-			ModLoader.getMinecraftInstance().theWorld.playSound(posX, posY, posZ, soundName, vol, pitch);
+			ModLoader.getMinecraftInstance().theWorld.playSound(posX, posY, posZ, soundName, vol, pitch, true);
 			System.out.println("Sound packet recieved");
-		} catch (Exception e) {
+		} catch (Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}
@@ -127,11 +129,35 @@ public class ClientPacketHandler implements IPacketHandler {
 		if (shouldPlayPlayerSound)
 			shouldPlayPlayerSound = EntangleCraft.getDistance(thisPlayerPos, playerPos) < 30.0D;
 		if (shouldPlayPlayerSound) {
-			world.playSound(player.posX, player.posY, player.posZ, "teleport", world.rand.nextFloat() * 0.2F + 0.3F, world.rand.nextFloat() * 0.2F + 0.8F);
+			world.playSound(player.posX, player.posY, player.posZ, "teleport", world.rand.nextFloat() * 0.2F + 0.3F, world.rand.nextFloat() * 0.2F + 0.8F, true);
 		}
 		if ((shouldPlayDestSound) && (EntangleCraft.getDistance(playerPos, dest) > 10.0D)) {
-			world.playSound(dest[0], dest[1], dest[2], "teleport", world.rand.nextFloat() * 0.2F + 0.3F, world.rand.nextFloat() * 0.2F + 0.8F);
+			world.playSound(dest[0], dest[1], dest[2], "teleport", world.rand.nextFloat() * 0.2F + 0.3F, world.rand.nextFloat() * 0.2F + 0.8F, true);
 		}
+	}
+	
+	public void createExplosionFromPacket(INetworkManager network, DataInputStream data) {
+		
+		try
+		{
+			String playerUsername = data.readUTF();
+			double x = data.readDouble();
+			double y = data.readDouble();
+			double z = data.readDouble();
+			float size = data.readFloat();
+			boolean isSmokey = data.readBoolean();
+			
+			World theWorld = ModLoader.getMinecraftInstance().theWorld;
+			EntityPlayer thePlayer = theWorld.getPlayerEntityByName(playerUsername);
+			theWorld.createExplosion(thePlayer, x, y, z, size, isSmokey);
+			
+		}
+		
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 
 	public static void sendDeviceToggle() {
@@ -181,7 +207,6 @@ public class ClientPacketHandler implements IPacketHandler {
 	@Override
 	public void onPacketData(INetworkManager network, Packet250CustomPayload packet, Player player) {
 		EntityPlayer thePlayer = (EntityPlayer) player;
-		
 		//thePlayer.addChatMessage("CLIENT SIDE PACKET");
 		DataInputStream dataStream = new DataInputStream(new java.io.ByteArrayInputStream(packet.data));
 		int task = -1;
@@ -203,5 +228,7 @@ public class ClientPacketHandler implements IPacketHandler {
 			distanceHandlerUpdate(network, dataStream);
 		else if (task == 4)
 			spawnParticleFromPacket(network, dataStream);
+		else if (task == 5)
+			createExplosionFromPacket(network, dataStream);
 	}
 }
