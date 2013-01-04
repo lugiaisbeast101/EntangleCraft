@@ -34,14 +34,17 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	public int[] blockCoords = new int[3];
 	public double[] destinationCoords = new double[3];
 	
+	private final int DEFAULT_SPEED_MULTIPLIER = 1;
+	private final int TRANSFORM_COST = 32;
+	private final int TRANSFORM_SLOT = 1;
+	
 	public int gdProcessTime = 0;
 	public int teleportsEarned = 0;
 	public Destination destination;
 	public int channel = 0;
-	public int speedMultiplier = 1;
+	public int speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
 	private ArrayList validStacks = new ArrayList();
 	private String beepSound = "beep";
-	private int teleportKbzCost = 32;
 	public InventoryController invController;
 
 	public TileEntityGenericDestination() {
@@ -222,10 +225,9 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 
 	public void updateEntity() {
 		super.updateEntity();
-		boolean aBoolean = false;
+		boolean smelted = false;
 
 		this.transform();
-		this.reverseTransform();
 		if (canSmelt()) {
 			++this.gdProcessTime;
 			int goal = 200 / this.speedMultiplier;
@@ -241,7 +243,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 							(double) this.destinationCoords[2], this.beepSound, this.worldObj.rand.nextFloat() * 0.05F + 0.02F,
 							(((float) this.speedMultiplier) / 16.0F) * 0.4F + 0.6F, true);
 					
-					aBoolean = true;
+					smelted = true;
 				}
 			}
 			
@@ -249,37 +251,47 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 			this.gdProcessTime = 0;
 		}
 
-		if (aBoolean) {
+		if (smelted) {
 			this.onInventoryChanged();
 		}
 	}
 
 	public boolean canTransform() {
-		boolean canTransform = false;
-		if (!this.worldObj.isRemote) {
-			canTransform = this.teleportsEarned > 0;
-			canTransform = canTransform && this.gdItemStacks[1] != null;
-			if (canTransform) {
-				canTransform = canTransform && this.gdItemStacks[1].itemID == new ItemStack(EntangleCraftItems.ItemTransformer, 1).itemID;
-				canTransform = canTransform && this.gdItemStacks[1].stackSize <= this.teleportsEarned;
-			} else
-				canTransform = false;
+		boolean canTransform = !this.worldObj.isRemote;
+		boolean standardTransform; // Standard or reverse trasnform?
+		
+		ItemStack transformer = this.gdItemStacks[this.TRANSFORM_SLOT];
+		canTransform =  canTransform && transformer != null;
+		canTransform = canTransform && 
+				(transformer.itemID == new ItemStack(EntangleCraftItems.ItemTransformer,1).itemID
+					|| transformer.itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer,1).itemID);
+		
+		if (canTransform)
+		{
+			standardTransform = transformer.itemID == new ItemStack(EntangleCraftItems.ItemTransformer,1).itemID;
+			
+			if (standardTransform) 
+			{
+				canTransform = canTransform && this.teleportsEarned > 0;
+				if (canTransform) 
+				{
+					canTransform = canTransform && transformer.itemID == new ItemStack(EntangleCraftItems.ItemTransformer, 1).itemID;
+					canTransform = canTransform && transformer.stackSize <= this.teleportsEarned;
+				} 
+			}
+			
+			else 
+			{
+				canTransform = canTransform && this.teleportsEarned < 1024;
+				if (canTransform) {
+					canTransform = canTransform && EntangleCraft.dhInstance.getDistance(this.channel) >= this.TRANSFORM_COST;
+					canTransform = canTransform && this.gdItemStacks[1].itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer, 1).itemID;
+					canTransform = canTransform
+							&& EntangleCraft.dhInstance.getDistance(this.channel) >= this.TRANSFORM_COST * this.gdItemStacks[1].stackSize;
+				} 
+			}
 		}
 		return canTransform;
-	}
-
-	public boolean canReverseTransform() {
-		boolean canReverseTransform = EntangleCraft.dhInstance.getDistance(this.channel) >= this.teleportKbzCost;
-		canReverseTransform = canReverseTransform && this.teleportsEarned < 1024;
-		canReverseTransform = canReverseTransform && this.gdItemStacks[1] != null;
-		if (canReverseTransform) {
-			canReverseTransform = canReverseTransform && this.gdItemStacks[1].itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer, 1).itemID;
-			canReverseTransform = canReverseTransform
-					&& EntangleCraft.dhInstance.getDistance(this.channel) >= this.teleportKbzCost * this.gdItemStacks[1].stackSize;
-		} else
-			canReverseTransform = false;
-
-		return canReverseTransform;
 	}
 
 	public void smeltItem() {
@@ -300,22 +312,22 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	}
 
 	public void transform() {
-
-		if (canTransform()) {
-			int transformMultiplier = this.gdItemStacks[1].stackSize;
-
-			this.changeTeleportsEarned(transformMultiplier * -1);
-			EntangleCraft.dhInstance.addToDistance(this.channel, transformMultiplier * 32);
-		}
-	}
-
-	public void reverseTransform() {
-		if (canReverseTransform()) {
-			int transformMultiplier = this.gdItemStacks[1].stackSize;
-			this.changeTeleportsEarned(transformMultiplier * 1);
-
-			EntangleCraft.dhInstance.subtractDistance(this.channel, transformMultiplier * this.teleportKbzCost);
-
+		
+		if (canTransform())
+		{
+			int transformMultiplier = this.gdItemStacks[TRANSFORM_SLOT].stackSize;
+			
+			if (this.gdItemStacks[TRANSFORM_SLOT].itemID == new ItemStack(EntangleCraftItems.ItemTransformer,1).itemID) 
+			{
+				this.changeTeleportsEarned(transformMultiplier * -1);
+				EntangleCraft.dhInstance.addToDistance(this.channel, transformMultiplier * this.TRANSFORM_COST);
+			}
+			
+			else
+			{
+				this.changeTeleportsEarned(transformMultiplier * 1);
+				EntangleCraft.dhInstance.subtractDistance(this.channel, transformMultiplier * this.TRANSFORM_COST);
+			}
 		}
 	}
 

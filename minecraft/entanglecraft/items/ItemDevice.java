@@ -13,8 +13,8 @@ import entanglecraft.EntangleCraft;
 
 public class ItemDevice extends ItemChanneled{
 	
-	public ItemDevice(int par1) {
-		super(par1);
+	public ItemDevice(int itemID) {
+		super(itemID);
 	}
 	
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)

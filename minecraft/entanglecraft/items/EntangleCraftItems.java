@@ -30,10 +30,10 @@ public class EntangleCraftItems {
 	  public static final Item ItemExclusiveFilter = new ItemLambda(8618).setIconIndex(98).setItemName("ItemExclusiveFilter").setMaxStackSize(1);
 	  public static final Item ItemSuperInductionCircuit = new ItemLambda(8619).setIconIndex(99).setItemName("ItemSuperInductionCircuit").setMaxStackSize(1);
 	  public static final Item ItemTPScroll = new ItemShard(8620,3).setIconIndex(101).setItemName("ItemTPScroll").setMaxDamage(1);
-	  public static final Item ItemShardPickG = new ItemShardPick(8621).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(1).setMaxDamage(0);
-	  public static final Item ItemShardPickR = new ItemShardPick(8622).setIconIndex(103).setItemName("ItemShardPickR").setMaxDamage(1).setMaxDamage(0);
-	  public static final Item ItemShardPickY = new ItemShardPick(8623).setIconIndex(104).setItemName("ItemShardPickY").setMaxDamage(1).setMaxDamage(0);
-	  public static final Item ItemShardPickB = new ItemShardPick(8624).setIconIndex(105).setItemName("ItemShardPickB").setMaxDamage(1).setMaxDamage(0);
+	  public static final Item ItemShardPickG = new ItemShardPick(8621).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(0);
+	  public static final Item ItemShardPickR = new ItemShardPick(8622).setIconIndex(103).setItemName("ItemShardPickR").setMaxDamage(0);
+	  public static final Item ItemShardPickY = new ItemShardPick(8623).setIconIndex(104).setItemName("ItemShardPickY").setMaxDamage(0);
+	  public static final Item ItemShardPickB = new ItemShardPick(8624).setIconIndex(105).setItemName("ItemShardPickB").setMaxDamage(0);
 	  
 public static void addItems(){
 	itemInitializing();
