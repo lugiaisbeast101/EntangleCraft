@@ -78,7 +78,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 		layerToMine = layer;
 		//ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityLambdaMiner", "layerToMine");
-		System.out.println("layerToMine now equal to " + layerToMine);
+		//System.out.println("layerToMine now equal to " + layerToMine);
 	}
 
 	public int getLayerToMine() {
@@ -112,7 +112,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	public void generateLayerStructure() {
 		if (!this.worldObj.isRemote) 
 		{
-			System.out.println("Generate layer structure was called");
+			//System.out.println("Generate layer structure was called");
 			
 			int direction = this.getBlockMetadata();
 			direction = ((direction -2)%4 + 2);
@@ -208,7 +208,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 		if (shouldLoad == -1) 
 		{
-			System.out.println("Read a lambdaMiner NBT");
 			this.channel = (int) nbt.getShort("channel");
 			setLayerToMine(nbt.getShort("layerToMine"));
 			
@@ -243,7 +242,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		System.out.println("Wrote a lambdaMiner to NBT");
 		nbt.setShort("shouldLoad", (short) -1);
 		nbt.setShort("channel", (short) this.channel);
 		nbt.setShort("layerToMine", (short) this.getLayerToMine());
@@ -345,7 +343,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					try {
 						int fieldValue = dataStream.readInt();
 						theField.setInt(this, fieldValue);
-						System.out.println(fieldName + " now equals " + fieldValue + " on the client side");
+						//System.out.println(fieldName + " now equals " + fieldValue + " on the client side");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

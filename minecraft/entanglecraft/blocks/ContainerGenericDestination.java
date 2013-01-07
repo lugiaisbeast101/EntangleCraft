@@ -45,6 +45,7 @@ public class ContainerGenericDestination extends Container{
 	        return this.genericDestination.isUseableByPlayer(par1EntityPlayer);
 	    }
 
+	
 	/**
 	 * Called to transfer a stack from one inventory to the other eg. when shift
 	 * clicking.
@@ -69,18 +70,40 @@ public class ContainerGenericDestination extends Container{
 			
 			else if (slotNumber >= 2 && slotNumber < 38)
 			{
-				if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemTransformer).itemID || itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer).itemID)
+				ItemStack powerSlot = ((Slot)inventorySlots.get(0)).getStack();
+				ItemStack transformerSlot = ((Slot)inventorySlots.get(1)).getStack();
+				ItemStack[] destinationSlots = new ItemStack[] {powerSlot,transformerSlot};
+				
+				boolean itemIsTransformer = itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemTransformer).itemID 
+						|| itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemReverseTransformer).itemID;
+				
+				int i = itemIsTransformer ? 1 : 0;
+				int difference;
+				
+				ItemStack workingCopy = itemstack1.copy();
+				ItemStack workingCopy1 = workingCopy.copy();
+				
+				if (destinationSlots[i] == null || destinationSlots[i].stackSize < 16)
 				{
-					if (!mergeItemStack(itemstack1, 1,2, false))
+					difference = destinationSlots[i] == null ? 16 : 16 - destinationSlots[i].stackSize;
+					
+					if (workingCopy.stackSize > difference)
 					{
-						if (!mergeItemStack(itemstack1,0,2,false))
-						{
-						return null;
-						}
+						workingCopy = workingCopy1.splitStack(difference);
 					}
+					
+					else workingCopy1.stackSize = 0;
+					
+					if (!mergeItemStack(workingCopy,i,2,false))
+					{
+						return null;
+					}
+					
+					else itemstack1.stackSize = workingCopy1.stackSize;
+			
 				}
-								
-				else if (!mergeItemStack(itemstack1, 0,2, false))
+				
+				else 
 				{
 					return null;
 				}
@@ -101,7 +124,6 @@ public class ContainerGenericDestination extends Container{
 			
 			
 		}
-
 		return itemstack;
 	}   
 	
