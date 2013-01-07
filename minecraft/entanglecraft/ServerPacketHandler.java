@@ -315,41 +315,48 @@ public class ServerPacketHandler implements IPacketHandler {
 			int channel = ((ItemShardPick)item.getItem()).channel;
 			
 			Destination closestDest = EntangleCraft.closestDestToCoord(coords, EntangleCraft.channelDests[channel]);
-			
+		
 			if (closestDest != null)
 			{
-				TileEntityGenericDestination teGD = (TileEntityGenericDestination)world.getBlockTileEntity(closestDest.blockCoords[0], closestDest.blockCoords[1], closestDest.blockCoords[2]);
-		
-				ItemStack itemStack = InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
+				//double[] doubleCoords = new double[] {(double)x,(double)y,(double)z};
+				//double cost = DistanceHandler.calculate3dDistance(doubleCoords, closestDest.destinationCoords);
 				
-				if (itemStack != null)
-				{
-					boolean hasChest = true;
+				//if (DistanceHandler.getDistance(channel) >= cost)
+				//{
+					TileEntityGenericDestination teGD = (TileEntityGenericDestination)world.getBlockTileEntity(closestDest.blockCoords[0], closestDest.blockCoords[1], closestDest.blockCoords[2]);
+			
+					ItemStack itemStack = InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
 					
-					hasChest = hasChest && teGD.invController != null;
-					if (hasChest)
+					if (itemStack != null)
 					{
-						teGD.invController.checkForChest();
-						hasChest = hasChest && teGD.invController.getChest() != null;					
+						boolean hasChest = true;
+						
+						hasChest = hasChest && teGD.invController != null;
+						if (hasChest)
+						{
+							teGD.invController.checkForChest();
+							hasChest = hasChest && teGD.invController.getChest() != null;					
+						}
+						if (hasChest)
+						{
+							teGD.invController.addStackToInventory(teGD.invController.getTileEntityChest(), itemStack);
+						}
+						
+						else
+						{
+							EntityItem e = new EntityItem(teGD.worldObj, (double) teGD.blockCoords[0] + 0.5, (double) teGD.blockCoords[1] + 1.5,
+									(double) teGD.blockCoords[2] + 0.5, itemStack);
+							e.dropItem(itemStack.itemID, itemStack.stackSize);
+						}
+						
+						
+						soundPitch = teGD.teleportsEarned < 16 ? 0.8F + (0.2F * (teGD.teleportsEarned/16F)) : soundPitch;
+						LambdaSoundHandler.playSound(world, coords, "shardMineProcess", world.rand.nextFloat() * 0.1F + 0.9F, soundPitch);
+						//DistanceHandler.subtractDistance(channel, cost);
+						teGD.changeTeleportsEarned(-1);
+						world.setBlockWithNotify(x, y, z, 0);
 					}
-					if (hasChest)
-					{
-						teGD.invController.addStackToInventory(teGD.invController.getTileEntityChest(), itemStack);
-					}
-					
-					else
-					{
-						EntityItem e = new EntityItem(teGD.worldObj, (double) teGD.blockCoords[0] + 0.5, (double) teGD.blockCoords[1] + 1.5,
-								(double) teGD.blockCoords[2] + 0.5, itemStack);
-						e.dropItem(itemStack.itemID, itemStack.stackSize);
-					}
-					
-					
-					soundPitch = teGD.teleportsEarned < 16 ? 0.8F + (0.2F * (teGD.teleportsEarned/16F)) : soundPitch;
-					LambdaSoundHandler.playSound(world, coords, "shardMineProcess", world.rand.nextFloat() * 0.1F + 0.9F, soundPitch);
-					teGD.changeTeleportsEarned(-1);
-					world.setBlockWithNotify(x, y, z, 0);
-				}
+				//}
 			}
 		}
 		return true;

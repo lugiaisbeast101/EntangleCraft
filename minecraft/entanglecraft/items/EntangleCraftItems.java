@@ -93,6 +93,10 @@ public static void addItems(){
     GameRegistry.addShapelessRecipe(new ItemStack(ItemBlueShard,1), new Object[]{ItemFrShard,new ItemStack(Item.dyePowder,1,4)});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemImbuedShard), new Object[]{ItemYelShard,ItemBlueShard,ItemRedShard});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemTPScroll,8), new Object[]{Item.enderPearl,Item.spiderEye,Item.gunpowder,Item.bone,Item.paper});
+    GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickG), new Object[] {Item.pickaxeDiamond, ItemDeviceG});
+    GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickR), new Object[] {Item.pickaxeDiamond, ItemDeviceR});
+    GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickY), new Object[] {Item.pickaxeDiamond, ItemDeviceY});
+    GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickB), new Object[] {Item.pickaxeDiamond, ItemDeviceB});
 }
 
 private static void itemInitializing()

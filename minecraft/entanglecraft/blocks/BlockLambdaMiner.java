@@ -8,6 +8,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.item.ItemStack;
 import net.minecraft.block.material.Material;
@@ -58,6 +59,7 @@ public class BlockLambdaMiner extends BlockContainer{
 		
 		int currentMetadata = world.getBlockMetadata(x, y, z);
 		int newMetadata = (((currentMetadata-2)%4)+2);
+		int newLightValue = isActive ? 100 : 0;
 		newMetadata = isActive ? newMetadata + 4 : newMetadata;
 		
 		TileEntityLambdaMiner teLM = (TileEntityLambdaMiner)world.getBlockTileEntity(x, y, z);

@@ -97,18 +97,20 @@ public class EntangleCraft implements IConnectionHandler {
 		
 		double minDistance;
 		Iterator iterator;
-		if (dests.size() != 0) {
-			
+		if (dests.size() != 0) 
+		{
 			destination = (Destination) dests.get(0);
 			minDistance = getDistance(coords,
 					destination.destinationCoords);
 
-			for (iterator = dests.iterator(); iterator.hasNext();) {
+			for (iterator = dests.iterator(); iterator.hasNext();) 
+			{
 				Object points = iterator.next();
 				Destination newPoints = (Destination) points;
 				double newDistance = getDistance(coords,
 						newPoints.destinationCoords);
-				if (newDistance < minDistance) {
+				if (newDistance < minDistance) 
+				{
 					minDistance = newDistance;
 					destination = newPoints;
 				}
@@ -196,31 +198,6 @@ public class EntangleCraft implements IConnectionHandler {
 		return Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0) + (z - z0)
 				* (z - z0));
 	}
-
-	/*
-	public void keyboardEvent(KeyBinding event) {
-		if (ModLoader.getMinecraftInstance().theWorld == null)
-			return;
-		if (ModLoader.getMinecraftInstance().currentScreen != null)
-			return;
-		try {
-			ItemStack itemInUse = ModLoader.getMinecraftInstance().thePlayer
-					.getCurrentEquippedItem();
-			if (((itemInUse.getItem() instanceof ItemChanneled))
-					&& (event == incrementDeviceChannel)) {
-				InventoryPlayer inv = ModLoader.getMinecraftInstance().thePlayer.inventory;
-				int x = itemInUse.stackSize;
-				inv.setInventorySlotContents(inv.currentItem, new ItemStack(
-						((ItemDevice) itemInUse.getItem()).incrementChannel(),
-						x));
-				ClientPacketHandler.sendDeviceToggle();
-				System.out.println("Changed Channel");
-			}
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
 
 	@Override
 	public void playerLoggedIn(Player player, NetHandler netHandler,

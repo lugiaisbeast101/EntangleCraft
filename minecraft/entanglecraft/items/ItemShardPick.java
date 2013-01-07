@@ -2,6 +2,7 @@ package entanglecraft.items;
 
 import entanglecraft.ClientPacketHandler;
 import entanglecraft.Destination;
+import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
 import entanglecraft.InventoryController;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
@@ -30,8 +31,8 @@ public class ItemShardPick extends ItemShardTool{
 		if (world.blockExists(x, y, z) && !world.blockHasTileEntity(x, y, z))	
 		{
 			System.out.println("Sent a shard spell from itemShardPick\n");
-			ClientPacketHandler.sendShardSpell(x, y, z, side, 5);
 			
+			ClientPacketHandler.sendShardSpell(x, y, z, side, 5);
 			minedBlock = true;
 		}
 		return minedBlock;	

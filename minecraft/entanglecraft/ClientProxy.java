@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	public File getWorldSaveDir(World world) {
-		File workingDir = new File(".\\\\saves\\" + world.getWorldInfo().getWorldName() + "\\");
+		File workingDir = new File(".\\\\saves\\" + world.getWorldInfo().getWorldName() + world.getWorldInfo().getSeed() + "\\");
 		return workingDir;
 	}
 
