@@ -79,7 +79,10 @@ public class ContainerLambdaMiner extends Container{
 				else if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemInductionCircuit).itemID || itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemSuperInductionCircuit).itemID){
 					if (!mergeItemStack(itemstack1,3,4,false)) return null;
 				}
-				else if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemInclusiveFilter).itemID || itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemExclusiveFilter).itemID){
+				else if (itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemInclusiveFilter).itemID 
+						|| itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemExclusiveFilter).itemID
+						|| itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemDestroyFilter).itemID
+						|| itemstack1.itemID == new ItemStack(EntangleCraftItems.ItemDontDestroyFilter).itemID){
 					if (!mergeItemStack(itemstack1,4,5,false)) return null;
 				}
 				else{

@@ -40,7 +40,8 @@ public class LambdaSoundHandler{
 			"closerAgainFive.wav",
 			"closerAgainSix.wav",
 			"foundIt.wav",
-			"shardMineProcess.wav"
+			"shardMineProcess.wav",
+			"destroyProcess.wav"
 		};
 		for (int i = 0; i < soundFiles.length; i++)
 		{

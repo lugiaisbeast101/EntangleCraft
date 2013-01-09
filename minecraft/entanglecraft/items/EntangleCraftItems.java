@@ -28,6 +28,8 @@ public class EntangleCraftItems {
 	  public static final Item ItemCircuit = new ItemLambda(8616).setIconIndex(96).setItemName("ItemCircuit");
 	  public static final Item ItemInclusiveFilter = new ItemLambda(8617).setIconIndex(97).setItemName("ItemInclusiveFilter").setMaxStackSize(1);
 	  public static final Item ItemExclusiveFilter = new ItemLambda(8618).setIconIndex(98).setItemName("ItemExclusiveFilter").setMaxStackSize(1);
+	  public static final Item ItemDestroyFilter = new ItemLambda(8625).setIconIndex(97+16).setItemName("ItemDestroyFilter").setMaxStackSize(1);
+	  public static final Item ItemDontDestroyFilter = new ItemLambda(8626).setIconIndex(97+17).setItemName("ItemDontDestroyFilter").setMaxStackSize(1);
 	  public static final Item ItemSuperInductionCircuit = new ItemLambda(8619).setIconIndex(99).setItemName("ItemSuperInductionCircuit").setMaxStackSize(1);
 	  public static final Item ItemTPScroll = new ItemShard(8620,3).setIconIndex(101).setItemName("ItemTPScroll").setMaxDamage(1);
 	  public static final Item ItemShardPickG = new ItemShardPick(8621).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(0);
@@ -58,6 +60,8 @@ public static void addItems(){
     LanguageRegistry.addName(ItemCircuit,"Circuit");
     LanguageRegistry.addName(ItemInclusiveFilter,"'Mine only x' Filter Device");
     LanguageRegistry.addName(ItemExclusiveFilter, "Exclusive Filter Device");
+    LanguageRegistry.addName(ItemDestroyFilter, "'Destroy x' Filter Device");
+    LanguageRegistry.addName(ItemDontDestroyFilter, "'Do not destroy x' Filter Device");
     LanguageRegistry.addName(ItemTPScroll, "TP Scroll");
     LanguageRegistry.addName(ItemShardPickG, "Displacement Pick : G");
     LanguageRegistry.addName(ItemShardPickR, "Displacement Pick : R");
@@ -86,6 +90,8 @@ public static void addItems(){
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockBLM,1), new Object[] {"FCF","TLT","FDF",Character.valueOf('D'), ItemShardPickB, Character.valueOf('F'), EntangleCraftBlocks.BlockFObsidian,Character.valueOf('L'), ItemLambdaCore, Character.valueOf('C'), ItemCircuit, Character.valueOf('T'), ItemTransmitter});
     GameRegistry.addRecipe(new ItemStack(ItemInclusiveFilter,1), new Object[] {"GTG","GCG","GTG", Character.valueOf('G'), Block.glass, Character.valueOf('C'),ItemCircuit,Character.valueOf('T'), ItemTransmitter});
     GameRegistry.addRecipe(new ItemStack(ItemExclusiveFilter,1), new Object[] {"GGG","TCT","GGG", Character.valueOf('G'), Block.glass, Character.valueOf('C'),ItemCircuit,Character.valueOf('T'), ItemTransmitter});
+    GameRegistry.addRecipe(new ItemStack(ItemDestroyFilter,1), new Object[] {"GTG","GCG","GRG", Character.valueOf('G'), Block.glass, Character.valueOf('C'), ItemCircuit,Character.valueOf('T'), ItemTransmitter, Character.valueOf('R'), Item.redstone});
+    GameRegistry.addRecipe(new ItemStack(ItemDestroyFilter,1), new Object[] {"GRG","GCG","GTG", Character.valueOf('G'), Block.glass, Character.valueOf('C'), ItemCircuit,Character.valueOf('T'), ItemTransmitter, Character.valueOf('R'), Item.redstone});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemFrShard,1), new Object[]{Block.obsidian}); // THIS RECIPE IS TEMPORARY, SHOULD BE BlockFObsidian AFTER WORLD GENEREATION RE-IMPLEMENTED AND SHOULD GRANT 8 INSTEAD OF 1
     GameRegistry.addShapelessRecipe(new ItemStack(ItemRedShard,1), new Object[]{ItemFrShard,Item.redstone});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemYelShard,1), new Object[]{ItemFrShard,Item.lightStoneDust});

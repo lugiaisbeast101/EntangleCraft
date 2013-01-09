@@ -2,6 +2,7 @@ package entanglecraft.blocks;
 
 import java.io.DataInputStream;
 import java.util.ArrayList;
+import java.util.Random;
 import java.lang.reflect.Field;
 
 import net.minecraft.block.Block;
@@ -43,6 +44,10 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	private ArrayList<Integer> filteredIds;
 	private ItemStack[] lMItemStacks = new ItemStack[11];
 	private int speedMultiplier = 1;
+	private String minerSound = "minerFail";
+	
+	private final int FILTER_SLOT = 10;
+	private final int DEFAULT_COST = 16;
 	
 	public InventoryController invController;
 	
@@ -304,9 +309,18 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 	private boolean isFiltering() {
 		boolean isFiltering = false;
+		if (this.lMItemStacks[FILTER_SLOT] != null) {
+			isFiltering = this.lMItemStacks[FILTER_SLOT].itemID == new ItemStack(EntangleCraftItems.ItemInclusiveFilter, 1).itemID
+					|| this.lMItemStacks[FILTER_SLOT].itemID == new ItemStack(EntangleCraftItems.ItemExclusiveFilter, 1).itemID;
+		}
+		return isFiltering;
+	}
+	
+	private boolean isDestroyFiltering() {
+		boolean isFiltering = false;
 		if (this.lMItemStacks[10] != null) {
-			isFiltering = this.lMItemStacks[10].itemID == new ItemStack(EntangleCraftItems.ItemInclusiveFilter, 1).itemID
-					|| this.lMItemStacks[10].itemID == new ItemStack(EntangleCraftItems.ItemExclusiveFilter, 1).itemID;
+			isFiltering = this.lMItemStacks[FILTER_SLOT].itemID == new ItemStack(EntangleCraftItems.ItemDestroyFilter, 1).itemID
+					|| this.lMItemStacks[FILTER_SLOT].itemID == new ItemStack(EntangleCraftItems.ItemDontDestroyFilter, 1).itemID;
 		}
 		return isFiltering;
 	}
@@ -536,7 +550,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 	private void smeltItem() {
 		if (!worldObj.isRemote) {
-			String minerSound = "minerFail";
+			minerSound = "minerFail";
 			float minerSoundPitch = 1F - (((float) this.blockCoords[1] - (float) this.getLayerToMine()) / (float) this.blockCoords[1]) / 4F;
 			if (minerSoundPitch > 1F)
 				minerSoundPitch = 1F;
@@ -562,16 +576,9 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					}
 
 					else {
-						if (itemStack.itemID == -1)
-						{
-							System.out.println(itemStack.getItemName() + " is the bastard culprit");
-						}
-						else
-						{
-							EntityItem e = new EntityItem(this.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
-									(double) this.blockCoords[2] + 0.5, itemStack);
-							e.dropItem(itemStack.itemID, itemStack.stackSize);
-						}
+						EntityItem e = new EntityItem(this.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
+								(double) this.blockCoords[2] + 0.5, itemStack);
+						e.dropItem(itemStack.itemID, itemStack.stackSize);
 					}
 
 				}
@@ -653,7 +660,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 			// Handling the filter slots
 			this.filteredIds = new ArrayList();
-			if (isFiltering()) 
+			if (isFiltering() || isDestroyFiltering()) 
 			{
 				this.filterInclusive = this.lMItemStacks[10].itemID == new ItemStack(EntangleCraftItems.ItemInclusiveFilter, 1).itemID;
 				for (int i = 4; i < 10; i++) 
@@ -698,19 +705,46 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	private void generateBlockCost() {
 		if (!this.worldObj.isRemote)
 		{
-			int cost = this.blockCost;
-			if (this.isFiltering()) {
-				if (this.filterInclusive) {
+			int cost = this.DEFAULT_COST;
+			if (this.isFiltering()) 
+			{
+				if (this.filterInclusive) 
+				{
 					cost = 0;
-					for (Object id : filteredIds) {
+					for (Object id : filteredIds) 
+					{
 						Integer intID = (Integer) id;
 						cost += getInclusiveCost(intID);
 					}
-				} else {
-					cost = 32;
-					for (Object id : filteredIds) {
+				} 
+				else 
+				{
+					cost = 16;
+					for (Object id : filteredIds) 
+					{
 						Integer intID = (Integer) id;
 						cost += getExclusiveCost(intID);
+					}
+				}
+			}
+			
+			else if (this.isDestroyFiltering())
+			{
+				boolean assumeDestroy = lMItemStacks[FILTER_SLOT].itemID == new ItemStack (EntangleCraftItems.ItemDontDestroyFilter).itemID;
+				if (assumeDestroy)
+				{
+					cost = DEFAULT_COST/4;
+					for (Integer id : filteredIds)
+					{
+						cost += (getInclusiveCost(id))/32;
+					}
+				}
+				else
+				{
+					cost = 0;
+					for (Integer id : filteredIds)
+					{
+						cost += (getExclusiveCost(id))/32;
 					}
 				}
 			}
@@ -795,19 +829,91 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		return canMine;
 	}
 
+	private boolean canDestroy(int blockID)
+	{
+		boolean canDestroy = true;
+		if (isDestroyFiltering())
+		{
+			boolean assumeDestroy = lMItemStacks[FILTER_SLOT].itemID == new ItemStack(EntangleCraftItems.ItemDestroyFilter, 1).itemID;
+			
+			if (!assumeDestroy)
+			{
+				if (filteredIds != null)
+				{
+					ArrayList<Integer> shouldNotDestroy = new ArrayList<Integer>();
+					for (Integer id : filteredIds) 
+					{
+						shouldNotDestroy.add(id);
+					}
+					
+					for (Integer id : shouldNotDestroy) 
+					{
+						if (id == blockID) 
+						{
+							canDestroy = false;
+							break;
+						}
+					}
+				}
+			}
+			
+			else
+			{
+				canDestroy = false;
+				if (filteredIds != null)
+				{
+					ArrayList<Integer> shouldDestroy = new ArrayList<Integer>();
+					for (Integer id : filteredIds) 
+					{
+						shouldDestroy.add(id);
+					}
+					
+					for (Integer id : shouldDestroy) 
+					{
+						if (id == blockID) 
+						{
+							canDestroy = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return canDestroy;
+	}
+	
 	private int processBlock(World world, int x, int y, int z) {
 		int blockID = 0;
 		if (world.blockExists(x, y, z)) 
 		{
 			blockID = world.getBlockId(x, y, z);
-			if (this.canMine(blockID)) 
+			if (blockID != 0)
 			{
-				world.setBlockWithNotify(x, y, z, 0);
-			}
-			
-			else
-			{
-				blockID = 0;
+				Block theBlock = Block.blocksList[blockID];
+				blockID = theBlock != null ? theBlock.idDropped(theBlock.blockID, new Random(), 0) : blockID;
+				if (this.isDestroyFiltering())
+				{
+					if (canDestroy(blockID))
+					{
+						world.setBlockWithNotify(x, y, z, 0);
+						DistanceHandler.subtractDistance(channel, this.blockCost);
+						this.minerSound = "destroyProcess";
+					}
+					
+					else this.minerSound = "minerFail";
+					blockID = 0;
+				}
+				
+				else if (this.canMine(blockID)) 
+				{
+					world.setBlockWithNotify(x, y, z, 0);
+				}
+				
+				else
+				{
+					blockID = 0;
+				}
 			}
 		}
 		return blockID;
