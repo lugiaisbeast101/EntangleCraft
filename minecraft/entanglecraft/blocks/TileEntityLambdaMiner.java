@@ -37,7 +37,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	public int processTime;
 	public int layerToMine = -1;
 	public int[] blockCoords;
-	public int blockCost = 32;
+	public int blockCost = 0;
 	private ArrayList<int[]> layerStructure;
 	private ArrayList<Integer> filteredIds;
 	private ItemStack[] lMItemStacks = new ItemStack[11];
@@ -683,7 +683,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	private void generateBlockCost() {
 		if (!this.worldObj.isRemote)
 		{
-			int cost = 32;
+			int cost = this.blockCost;
 			if (this.isFiltering()) {
 				if (this.filterInclusive) {
 					cost = 0;
