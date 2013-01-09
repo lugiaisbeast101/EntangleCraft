@@ -50,7 +50,7 @@ public static void addItems(){
     LanguageRegistry.addName(ItemTransmitter,"Transmitter");
     LanguageRegistry.addName(ItemInductionCircuit, "Induction Circuit");
     LanguageRegistry.addName(ItemSuperInductionCircuit, "Forerunner Induction Circuit");
-    LanguageRegistry.addName(ItemFrShard, "Obsidian Shard");
+    LanguageRegistry.addName(ItemFrShard, "Forerunner Obsidian Shard");
     LanguageRegistry.addName(ItemBlueShard, "Mysterious Blue Shard");
     LanguageRegistry.addName(ItemRedShard, "Mysterious Red Shard");
     LanguageRegistry.addName(ItemYelShard, "Mysterious Yellow Shard");
@@ -64,7 +64,6 @@ public static void addItems(){
     LanguageRegistry.addName(ItemShardPickY, "Displacement Pick : Y");
     LanguageRegistry.addName(ItemShardPickB, "Displacement Pick : B");
     GameRegistry.addSmelting(Block.netherrack.blockID, new ItemStack(ItemNetherEssence, 1),1F);
-    GameRegistry.addSmelting(Block.obsidian.blockID, new ItemStack(EntangleCraftBlocks.BlockFObsidian, 1),1F);
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockRLD, 1), new Object[] { "NRN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGLD, Character.valueOf('R'), Item.redstone });
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockYLD, 1), new Object[] { "NSN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGLD, Character.valueOf('S'), Item.lightStoneDust });
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockBLD, 1), new Object[] { "NSN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGLD, Character.valueOf('S'), new ItemStack(Item.dyePowder, 1, 4) });
@@ -81,12 +80,12 @@ public static void addItems(){
     GameRegistry.addRecipe(new ItemStack(ItemCircuit,1), new Object[] {"FIF","ISI","FIF", Character.valueOf('F'), ItemFrShard,Character.valueOf('I'), Item.ingotIron, Character.valueOf('S'), ItemImbuedShard});
     GameRegistry.addRecipe(new ItemStack(ItemInductionCircuit,1), new Object[] {"IRI","ISI"," C ", Character.valueOf('C'), ItemCircuit, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone, Character.valueOf('S'),ItemFrShard});
     GameRegistry.addRecipe(new ItemStack(ItemSuperInductionCircuit,1), new Object[] {"FDF","FDF"," I ", Character.valueOf('F'), EntangleCraftBlocks.BlockFObsidian, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), ItemInductionCircuit});
-    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGLM,1), new Object[] {"FCF","TLT","FDF",Character.valueOf('D'), Item.pickaxeDiamond, Character.valueOf('F'), EntangleCraftBlocks.BlockFObsidian,Character.valueOf('L'), ItemLambdaCore, Character.valueOf('C'), ItemCircuit, Character.valueOf('T'), ItemTransmitter});
+    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGLM,1), new Object[] {"FCF","TLT","FDF",Character.valueOf('D'), ItemShardPickG, Character.valueOf('F'), EntangleCraftBlocks.BlockFObsidian,Character.valueOf('L'), ItemLambdaCore, Character.valueOf('C'), ItemCircuit, Character.valueOf('T'), ItemTransmitter});
+    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockRLM,1), new Object[] {"FCF","TLT","FDF",Character.valueOf('D'), ItemShardPickR, Character.valueOf('F'), EntangleCraftBlocks.BlockFObsidian,Character.valueOf('L'), ItemLambdaCore, Character.valueOf('C'), ItemCircuit, Character.valueOf('T'), ItemTransmitter});
+    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockYLM,1), new Object[] {"FCF","TLT","FDF",Character.valueOf('D'), ItemShardPickY, Character.valueOf('F'), EntangleCraftBlocks.BlockFObsidian,Character.valueOf('L'), ItemLambdaCore, Character.valueOf('C'), ItemCircuit, Character.valueOf('T'), ItemTransmitter});
+    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockBLM,1), new Object[] {"FCF","TLT","FDF",Character.valueOf('D'), ItemShardPickB, Character.valueOf('F'), EntangleCraftBlocks.BlockFObsidian,Character.valueOf('L'), ItemLambdaCore, Character.valueOf('C'), ItemCircuit, Character.valueOf('T'), ItemTransmitter});
     GameRegistry.addRecipe(new ItemStack(ItemInclusiveFilter,1), new Object[] {"GTG","GCG","GTG", Character.valueOf('G'), Block.glass, Character.valueOf('C'),ItemCircuit,Character.valueOf('T'), ItemTransmitter});
-    GameRegistry.addRecipe(new ItemStack(ItemInclusiveFilter,1), new Object[] {"GGG","TCT","GGG", Character.valueOf('G'), Block.glass, Character.valueOf('C'),ItemCircuit,Character.valueOf('T'), ItemTransmitter});
-    GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockRLM,1), new Object[]{EntangleCraftBlocks.BlockGLM,ItemRedShard});
-    GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockYLM,1), new Object[] {EntangleCraftBlocks.BlockGLM,ItemYelShard});
-    GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockBLM,1), new Object[] {EntangleCraftBlocks.BlockGLM,ItemBlueShard});
+    GameRegistry.addRecipe(new ItemStack(ItemExclusiveFilter,1), new Object[] {"GGG","TCT","GGG", Character.valueOf('G'), Block.glass, Character.valueOf('C'),ItemCircuit,Character.valueOf('T'), ItemTransmitter});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemFrShard,1), new Object[]{Block.obsidian}); // THIS RECIPE IS TEMPORARY, SHOULD BE BlockFObsidian AFTER WORLD GENEREATION RE-IMPLEMENTED AND SHOULD GRANT 8 INSTEAD OF 1
     GameRegistry.addShapelessRecipe(new ItemStack(ItemRedShard,1), new Object[]{ItemFrShard,Item.redstone});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemYelShard,1), new Object[]{ItemFrShard,Item.lightStoneDust});
