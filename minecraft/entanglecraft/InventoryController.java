@@ -68,25 +68,26 @@ public class InventoryController {
 			result = new ItemStack(Block.cobblestone, 1);
 		} 
 		
-		else if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID || blockID == Block.lavaStill.blockID
+		else if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID 
+				|| blockID == Block.lavaStill.blockID
 				|| blockID == Block.lavaMoving.blockID || blockID == Block.bedrock.blockID) 
 		{
 			result = null;
 		} 
 		
-		else if (blockID == Block.oreLapis.blockID) 
+		else if (blockID == Block.oreCoal.blockID) 
 		{
-			result = new ItemStack(Item.dyePowder, rand.nextInt(1) + 4, 4);
+			result = new ItemStack(Item.coal, 1);
 		} 
 		
 		else if (blockID == Block.oreRedstone.blockID) 
 		{
 			result = new ItemStack(Item.redstone, rand.nextInt(1) + 4);
 		} 
-		
-		else if (blockID == Block.oreCoal.blockID) 
+				
+		else if (blockID == Block.oreLapis.blockID) 
 		{
-			result = new ItemStack(Item.coal, 1);
+			result = new ItemStack(Item.dyePowder, rand.nextInt(1) + 4, 4);
 		} 
 		
 		else if (blockID == Block.oreDiamond.blockID) 

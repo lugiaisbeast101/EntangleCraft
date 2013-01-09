@@ -23,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.ISidedInventory;
 import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
@@ -37,7 +38,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	public int processTime;
 	public int layerToMine = -1;
 	public int[] blockCoords;
-	public int blockCost = 0;
+	public int blockCost = 16;
 	private ArrayList<int[]> layerStructure;
 	private ArrayList<Integer> filteredIds;
 	private ItemStack[] lMItemStacks = new ItemStack[11];
@@ -583,6 +584,18 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		}
 	}
 
+	private boolean isShearable(World world, int blockID, int x, int y, int z)
+	{
+		if (!(Block.blocksList[blockID] instanceof IShearable))
+		{
+			return false;
+		}
+		
+		ItemStack itemstack = new ItemStack(Item.shears,1);
+		IShearable target = (IShearable)Block.blocksList[blockID];
+        return target.isShearable(itemstack, world, x, y, z);
+	}
+	
 	private InventoryBasic prepareToMine() {		
 		InventoryBasic inv = new InventoryBasic(null, layerStructure.size());
 		for (Object block : this.layerStructure) 
@@ -594,7 +607,9 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				if (blockID != 0) 
 				{
 					int metadata = this.worldObj.getBlockMetadata(blockToMine[0], blockToMine[1], blockToMine[2]);
-					ItemStack result = invController.getItemStackFromIDAndMetadata(blockID, metadata);
+					ItemStack result = isShearable
+							(this.worldObj, blockID, blockToMine[0], this.getLayerToMine(), blockToMine[2]) 
+							? null : invController.getItemStackFromIDAndMetadata(blockID, metadata);
 
 					if (result != null) 
 					{
