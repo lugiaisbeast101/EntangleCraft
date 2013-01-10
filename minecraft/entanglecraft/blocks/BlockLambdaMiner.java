@@ -1,6 +1,7 @@
 package entanglecraft.blocks;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -214,8 +215,13 @@ public class BlockLambdaMiner extends BlockContainer{
 			}
 		}
 			
-
 	}
+	
+	@Override
+    public int idDropped(int par1, Random par2Random, int par3)
+    {
+        return EntangleCraftBlocks.BlockGLM.blockID + channel;
+    }
 	
 	public String getTextureFile(){
 		return "/lambdaTextures.png";

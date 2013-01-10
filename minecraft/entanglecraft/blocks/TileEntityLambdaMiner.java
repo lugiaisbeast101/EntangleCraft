@@ -221,7 +221,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 			this.speedMultiplier = (int) nbt.getShort("speedMultiplier");
 			this.blockCost = (int) nbt.getShort("blockCost");
 			setBlockCoords(nbt.getIntArray("blockCoords"));
-			this.invController.setChest(nbt.getIntArray("chest"));
 			this.readFiltersFromNBT(nbt);
 			int size = (int) nbt.getShort("layerStructureSize");
 			this.filterInclusive = nbt.getBoolean("filterInclusive");
@@ -255,7 +254,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		nbt.setShort("speedMultiplier", (short) this.speedMultiplier);
 		nbt.setShort("blockCost", (short) this.blockCost);
 		nbt.setIntArray("blockCoords", this.blockCoords);
-		NBTSaver.writeFieldToNBT(nbt, "int[]", this.invController.getChest(), "chest");
 		this.writeFiltersToNBT(nbt);
 		nbt.setShort("layerStructureSize", (short) (this.layerStructure.size()));
 		nbt.setBoolean("filterInclusive", this.filterInclusive);
@@ -768,6 +766,9 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 
 	private boolean canMine(int blockID) {
 		boolean canMine = true;
+		Block theBlock = Block.blocksList[blockID];
+		int droppedID = theBlock != null ? theBlock.idDropped(theBlock.blockID, new Random(), 0) : blockID;
+		
 		if (this.isFiltering()) 
 		{
 			if (this.filterInclusive && this.filteredIds != null) 
@@ -778,7 +779,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				for (Object id : this.filteredIds) 
 				{
 					Integer intID = (Integer) id;
-					if (intID == blockID) 
+					if (intID == blockID || intID == droppedID) 
 					{
 						canMine = true;
 						break;
@@ -804,7 +805,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				for (Object id : notMineable) 
 				{
 					Integer intID = (Integer) id;
-					if (intID == blockID) 
+					if (intID == blockID || intID == droppedID) 
 					{
 						canMine = false;
 						break;
@@ -820,6 +821,10 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	private boolean canDestroy(int blockID)
 	{
 		boolean canDestroy = true;
+		Block theBlock = Block.blocksList[blockID];
+		int droppedID = theBlock != null ? theBlock.idDropped(theBlock.blockID, new Random(), 0) : blockID;
+		int filterDroppedID;
+		
 		if (isDestroyFiltering())
 		{
 			boolean assumeDestroy = lMItemStacks[FILTER_SLOT].itemID == new ItemStack(EntangleCraftItems.ItemDestroyFilter, 1).itemID;
@@ -830,13 +835,13 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				{
 					ArrayList<Integer> shouldNotDestroy = new ArrayList<Integer>();
 					for (Integer id : filteredIds) 
-					{
+					{						
 						shouldNotDestroy.add(id);
 					}
 					
 					for (Integer id : shouldNotDestroy) 
 					{
-						if (id == blockID) 
+						if (id == blockID || id == droppedID) 
 						{
 							canDestroy = false;
 							break;
@@ -858,7 +863,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					
 					for (Integer id : shouldDestroy) 
 					{
-						if (id == blockID) 
+						if (id == blockID || id == droppedID) 
 						{
 							canDestroy = true;
 							break;
@@ -876,10 +881,14 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		if (world.blockExists(x, y, z)) 
 		{
 			blockID = world.getBlockId(x, y, z);
-			if (blockID != 0)
+			boolean isShearable = invController.isShearable
+			(this.worldObj, blockID, x, y ,z);
+			if (blockID != 0 && !isShearable)
 			{
+				/*
 				Block theBlock = Block.blocksList[blockID];
 				blockID = theBlock != null ? theBlock.idDropped(theBlock.blockID, new Random(), 0) : blockID;
+				*/
 				if (this.isDestroyFiltering())
 				{
 					if (canDestroy(blockID))

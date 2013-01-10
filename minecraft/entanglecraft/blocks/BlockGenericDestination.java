@@ -119,7 +119,7 @@ public class BlockGenericDestination extends BlockContainer{
 	
     public int idDropped(int par1, Random par2Random, int par3)
     {
-        return EntangleCraftBlocks.BlockGLD.blockID;
+        return EntangleCraftBlocks.BlockGLD.blockID + channel;
     }
  
    

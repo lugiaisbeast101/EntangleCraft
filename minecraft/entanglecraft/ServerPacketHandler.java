@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Random;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.block.Block;
@@ -365,8 +366,11 @@ public class ServerPacketHandler implements IPacketHandler {
 				//{
 					TileEntityGenericDestination teGD = (TileEntityGenericDestination)world.getBlockTileEntity(closestDest.blockCoords[0], closestDest.blockCoords[1], closestDest.blockCoords[2]);
 			
-					ItemStack itemStack = 	InventoryController.isShearable(world, blockID, x, y, z) ? null :
+					ItemStack itemStack = 	
+							InventoryController.isShearable(world, blockID, x, y, z) ? null :
+							Block.blocksList[blockID].idDropped(blockID, new Random(), 0) == -1 ? null :
 							InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
+					
 					
 					if (itemStack != null)
 					{

@@ -99,7 +99,6 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 			this.speedMultiplier = 1;
 		this.destination = DestinationSaveMethods.readDestFromNBT(nbt);
 		this.invController = new InventoryController(this,destination.blockCoords);
-		this.invController.setChest(nbt.getIntArray("chest"));
 		if (teleportsEarned > 0)
 			EntangleCraft.addDestination(this.destination);
 		
@@ -111,7 +110,6 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 		nbt.setShort("gdProcessTime", (short) this.gdProcessTime);
 		nbt.setShort("teleportsEarned", (short) (int) this.teleportsEarned);
 		nbt.setShort("speedMultiplier", (short) this.speedMultiplier);
-		NBTSaver.writeFieldToNBT(nbt, "int[]", this.invController.getChest(), "chest");
 		NBTTagList tagList = new NBTTagList();
 
 		for (int var3 = 0; var3 < this.gdItemStacks.length; ++var3) {
