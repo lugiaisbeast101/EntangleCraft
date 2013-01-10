@@ -35,7 +35,7 @@ public class ClientPacketHandler implements IPacketHandler {
 		try {
 			int channel = dataStream.readInt();
 			int value = dataStream.readInt();
-			DistanceHandler.setDistance(channel, value);
+			DistanceHandler.setDistance(channel, value, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

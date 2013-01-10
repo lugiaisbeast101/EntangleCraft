@@ -25,16 +25,15 @@ public class ItemShardPick extends ItemShardTool{
 	}
 	
 	@Override
-	public boolean onItemUseFirst(ItemStack par1ItemStack, EntityPlayer thePlayer, World world, int x, int y, int z, int side, float i, float j, float k) 
+	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer thePlayer, World world, int x, int y, int z, int side, float i, float j, float k) 
 	{
-		boolean minedBlock = false;
-		if (world.blockExists(x, y, z) && !world.blockHasTileEntity(x, y, z))	
+		boolean minedBlock = true;
+		if (world.isRemote)
 		{
-			System.out.println("Sent a shard spell from itemShardPick\n");
-			
 			ClientPacketHandler.sendShardSpell(x, y, z, side, 5);
-			minedBlock = true;
+			
 		}
+			
 		return minedBlock;	
 	}
 	

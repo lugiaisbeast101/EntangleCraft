@@ -164,7 +164,6 @@ public class ServerPacketHandler implements IPacketHandler {
 		MinecraftServer server = ModLoader.getMinecraftServerInstance();
 		
 		if (!thePlayer.worldObj.isRemote) {
-			//thePlayer.addChatMessage("SERVER PACKET");
 			int ID = -1;
 			DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
 			try 
@@ -180,7 +179,7 @@ public class ServerPacketHandler implements IPacketHandler {
 				// Toggle lambdaDevice channel
 				this.toggleChannel(thePlayer);
 			}
-			
+				
 			else if (task == "shardSpell")
 			{
 				Integer x = null;
@@ -215,7 +214,7 @@ public class ServerPacketHandler implements IPacketHandler {
 
 	}
 	
-	public void sendExplosionToClients(EntityPlayer thePlayer, double x, double y, double z, float size , boolean isSmokey){
+	public static void sendExplosionToClients(EntityPlayer thePlayer, double x, double y, double z, float size , boolean isSmokey){
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream DOS = new DataOutputStream(bytes);
 		
@@ -251,10 +250,51 @@ public class ServerPacketHandler implements IPacketHandler {
 			return "increment";
 		if (i == 1)
 			return "shardSpell";
+		if (i == 3)
+			return "distanceUpdate";
 		else
 			return "unknown";
 	}
+	
+	
+	public static void tpScrollTeleport(World world, EntityPlayer thePlayer) {
+		
+		ChunkCoordinates coords = thePlayer.getBedLocation();
+		if (coords != null) 
+		{
+			ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
+			theCoords = theCoords != null ? theCoords : coords;
+			double expX = thePlayer.posX;
+			double expY = thePlayer.posY;
+			double expZ = thePlayer.posZ;
+			placePlayer(theCoords.posX, theCoords.posY, theCoords.posZ, world, thePlayer);
+			LambdaSoundHandler.playSound(world, new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 },
+					"tpScroll", world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F);
+			ServerPacketHandler.spawnParticleToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 }, "largeexplode");
 
+			double distance = EntangleCraft.getDistance(new double[] { expX, expY, expZ }, new double[] { thePlayer.posX, thePlayer.posY,
+					thePlayer.posZ });
+			distance = distance < 30 ? 0 : distance < 96 ? (double) (int) Math.log(distance) * 0.7
+					: distance < 256 ? (double) (int) Math.log(distance) * 1.5 : (double) (int) Math.log(distance) * 2.5;
+
+			if (distance != 0)
+			{
+				//sendExplosionToClients(thePlayer, expX, expY, expZ, (float) distance, true);
+				world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
+			}
+			else
+			{
+				ServerPacketHandler.spawnParticleToClients(new double[] { expX, expY, expZ }, "largeexplode");
+			}
+			LambdaSoundHandler.playSound(world, new double[] { expX, expY, expZ },"tpScroll",  world.rand.nextFloat() * 0.2F + 0.5F,
+					world.rand.nextFloat() * 0.2F + 0.8F);
+			
+			
+			ItemStack iS = thePlayer.getCurrentEquippedItem();
+			if (iS != null) iS.damageItem(2, thePlayer);
+		}
+		
+	}
 	
 	private boolean ignite(World theWorld, EntityPlayer thePlayer, Integer x, Integer y, Integer z, Integer side) {
 		{
@@ -325,7 +365,8 @@ public class ServerPacketHandler implements IPacketHandler {
 				//{
 					TileEntityGenericDestination teGD = (TileEntityGenericDestination)world.getBlockTileEntity(closestDest.blockCoords[0], closestDest.blockCoords[1], closestDest.blockCoords[2]);
 			
-					ItemStack itemStack = InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
+					ItemStack itemStack = 	InventoryController.isShearable(world, blockID, x, y, z) ? null :
+							InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
 					
 					if (itemStack != null)
 					{
@@ -410,7 +451,7 @@ public class ServerPacketHandler implements IPacketHandler {
 		return true;
 	}
 	
-	private static void placePlayer(int posX, int posY, int posZ, World theWorld, EntityPlayer thePlayer) {
+	public static void placePlayer(int posX, int posY, int posZ, World theWorld, EntityPlayer thePlayer) {
 		if (!theWorld.isRemote) {
 			while (posY > 0.0D) {
 				thePlayer.setPosition(posX, posY, posZ);
@@ -425,45 +466,6 @@ public class ServerPacketHandler implements IPacketHandler {
 		}
 	}
 	
-	
-	public static void tpScrollTeleport(World world, EntityPlayer thePlayer) {
-		
-		ChunkCoordinates coords = thePlayer.getBedLocation();
-		if (coords != null) 
-		{
-			ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
-			theCoords = theCoords != null ? theCoords : coords;
-			double expX = thePlayer.posX;
-			double expY = thePlayer.posY;
-			double expZ = thePlayer.posZ;
-			placePlayer(theCoords.posX, theCoords.posY, theCoords.posZ, world, thePlayer);
-			LambdaSoundHandler.playSound(world, new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 },
-					"tpScroll", world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F);
-			ServerPacketHandler.spawnParticleToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 }, "largeexplode");
-
-			double distance = EntangleCraft.getDistance(new double[] { expX, expY, expZ }, new double[] { thePlayer.posX, thePlayer.posY,
-					thePlayer.posZ });
-			distance = distance < 30 ? 0 : distance < 96 ? (double) (int) Math.log(distance) * 0.7
-					: distance < 256 ? (double) (int) Math.log(distance) * 1.5 : (double) (int) Math.log(distance) * 2.5;
-
-			if (distance != 0)
-			{
-				//sendExplosionToClients(thePlayer, expX, expY, expZ, (float) distance, true);
-				world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
-			}
-			else
-			{
-				ServerPacketHandler.spawnParticleToClients(new double[] { expX, expY, expZ }, "largeexplode");
-			}
-			LambdaSoundHandler.playSound(world, new double[] { expX, expY, expZ },"tpScroll",  world.rand.nextFloat() * 0.2F + 0.5F,
-					world.rand.nextFloat() * 0.2F + 0.8F);
-			
-			
-			ItemStack iS = thePlayer.getCurrentEquippedItem();
-			if (iS != null) iS.damageItem(2, thePlayer);
-		}
-		
-	}
 	
 	private boolean freeze(World world, EntityPlayer thePlayer, int x, int y, int z, int side)
 	{

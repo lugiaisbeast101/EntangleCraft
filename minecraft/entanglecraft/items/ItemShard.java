@@ -45,78 +45,117 @@ public class ItemShard extends Item {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer thePlayer) {
-		System.out.println("onItemRightClick itemShard was called \n");
 		
+		if (world.isRemote)
+		{
+
+		}
+		
+		else
+		{
 			if (type == 3) 
 			{
 				ChunkCoordinates coords = thePlayer.getBedLocation();
 				if (coords != null)
 				{
-					ClientPacketHandler.sendShardSpell(-1, -1, -1, -1, type);
+					tpScrollTeleport(world, thePlayer);
 					return itemStack;
 				}
 			}
 			
-			else if (!world.isRemote) 
+			else if (type == 4) 
 			{
-				if (type == 4) 
-				{
-					this.imbuedShardRespond(world, thePlayer, (int)thePlayer.posX, (int)thePlayer.posY, (int)thePlayer.posZ);
-				}
-			
+				this.imbuedShardRespond(world, thePlayer, (int)thePlayer.posX, (int)thePlayer.posY, (int)thePlayer.posZ);
 			}
 		
-		else if (type == 3 && thePlayer.getBedLocation() != null)
-		{
-			itemStack.damageItem(2, thePlayer);
-			return itemStack;
 		}
 		
 		return itemStack;
 	}
 
 	@Override
-	public boolean onItemUseFirst(ItemStack par1ItemStack, EntityPlayer thePlayer, World world, int x, int y, int z, int side, float i, float j, float k) {
+	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer thePlayer, World world, int x, int y, int z, int side, float i, float j, float k) {
 		
 		boolean usedItem = false;
-		System.out.println("onItemUseFirst itemShard was called \n");
-		if (!world.blockHasTileEntity(x, y, z))
+
+		usedItem = true;
+		int posX = x;
+		int posY = y;
+		int posZ = z;
+		
+		
+		if (world.isRemote)
 		{
-			usedItem = true;
-			int posX = x;
-			int posY = y;
-			int posZ = z;
-			
 			if (type == 0) 
 			{
 				MovingObjectPosition movingObject = getMovingObjectPositionFromPlayer(world, thePlayer, true);
 				posX = movingObject.blockX;
 				posY = movingObject.blockY;
 				posZ = movingObject.blockZ;
+				ClientPacketHandler.sendShardSpell(posX, posY, posZ, side, type);
 			} 
-	
-			else if (type == 3) {
-				ChunkCoordinates coords = thePlayer.getBedLocation();
-				
-				if (coords != null)
-				{
-					ClientPacketHandler.sendShardSpell(posX, posY, posZ, side, type);
-					par1ItemStack.damageItem(2,thePlayer);
-				}
-			}
 			
-			else if (type == 4) 
-			{
-				this.imbuedShardRespond(world, thePlayer, x, y, z);
-			}
-			
-			else
+			else if (type != 3)
 			{
 				ClientPacketHandler.sendShardSpell(posX, posY, posZ, side, type);
 			}
 		}
 		
+		else if (type == 3) 
+		{
+			ChunkCoordinates coords = thePlayer.getBedLocation();
+			if (coords != null)
+			{
+				tpScrollTeleport(world, thePlayer);
+				par1ItemStack.damageItem(2,thePlayer);
+			}
+		}
+
+		else if (type == 4) 
+		{
+			this.imbuedShardRespond(world, thePlayer, x, y, z);
+		}
+		
 		return usedItem;
+	}
+	
+	public static void tpScrollTeleport(World world, EntityPlayer thePlayer) {
+		
+		ChunkCoordinates coords = thePlayer.getBedLocation();
+		if (coords != null) 
+		{
+			ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
+			theCoords = theCoords != null ? theCoords : coords;
+			double expX = thePlayer.posX;
+			double expY = thePlayer.posY;
+			double expZ = thePlayer.posZ;
+			ServerPacketHandler.placePlayer(theCoords.posX, theCoords.posY, theCoords.posZ, world, thePlayer);
+			LambdaSoundHandler.playSound(world, new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 },
+					"tpScroll", world.rand.nextFloat() * 0.2F + 0.5F, world.rand.nextFloat() * 0.2F + 0.8F);
+			ServerPacketHandler.spawnParticleToClients(new double[] { theCoords.posX + 0.5, theCoords.posY, theCoords.posZ + 0.5 }, "largeexplode");
+
+			double distance = EntangleCraft.getDistance(new double[] { expX, expY, expZ }, new double[] { thePlayer.posX, thePlayer.posY,
+					thePlayer.posZ });
+			distance = distance < 30 ? 0 : distance < 96 ? (double) (int) Math.log(distance) * 0.7
+					: distance < 256 ? (double) (int) Math.log(distance) * 1.5 : (double) (int) Math.log(distance) * 2.5;
+			System.out.println("explosion size = " + distance);
+			if (distance != 0)
+			{
+				//sendExplosionToClients(thePlayer, expX, expY, expZ, (float) distance, true);
+				world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
+			}
+			else
+			{
+				ServerPacketHandler.spawnParticleToClients(new double[] { expX, expY, expZ }, "largeexplode");
+			}
+			LambdaSoundHandler.playSound(world, new double[] { expX, expY, expZ },"tpScroll",  world.rand.nextFloat() * 0.2F + 0.5F,
+					world.rand.nextFloat() * 0.2F + 0.8F);
+			
+			
+			ItemStack iS = thePlayer.getCurrentEquippedItem();
+			if (iS != null) iS.damageItem(2, thePlayer);
+		}
+		
 	}
 	
 	private void imbuedShardRespond(World theWorld, EntityPlayer thePlayer, int x, int y, int z)
@@ -159,6 +198,8 @@ public class ItemShard extends Item {
 			}
 		}
 	}
+
+	
 
 
 

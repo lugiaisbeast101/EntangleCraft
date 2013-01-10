@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IShearable;
 
 public class InventoryController {
 	private int chestRecursion = 0;
@@ -58,6 +59,18 @@ public class InventoryController {
 	
 	public TileEntityChest getTileEntityChest() {
 		return (TileEntityChest) this.tileEntity.worldObj.getBlockTileEntity(chest[0], chest[1], chest[2]);
+	}
+	
+	public static boolean isShearable(World world, int blockID, int x, int y, int z)
+	{
+		if (!(Block.blocksList[blockID] instanceof IShearable))
+		{
+			return false;
+		}
+		
+		ItemStack itemstack = new ItemStack(Item.shears,1);
+		IShearable target = (IShearable)Block.blocksList[blockID];
+        return target.isShearable(itemstack, world, x, y, z);
 	}
 	
 	public static ItemStack getItemStackFromIDAndMetadata(int blockID, int metadata) {

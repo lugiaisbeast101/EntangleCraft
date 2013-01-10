@@ -590,18 +590,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 					minerSound, this.worldObj.rand.nextFloat() * 0.2F + 0.7F, minerSoundPitch);
 		}
 	}
-
-	private boolean isShearable(World world, int blockID, int x, int y, int z)
-	{
-		if (!(Block.blocksList[blockID] instanceof IShearable))
-		{
-			return false;
-		}
-		
-		ItemStack itemstack = new ItemStack(Item.shears,1);
-		IShearable target = (IShearable)Block.blocksList[blockID];
-        return target.isShearable(itemstack, world, x, y, z);
-	}
 	
 	private InventoryBasic prepareToMine() {		
 		InventoryBasic inv = new InventoryBasic(null, layerStructure.size());
@@ -614,7 +602,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				if (blockID != 0) 
 				{
 					int metadata = this.worldObj.getBlockMetadata(blockToMine[0], blockToMine[1], blockToMine[2]);
-					ItemStack result = isShearable
+					ItemStack result = invController.isShearable
 							(this.worldObj, blockID, blockToMine[0], this.getLayerToMine(), blockToMine[2]) 
 							? null : invController.getItemStackFromIDAndMetadata(blockID, metadata);
 
