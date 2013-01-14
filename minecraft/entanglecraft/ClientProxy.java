@@ -6,6 +6,7 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.client.audio.SoundManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.blocks.TileEntityGenericDestination;
@@ -32,9 +33,13 @@ public class ClientProxy extends CommonProxy {
 		super.registerOnLoad();
 	}
 
+	@Override
 	public File getWorldSaveDir(World world) {
-		File workingDir = new File(".\\\\saves\\" + world.getWorldInfo().getWorldName() + world.getWorldInfo().getSeed() + "\\");
+		File workingDir = new File(".\\\\saves\\" + world.getSaveHandler().getSaveDirectoryName() + "\\");
 		return workingDir;
+	}
+	
+	public static void sendTEFieldUpdate(TileEntity te, String tileEntityName, String field) {
 	}
 
 	@Override
@@ -50,4 +55,6 @@ public class ClientProxy extends CommonProxy {
 		} else
 			return null;
 	}
+	
+
 }

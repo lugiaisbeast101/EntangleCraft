@@ -52,11 +52,21 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = "EntangleCraft", name = "EntangleCraft", version = "1.0b")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, clientPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, packetHandler = ServerPacketHandler.class), connectionHandler = EntangleCraft.class)
+@Mod(modid = "EntangleCraft", name = "EntangleCraft", version = "1.0.2b")
+@NetworkMod(
+clientSideRequired = true, 
+serverSideRequired = false, 
+clientPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, 
+packetHandler = ClientPacketHandler.class), 
+serverPacketHandlerSpec = @SidedPacketHandler(channels = { "EntangleCraft" }, 
+packetHandler = ServerPacketHandler.class), 
+connectionHandler = EntangleCraft.class)
+
+
 public class EntangleCraft implements IConnectionHandler {
 	@Instance
 	public static EntangleCraft instance;
+	public static final String NAME = "EntangleCraft";
 
 	@SidedProxy(clientSide = "entanglecraft.ClientProxy", serverSide = "entanglecraft.CommonProxy")
 	public static CommonProxy proxy;
@@ -79,11 +89,9 @@ public class EntangleCraft implements IConnectionHandler {
 		proxy.registerOnLoad();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
-
 	}
 
-	public static Destination closestDestToPlayer(EntityPlayer playerEntity,
-			ArrayList dests) {
+	public static Destination closestDestToPlayer(EntityPlayer playerEntity, ArrayList dests) {
 		Destination destination = null;
 		double[] playerPoints = new double[] { playerEntity.posX, playerEntity.posY,
 				playerEntity.posZ };
@@ -121,30 +129,55 @@ public class EntangleCraft implements IConnectionHandler {
 		return destination;
 	}
 	
-	public static void teleport(EntityPlayer par3EntityPlayer, int channel) {
+	public static ArrayList getDestsFromChannelAndDimension(ArrayList<Destination>[] destinations, int channel, int dimension){
+		ArrayList<Destination> dests = new ArrayList<Destination>();
+		ArrayList<Destination> channelDests = destinations[channel];
+		System.out.println("Getting destinations of channel " + channel + " and in the " + (dimension == 0 ? "default dimension " : dimension == -1 ? "nether dimension" : dimension + " dimension"));
+		
+		for (Destination d : channelDests)
+		{
+			if (d.dimension == dimension)
+			{
+				dests.add(d);
+			}
+		}
+		System.out.println("Returning a list of size " + dests.size());
+		return dests;
+	}
+	
+	public static void teleport(EntityPlayer parPlayer, int channel) {
 		// This method is disgusting to read just hide it
-		if (!par3EntityPlayer.worldObj.isRemote) {
-			ArrayList dests = channelDests[channel];
+		if (!parPlayer.worldObj.isRemote) 
+		{
+			ArrayList dests = getDestsFromChannelAndDimension(channelDests, channel, parPlayer.dimension);
 			if (dests.size() != 0) {
-				Destination dest = closestDestToPlayer(par3EntityPlayer, dests);
+				Destination dest = closestDestToPlayer(parPlayer, dests);
 				double[] destinationPoints = dest.destinationCoords;
 
-				double[] playerPoints = { par3EntityPlayer.posX,
-						par3EntityPlayer.posY, par3EntityPlayer.posZ };
+				double[] playerPoints = { parPlayer.posX,
+						parPlayer.posY, parPlayer.posZ };
 				double amount = getDistance(destinationPoints, playerPoints);
 				dhInstance.addToDistance(channel, amount);
 
-				if (par3EntityPlayer instanceof EntityPlayerMP) {
-					EntityPlayerMP thePlayer = (EntityPlayerMP) par3EntityPlayer;
+				if (parPlayer instanceof EntityPlayerMP) {
+					EntityPlayerMP thePlayer = (EntityPlayerMP) parPlayer;
 					// Server-side teleports seem to teleport the player too
 					// high so I'm subtracting 1.65 from the usual height
 					try {
+						int[] closBlock = dest.blockCoords;
+						World theWorld = parPlayer.worldObj;
+						TileEntityGenericDestination destEntity = (TileEntityGenericDestination) theWorld
+								.getBlockTileEntity(closBlock[0], closBlock[1],
+										closBlock[2]);
+						if (destEntity.teleportsEarned != 0)
+							destEntity.changeTeleportsEarned(-1);
+						
 						thePlayer.playerNetServerHandler.setPlayerLocation(
 								destinationPoints[0],
 								destinationPoints[1] - 1.65,
 								destinationPoints[2],
-								par3EntityPlayer.rotationYaw,
-								par3EntityPlayer.rotationPitch);
+								parPlayer.rotationYaw,
+								parPlayer.rotationPitch);
 						
 						
 						ServerPacketHandler.playTPSoundToClients(thePlayer,
@@ -154,16 +187,9 @@ public class EntangleCraft implements IConnectionHandler {
 						ServerPacketHandler.spawnParticleToClients(
 								playerPoints, "largeexplosion");
 
-						int[] closBlock = dest.blockCoords;
-						World theWorld = par3EntityPlayer.worldObj;
-						TileEntityGenericDestination destEntity = (TileEntityGenericDestination) theWorld
-								.getBlockTileEntity(closBlock[0], closBlock[1],
-										closBlock[2]);
-						if (destEntity.teleportsEarned != 0)
-							destEntity.changeTeleportsEarned(-1);
+					
 					} catch (NullPointerException e) {
-						thePlayer
-								.addChatMessage("No available teleport Destinations!");
+						e.printStackTrace();
 					}
 				}
 			}
@@ -172,9 +198,17 @@ public class EntangleCraft implements IConnectionHandler {
 
 	public static void addDestination(Destination dest) {
 		int channel = dest.channel;
+		
+		if (!channelDests[channel].contains(dest))
+		{
+			channelDests[channel].add(dest);
+		}
+		
+		if (!destinations.contains(dest))
+		{
+			destinations.add(dest);
+		}
 
-		channelDests[channel].add(dest);
-		destinations.add(dest);
 	}
 
 	public static void emptyDestinationList() {

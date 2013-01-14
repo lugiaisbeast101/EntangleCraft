@@ -68,12 +68,9 @@ public static void addItems(){
     LanguageRegistry.addName(ItemShardPickY, "Displacement Pick : Y");
     LanguageRegistry.addName(ItemShardPickB, "Displacement Pick : B");
     GameRegistry.addSmelting(Block.netherrack.blockID, new ItemStack(ItemNetherEssence, 1),1F);
-    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockRLD, 1), new Object[] { "NRN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGLD, Character.valueOf('R'), Item.redstone });
-    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockYLD, 1), new Object[] { "NSN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGLD, Character.valueOf('S'), Item.lightStoneDust });
-    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockBLD, 1), new Object[] { "NSN", "NGN", "NDN", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('N'), ItemNetherEssence, Character.valueOf('G'), EntangleCraftBlocks.BlockGLD, Character.valueOf('S'), new ItemStack(Item.dyePowder, 1, 4) });
     GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockFObsidian,8), new Object[] {"OOO","OSO","OOO", Character.valueOf('O'),Block.obsidian, Character.valueOf('S'),ItemFrShard});
     GameRegistry.addRecipe(new ItemStack(ItemDeviceG, 1), new Object[] { "SOO", "OLO", "OXO", Character.valueOf('O'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore, Character.valueOf('S'), Item.lightStoneDust, Character.valueOf('X'), Item.emptyMap});
-    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGLD, 1), new Object[] { "FFF", "FLF", "FFF", Character.valueOf('F'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore });
+    GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGLD, 1), new Object[] { "FGF", "FLF", "FFF", Character.valueOf('G'), Block.glass, Character.valueOf('F'), Block.obsidian, Character.valueOf('L'), ItemLambdaCore });
     //GameRegistry.addRecipe(new ItemStack(EntangleCraftBlocks.BlockGenericDestination, 1), new Object[] { "  D","   ", "   ", Character.valueOf('D'), Block.dirt});
     GameRegistry.addRecipe(new ItemStack(ItemNethermonicDiamond, 1), new Object[] { "NNN", "NDN", "NNN", Character.valueOf('N'), ItemNetherEssence, Character.valueOf('D'), Item.diamond });
     GameRegistry.addRecipe(new ItemStack(ItemNethermonicDiamond,12), new Object[] {"DDD","DID","DDD", Character.valueOf('D'), ItemNethermonicDiamond, Character.valueOf('I'), ItemImbuedShard});
@@ -102,6 +99,10 @@ public static void addItems(){
     GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickR), new Object[] {Item.pickaxeDiamond, ItemDeviceR});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickY), new Object[] {Item.pickaxeDiamond, ItemDeviceY});
     GameRegistry.addShapelessRecipe(new ItemStack(ItemShardPickB), new Object[] {Item.pickaxeDiamond, ItemDeviceB});
+    GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockRLD, 1), new Object[] {EntangleCraftBlocks.BlockGLD, EntangleCraftItems.ItemRedShard});
+    GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockYLD, 1), new Object[] {EntangleCraftBlocks.BlockGLD, EntangleCraftItems.ItemYelShard});
+    GameRegistry.addShapelessRecipe(new ItemStack(EntangleCraftBlocks.BlockBLD, 1), new Object[] {EntangleCraftBlocks.BlockGLD,  EntangleCraftItems.ItemBlueShard});
+
 }
 
 private static void itemInitializing()

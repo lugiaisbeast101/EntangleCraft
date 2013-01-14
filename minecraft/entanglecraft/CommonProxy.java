@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.client.audio.SoundManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -37,6 +38,10 @@ public class CommonProxy implements IGuiHandler {
 		return workingDir;
 	}
 	
+	public static void sendTEFieldUpdate(TileEntity te, String tileEntityName, String field) {
+		ServerPacketHandler.sendTEFieldUpdate(te, tileEntityName, field);
+	}
+	
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == EnumGui.GenericDestination.getIndex()) {
@@ -56,5 +61,7 @@ public class CommonProxy implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return null;
 	}
+	
+
 
 }

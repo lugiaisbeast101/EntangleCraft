@@ -147,12 +147,13 @@ public class InventoryController {
 		return result;
 	}
 	
-	public void addStackToInventory(TileEntityChest inv, ItemStack itemStack) {
+	public boolean addStackToInventory(TileEntityChest inv, ItemStack itemStack) {
 		this.chestRecursion += 1;
 		int counter = 0;
 		boolean invContainsItem = false;
 		boolean slotOccupied = false;
 		boolean overFlow = false;
+		boolean chestOverFlow = false;
 		boolean stackAdded = false;
 
 		if (itemStack != null) {
@@ -201,11 +202,13 @@ public class InventoryController {
 					else if (inv.adjacentChestZPosition != null)
 						addStackToInventory(inv.adjacentChestZPosition, itemStack);
 					else {
+						chestOverFlow = true;
 						EntityItem e = new EntityItem(this.tileEntity.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
 								(double) this.blockCoords[2] + 0.5, itemStack);
 						e.dropItem(itemStack.itemID, itemStack.stackSize);
 					}
 				} else {
+					chestOverFlow = true;
 					EntityItem e = new EntityItem(this.tileEntity.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
 							(double) this.blockCoords[2] + 0.5, itemStack);
 					e.dropItem(itemStack.itemID, itemStack.stackSize);
@@ -213,9 +216,11 @@ public class InventoryController {
 			}
 		}
 		this.chestRecursion = 0;
+		
+		return chestOverFlow;
 	}
 	
-	public void addStackToInventory(InventoryBasic inv, ItemStack itemStack) {
+	public boolean addStackToInventory(InventoryBasic inv, ItemStack itemStack) {
 		int counter = 0;
 		boolean invContainsItem = false;
 		boolean slotOccupied = false;
@@ -251,6 +256,8 @@ public class InventoryController {
 				inv.setInventorySlotContents(counter, itemStack);
 			}
 		}
+		
+		return overFlow;
 	}
 
 }

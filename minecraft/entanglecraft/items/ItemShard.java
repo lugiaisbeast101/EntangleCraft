@@ -121,9 +121,16 @@ public class ItemShard extends Item {
 	
 	public static void tpScrollTeleport(World world, EntityPlayer thePlayer) {
 		
+		boolean travelledThroughSpaceAndTime = false;
 		ChunkCoordinates coords = thePlayer.getBedLocation();
 		if (coords != null) 
 		{
+			if (thePlayer.dimension != 0)
+			{
+				thePlayer.travelToDimension(0);
+				travelledThroughSpaceAndTime = true;
+			}
+			
 			ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
 			theCoords = theCoords != null ? theCoords : coords;
 			double expX = thePlayer.posX;
@@ -142,7 +149,10 @@ public class ItemShard extends Item {
 			if (distance != 0)
 			{
 				//sendExplosionToClients(thePlayer, expX, expY, expZ, (float) distance, true);
-				world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
+				if (!travelledThroughSpaceAndTime)
+				{
+					world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
+				}
 			}
 			else
 			{

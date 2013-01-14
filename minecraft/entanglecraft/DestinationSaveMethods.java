@@ -9,12 +9,14 @@ public class DestinationSaveMethods {
 		int[] blockCoords = dest.blockCoords;
 		double[] destinationCoords = dest.destinationCoords;
 		int channel = dest.channel;
+		int dimension = dest.dimension;
 		
 		int[] intDestinationCoords = doubleToIntArray(destinationCoords);
 		
 		nbt.setIntArray("blockCoords",blockCoords);
 		nbt.setIntArray("destinationCoords",intDestinationCoords);
 		nbt.setInteger("channel",channel);
+		nbt.setInteger("dimension", dimension);
 		}
 	}
 	
@@ -22,12 +24,15 @@ public class DestinationSaveMethods {
 		double[] destCoords;
 		int[] blockCoords;
 		int channel;
+		int destination;
+		int dimension;
 		
 		int[] intDestCoords = (nbt.getIntArray("destinationCoords"));
 		destCoords = intToDoubleArray(intDestCoords);
 		blockCoords = (nbt.getIntArray("blockCoords"));
 		channel = (nbt.getInteger("channel"));
-		return new Destination(destCoords,blockCoords,channel);
+		dimension = (nbt.getInteger("dimension"));
+		return new Destination(destCoords,blockCoords,channel,dimension);
 	}
 		
 	public static double[] intToDoubleArray(int[] array){

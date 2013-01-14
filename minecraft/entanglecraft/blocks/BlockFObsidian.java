@@ -9,8 +9,8 @@ import entanglecraft.EntangleCraft;
 
 public class BlockFObsidian extends BlockStone{
 
-	public BlockFObsidian(int par1,int par2) {
-		super(par1,par2);
+	public BlockFObsidian(int par1, int textureIndex) {
+		super(par1,textureIndex);
 		setCreativeTab(CreativeTabs.tabMaterials);
 	}
 	

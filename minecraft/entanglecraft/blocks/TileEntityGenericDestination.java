@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 import entanglecraft.Destination;
@@ -37,6 +38,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	private final int DEFAULT_SPEED_MULTIPLIER = 1;
 	private final int TRANSFORM_COST = 32;
 	private final int TRANSFORM_SLOT = 1;
+	public final String NAME = "TileEntityGenericDestination";
 	
 	public int gdProcessTime = 0;
 	public int teleportsEarned = 0;
@@ -68,9 +70,16 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 		createDestination();
 		this.invController = new InventoryController(this,blockCoords);
 	}
+	
+	public void setDest(Destination dest) {
+		this.blockCoords = dest.blockCoords;
+		this.destinationCoords = dest.destinationCoords;
+		this.channel = dest.channel;
+		this.destination = dest;
+	}
 
 	public void createDestination() {
-		destination = new Destination(destinationCoords, blockCoords, channel);
+		destination = new Destination(destinationCoords, blockCoords, channel, this.worldObj.getWorldInfo().getDimension());
 	}
 
 	@Override
@@ -93,14 +102,20 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 		}
 
 		this.gdProcessTime = nbt.getShort("processTime");
+		
 		this.teleportsEarned = (int) nbt.getShort("teleportsEarned");
+		System.out.println("Updated teleport count on read");
+		EntangleCraft.proxy.sendTEFieldUpdate(this, this.NAME, "teleportsEarned");
+		
 		this.speedMultiplier = (int) nbt.getShort("speedMultiplier");
 		if (this.speedMultiplier == 0)
 			this.speedMultiplier = 1;
 		this.destination = DestinationSaveMethods.readDestFromNBT(nbt);
 		this.invController = new InventoryController(this,destination.blockCoords);
 		if (teleportsEarned > 0)
+		{
 			EntangleCraft.addDestination(this.destination);
+		}
 		
 		
 	}
@@ -357,7 +372,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 			}
 			if (this.speedMultiplier == 0)
 				this.speedMultiplier = 1;
-			ServerPacketHandler.sendTEFieldUpdate(this, "TileEntityGenericDestination", "speedMultiplier");
+			ServerPacketHandler.sendTEFieldUpdate(this, this.NAME, "speedMultiplier");
 		}
 	}
 
@@ -388,7 +403,6 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 			EntangleCraft.addDestination(destination);
 		} else if (action == "remove") {
 			EntangleCraft.removeDestination(destination);
-
 		}
 	}
 

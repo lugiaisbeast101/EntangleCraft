@@ -41,6 +41,7 @@ public class LambdaSoundHandler{
 			"closerAgainSix.wav",
 			"foundIt.wav",
 			"shardMineProcess.wav",
+			"shardMineProcessOverflow.wav",
 			"destroyProcess.wav"
 		};
 		for (int i = 0; i < soundFiles.length; i++)
@@ -65,6 +66,7 @@ public class LambdaSoundHandler{
 			ServerPacketHandler.playSoundToClients(destination, volume, pitch, soundName);
 		}
 	}
+	
 
 
 }

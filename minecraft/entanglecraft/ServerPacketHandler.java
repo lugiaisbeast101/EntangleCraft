@@ -18,11 +18,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.Direction;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.network.NetServerHandler;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.blocks.EntangleCraftBlocks;
 import entanglecraft.blocks.TileEntityGenericDestination;
@@ -41,14 +43,17 @@ public class ServerPacketHandler implements IPacketHandler {
 	public static void playTPSoundToClients(EntityPlayer player, double[] dest, String sound) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		DataOutputStream DOS = new DataOutputStream(bytes);
-		try {
+		try 
+		{
 			DOS.writeInt(0); // 0 for TP sound packet
 			DOS.writeUTF(player.username);
 			DOS.writeUTF(sound);
 			DOS.writeDouble(dest[0]);
 			DOS.writeDouble(dest[1]);
 			DOS.writeDouble(dest[2]);
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
 
@@ -204,11 +209,12 @@ public class ServerPacketHandler implements IPacketHandler {
 				}
 				if (spell != null)
 				{
-					if (spell == 0) this.freeze(server.worldServerForDimension(0), thePlayer, x, y, z, side);
-					else if (spell == 1) this.ignite(server.worldServerForDimension(0), thePlayer, x, y, z, side);
-					else if (spell == 2) this.placeTorch(server.worldServerForDimension(0), thePlayer, x, y, z, side);
-					else if (spell == 3) this.tpScrollTeleport(server.worldServerForDimension(0), thePlayer);
-					else if (spell == 5) this.shardPickMineBlock(server.worldServerForDimension(0), thePlayer, x, y, z, side);
+					WorldServer w = server.worldServerForDimension(thePlayer.dimension);
+					if (spell == 0) this.freeze(w, thePlayer, x, y, z, side);
+					else if (spell == 1) this.ignite(w, thePlayer, x, y, z, side);
+					else if (spell == 2) this.placeTorch(w, thePlayer, x, y, z, side);
+					else if (spell == 3) this.tpScrollTeleport(w, thePlayer);
+					else if (spell == 5) this.shardPickMineBlock(w, thePlayer, x, y, z, side);
 				}
 			}
 		}
@@ -259,8 +265,14 @@ public class ServerPacketHandler implements IPacketHandler {
 	
 	
 	public static void tpScrollTeleport(World world, EntityPlayer thePlayer) {
-		
+		boolean travelledThroughSpaceAndTime = false;
 		ChunkCoordinates coords = thePlayer.getBedLocation();
+		if (thePlayer.dimension != 0)
+		{
+			thePlayer.travelToDimension(0);
+			travelledThroughSpaceAndTime = true;
+		}
+		
 		if (coords != null) 
 		{
 			ChunkCoordinates theCoords = thePlayer.verifyRespawnCoordinates(world, coords, true);
@@ -281,7 +293,10 @@ public class ServerPacketHandler implements IPacketHandler {
 			if (distance != 0)
 			{
 				//sendExplosionToClients(thePlayer, expX, expY, expZ, (float) distance, true);
-				world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
+				if (!travelledThroughSpaceAndTime)
+				{
+					world.createExplosion(thePlayer, expX, expY, expZ, (float) distance, true);
+				}
 			}
 			else
 			{
@@ -329,9 +344,12 @@ public class ServerPacketHandler implements IPacketHandler {
 				/*
 				 * if (!thePlayer.canPlayerEdit(x, y, z)) { return false; } else {
 				 */
-				LambdaSoundHandler.playSound(theWorld, new double[] {(double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D}, "fire.ignite", 1.0F, theWorld.rand.nextFloat() * 0.4F + 0.8F);
-				theWorld.setBlockWithNotify(x, y, z, Block.fire.blockID);
-				thePlayer.getCurrentEquippedItem().damageItem(1, thePlayer);
+				if (thePlayer.getCurrentEquippedItem() != null)
+				{
+					LambdaSoundHandler.playSound(theWorld, new double[] {(double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D}, "fire.ignite", 1.0F, theWorld.rand.nextFloat() * 0.4F + 0.8F);
+					theWorld.setBlockWithNotify(x, y, z, Block.fire.blockID);
+					thePlayer.getCurrentEquippedItem().damageItem(1, thePlayer);
+				}
 			}
 			return true;
 			// }
@@ -340,68 +358,76 @@ public class ServerPacketHandler implements IPacketHandler {
 	
 	private boolean shardPickMineBlock(World world, EntityPlayer thePlayer, int x, int y, int z, int side) {
 		
-		int blockID = world.getBlockId(x, y, z);
-
-		int metadata = world.getBlockMetadata(x, y, z);
-		double[] coords = new double[] {x + 0.5D, y + 0.5D, z + 0.5D};
-		ItemStack item = thePlayer.getCurrentEquippedItem();
-		float soundPitch = 1F;
-		
-		Item[] shardPicks = new Item[] {EntangleCraftItems.ItemShardPickG, EntangleCraftItems.ItemShardPickR, EntangleCraftItems.ItemShardPickB, EntangleCraftItems.ItemShardPickY};
-		
-		boolean acceptable = item.getItem() instanceof ItemShardPick;
-		
-		if (acceptable)
+		if (world.blockExists(x, y, z) && world.getBlockId(x,y,z) != 0)
 		{
-			int channel = ((ItemShardPick)item.getItem()).channel;
+			int blockID = world.getBlockId(x, y, z);
+			int metadata = world.getBlockMetadata(x, y, z);
+			double[] coords = new double[] {x + 0.5D, y + 0.5D, z + 0.5D};
+			ItemStack item = thePlayer.getCurrentEquippedItem();
+			float soundPitch = 1F;
+			String sound = "shardMineProcess";
 			
-			Destination closestDest = EntangleCraft.closestDestToCoord(coords, EntangleCraft.channelDests[channel]);
-		
-			if (closestDest != null)
+			Item[] shardPicks = new Item[] {EntangleCraftItems.ItemShardPickG, EntangleCraftItems.ItemShardPickR, EntangleCraftItems.ItemShardPickB, EntangleCraftItems.ItemShardPickY};
+			
+			boolean acceptable = item.getItem() instanceof ItemShardPick;
+			
+			if (acceptable)
 			{
-				//double[] doubleCoords = new double[] {(double)x,(double)y,(double)z};
-				//double cost = DistanceHandler.calculate3dDistance(doubleCoords, closestDest.destinationCoords);
+				int channel = ((ItemShardPick)item.getItem()).channel;
 				
-				//if (DistanceHandler.getDistance(channel) >= cost)
-				//{
-					TileEntityGenericDestination teGD = (TileEntityGenericDestination)world.getBlockTileEntity(closestDest.blockCoords[0], closestDest.blockCoords[1], closestDest.blockCoords[2]);
+				Destination closestDest = EntangleCraft.closestDestToCoord(coords, EntangleCraft.getDestsFromChannelAndDimension(EntangleCraft.channelDests, channel, thePlayer.dimension));
 			
-					ItemStack itemStack = 	
-							InventoryController.isShearable(world, blockID, x, y, z) ? null :
-							Block.blocksList[blockID].idDropped(blockID, new Random(), 0) == -1 ? null :
-							InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
+				if (closestDest != null)
+				{
+					//double[] doubleCoords = new double[] {(double)x,(double)y,(double)z};
+					//double cost = DistanceHandler.calculate3dDistance(doubleCoords, closestDest.destinationCoords);
 					
-					
-					if (itemStack != null)
-					{
-						boolean hasChest = true;
-						
-						hasChest = hasChest && teGD.invController != null;
-						if (hasChest)
+					//if (DistanceHandler.getDistance(channel) >= cost)
+					//{
+						TileEntityGenericDestination teGD = (TileEntityGenericDestination)world.getBlockTileEntity(closestDest.blockCoords[0], closestDest.blockCoords[1], closestDest.blockCoords[2]);
+						if (teGD != null)
 						{
-							teGD.invController.checkForChest();
-							hasChest = hasChest && teGD.invController.getChest() != null;					
+							ItemStack itemStack = 	
+									InventoryController.isShearable(world, blockID, x, y, z) ? null :
+									Block.blocksList[blockID].idDropped(blockID, new Random(), 0) == -1 ? null :
+									InventoryController.getItemStackFromIDAndMetadata(blockID, metadata);
+							
+							
+							if (itemStack != null)
+							{
+								boolean hasChest = true;
+								
+								hasChest = hasChest && teGD.invController != null;
+								if (hasChest)
+								{
+									teGD.invController.checkForChest();
+									hasChest = hasChest && teGD.invController.getChest() != null;					
+								}
+								if (hasChest)
+								{
+									sound = teGD.invController.addStackToInventory(teGD.invController.getTileEntityChest(), itemStack)
+											? "shardMineProcessOverflow" : sound;
+								}
+								
+								else
+								{
+									EntityItem e = new EntityItem(teGD.worldObj, (double) teGD.blockCoords[0] + 0.5, (double) teGD.blockCoords[1] + 1.5,
+											(double) teGD.blockCoords[2] + 0.5, itemStack);
+									e.dropItem(itemStack.itemID, itemStack.stackSize);
+									sound = "shardMineProcessOverflow";
+									
+								}
+								
+								
+								soundPitch = teGD.teleportsEarned < 16 ? 0.8F + (0.2F * (teGD.teleportsEarned/16F)) : soundPitch;
+								LambdaSoundHandler.playSound(world, coords, sound, world.rand.nextFloat() * 0.1F + 0.6F, soundPitch);
+								//DistanceHandler.subtractDistance(channel, cost);
+								teGD.changeTeleportsEarned(-1);
+								world.setBlockWithNotify(x, y, z, 0);
+							}
 						}
-						if (hasChest)
-						{
-							teGD.invController.addStackToInventory(teGD.invController.getTileEntityChest(), itemStack);
-						}
-						
-						else
-						{
-							EntityItem e = new EntityItem(teGD.worldObj, (double) teGD.blockCoords[0] + 0.5, (double) teGD.blockCoords[1] + 1.5,
-									(double) teGD.blockCoords[2] + 0.5, itemStack);
-							e.dropItem(itemStack.itemID, itemStack.stackSize);
-						}
-						
-						
-						soundPitch = teGD.teleportsEarned < 16 ? 0.8F + (0.2F * (teGD.teleportsEarned/16F)) : soundPitch;
-						LambdaSoundHandler.playSound(world, coords, "shardMineProcess", world.rand.nextFloat() * 0.1F + 0.9F, soundPitch);
-						//DistanceHandler.subtractDistance(channel, cost);
-						teGD.changeTeleportsEarned(-1);
-						world.setBlockWithNotify(x, y, z, 0);
-					}
-				//}
+					//}
+				}
 			}
 		}
 		return true;
@@ -438,15 +464,20 @@ public class ServerPacketHandler implements IPacketHandler {
 
 			if (theWorld.getBlockId(x, y, z) == Block.waterStill.blockID) 
 			{
-				theWorld.setBlockWithNotify(x, y, z, EntangleCraftBlocks.BlockLitWater.blockID);
-				thePlayer.getCurrentEquippedItem().damageItem(1, thePlayer);
+				if (thePlayer.getCurrentEquippedItem() != null)
+				{
+					thePlayer.getCurrentEquippedItem().damageItem(1, thePlayer);
+					theWorld.setBlockWithNotify(x, y, z, EntangleCraftBlocks.BlockLitWater.blockID);
+				}
 			} 
 			
 			else if (theWorld.getBlockId(x, y, z) != EntangleCraftBlocks.BlockLitWater.blockID) 
 			{
-				theWorld.setBlockWithNotify(x, y, z, EntangleCraftBlocks.BlockGlowTorch.blockID);
-				thePlayer.getCurrentEquippedItem().damageItem(1, thePlayer);
-				
+				if (thePlayer.getCurrentEquippedItem() != null)
+				{
+					thePlayer.getCurrentEquippedItem().damageItem(1, thePlayer);
+					theWorld.setBlockWithNotify(x, y, z, EntangleCraftBlocks.BlockGlowTorch.blockID);
+				}
 			}
 
 			
@@ -474,11 +505,14 @@ public class ServerPacketHandler implements IPacketHandler {
 	private boolean freeze(World world, EntityPlayer thePlayer, int x, int y, int z, int side)
 	{
 		
-		if (world.getBlockId(x, y, z) == Block.waterStill.blockID) {
+		if (world.getBlockId(x, y, z) == Block.waterStill.blockID 
+				&& thePlayer.getCurrentEquippedItem() != null) 
+		{
 			world.setBlockWithNotify(x, y, z, Block.ice.blockID);
 			LambdaSoundHandler.playSound(world, new double[] {(double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D}, "icePoof", 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			thePlayer.getCurrentEquippedItem().damageItem(1, thePlayer);
 		}
+		
 		return true;
 	}
 }

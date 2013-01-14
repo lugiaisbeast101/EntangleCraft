@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import entanglecraft.Destination;
 import entanglecraft.EntangleCraft;
 import entanglecraft.gui.GuiGenericDestination;
@@ -22,7 +23,6 @@ public class BlockGenericDestination extends BlockContainer{
 	
 	public int channel = 0;
 	public int id;
-	private Destination dest;
 	
 	public BlockGenericDestination(int par1, int channel) {
 		super(par1, Material.rock);
@@ -34,12 +34,16 @@ public class BlockGenericDestination extends BlockContainer{
 	
 	public void onBlockAdded(World theWorld, int x, int y, int z){
 		super.onBlockAdded(theWorld, x, y, z);
-		    	
-		this.dest = new Destination(new int[]{x,y,z},this.channel);
+
+		int dimension = theWorld.provider.dimensionId;
+
+		Destination dest = new Destination(new int[]{x,y,z},this.channel,dimension);
+		System.out.println(dest.toString());
+		
 	}
 	
 	public void breakBlock(World theWorld, int x,int y, int z, int a, int b){
-		EntangleCraft.removeDestination((new Destination(new int[] {x,y,z}, channel)));
+		EntangleCraft.removeDestination((new Destination(new int[] {x,y,z}, channel, theWorld.provider.dimensionId)));
 		
         TileEntityGenericDestination te = (TileEntityGenericDestination)theWorld.getBlockTileEntity(x, y, z);
 
@@ -92,22 +96,28 @@ public class BlockGenericDestination extends BlockContainer{
     {   	
 		TileEntityGenericDestination tileEntityGD = (TileEntityGenericDestination) world
 				.getBlockTileEntity(i, j, k);
+
 		
-		tileEntityGD.setDest(new int[] {i,j,k},this.channel);
-		
-        	parPlayer.openGui(EntangleCraft.instance, 0, world, i, j, k);
-            return true;
+		int dimension = world.provider.dimensionId;
+		Destination dest = new Destination(new int[]{i,j,k},this.channel,dimension);
+		tileEntityGD.setDest(dest);
+
+    	parPlayer.openGui(EntangleCraft.instance, 0, world, i, j, k);
+        return true;
     }
 	
     
 	public int getBlockTextureFromSide(int i){
-		if (i == 1){
+		if (i == 1)
+		{
 			return 9+(channel);
 		}
-		else if(i == 0){
+		else if(i == 0)
+		{
 			return 0;
 		}
-		else{
+		else
+		{
 			return 2+(channel*2);
 		}
 	}
