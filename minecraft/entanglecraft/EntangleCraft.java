@@ -33,6 +33,7 @@ import entanglecraft.items.ItemLambda;
 import entanglecraft.items.ItemShard;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
@@ -81,6 +82,9 @@ public class EntangleCraft implements IConnectionHandler {
 	public void preLoad(FMLPreInitializationEvent event) {
 		proxy.registerPreLoad();
 		MinecraftForge.EVENT_BUS.register(dhInstance);
+		
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		configure(config);
 	}
 
 	@Init
@@ -91,6 +95,20 @@ public class EntangleCraft implements IConnectionHandler {
 		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
 	}
 
+	public void configure(Configuration config) {
+
+        // loading the configuration from its file
+        config.load();
+        
+        WorldGenFunctions.worldGenerationEnabled = config.get(Configuration.CATEGORY_GENERAL, "isWorldGenerationEnabled", true).getBoolean(true);
+        
+        EntangleCraftBlocks.configureIDs(config);
+        EntangleCraftItems.configureIDs(config);
+        
+        // saving the configuration to its file
+        config.save();
+	}
+	
 	public static Destination closestDestToPlayer(EntityPlayer playerEntity, ArrayList dests) {
 		Destination destination = null;
 		double[] playerPoints = new double[] { playerEntity.posX, playerEntity.posY,

@@ -14,7 +14,7 @@ public class WorldGenLambdaOre {
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
-    	if (random.nextInt(3) == 1)
+    	if (random.nextInt(20) == 1)
     	{
 	    	int blockToGen = WorldGenFunctions.chooseRandomItem(random, ores);
 	    	
@@ -26,8 +26,9 @@ public class WorldGenLambdaOre {
 	        j1 = j + random.nextInt(16) - random.nextInt(16);
 	        k1 = k + random.nextInt(256) * random.nextInt(1) == 0 ? -1 : 1;
 		    
-	        if (world.getBlockId(i1, j1, k1) == 0 && world.getBlockId(i1, j1, k1) != EntangleCraftBlocks.BlockFObsidian.blockID)
+	        if (world.getBlockId(i1, j1, k1) != 0 && world.getBlockId(i1, j1, k1)!= EntangleCraftBlocks.BlockFObsidian.blockID)
 	        {
+	        	System.out.println("created an ore");
 	        	world.setBlockWithNotify(i1, j1, k1,blockToGen);
 	        	EntangleCraft.dhInstance.oreGenCount += 1;
 	        	

@@ -567,17 +567,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 				if (itemStack != null) {
 					minerSound = itemStack.itemID == new ItemStack(Item.diamond, 1).itemID ? "teleport" : "mineProcess";
 					minerSoundPitch = itemStack.itemID == new ItemStack(Item.diamond, 1).itemID ? 1F : minerSoundPitch;
-					invController.checkForChest();
-					if (invController.getChest() != null) {
-						TileEntityChest theChest = invController.getTileEntityChest();
-						invController.addStackToInventory(theChest, itemStack);
-					}
-
-					else {
-						EntityItem e = new EntityItem(this.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
-								(double) this.blockCoords[2] + 0.5, itemStack);
-						e.dropItem(itemStack.itemID, itemStack.stackSize);
-					}
+					invController.addStackToInventory(itemStack);
 
 				}
 			}
@@ -768,7 +758,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		boolean canMine = true;
 		Block theBlock = Block.blocksList[blockID];
 		int droppedID = theBlock != null ? theBlock.idDropped(theBlock.blockID, new Random(), 0) : blockID;
-		
 		if (this.isFiltering()) 
 		{
 			if (this.filterInclusive && this.filteredIds != null) 
@@ -815,7 +804,7 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 		} 
 
 
-		return canMine;
+		return canMine && droppedID != -1;
 	}
 
 	private boolean canDestroy(int blockID)
@@ -897,8 +886,6 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 						DistanceHandler.subtractDistance(channel, this.blockCost);
 						this.minerSound = "destroyProcess";
 					}
-					
-					else this.minerSound = "minerFail";
 					blockID = 0;
 				}
 				

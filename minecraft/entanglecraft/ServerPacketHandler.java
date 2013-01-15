@@ -420,7 +420,7 @@ public class ServerPacketHandler implements IPacketHandler {
 								
 								
 								soundPitch = teGD.teleportsEarned < 16 ? 0.8F + (0.2F * (teGD.teleportsEarned/16F)) : soundPitch;
-								LambdaSoundHandler.playSound(world, coords, sound, world.rand.nextFloat() * 0.1F + 0.6F, soundPitch);
+								LambdaSoundHandler.playSound(world, coords, sound, world.rand.nextFloat() * 0.1F + 0.5F, soundPitch);
 								//DistanceHandler.subtractDistance(channel, cost);
 								teGD.changeTeleportsEarned(-1);
 								world.setBlockWithNotify(x, y, z, 0);

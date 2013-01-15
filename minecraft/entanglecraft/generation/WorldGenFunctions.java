@@ -18,6 +18,10 @@ public class WorldGenFunctions implements IWorldGenerator{
 	private WorldGenForerunnerDungeon dungeonMaker = new WorldGenForerunnerDungeon();
 	private static boolean shouldGenerateSkyFortress = true;
 	
+	public static boolean worldGenerationEnabled = true;
+	public static boolean oreGenerationEnabled = true;
+	public static boolean structureGenerationEnabled = false;
+	
     public static int getLeftAndRight(int[] direction){
     	if (direction[0] == 0){
     		return 0;
@@ -30,10 +34,22 @@ public class WorldGenFunctions implements IWorldGenerator{
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		
 		int x = chunkX + rand.nextInt(16); int y = 192; int z = chunkZ + rand.nextInt(16); 
-		//skyFortressMaker.generate(world, rand, x, y, z); 
-		//dungeonMaker.generate(world, rand, x, 32, z);
-		new WorldGenLambdaOre().generate(world, rand, chunkX, 32, chunkZ); 
 		
+		if (worldGenerationEnabled)
+		{
+			
+			if (structureGenerationEnabled)
+			{
+				//skyFortressMaker.generate(world, rand, x, y, z); 
+				//dungeonMaker.generate(world, rand, x, 32, z);
+			}
+				
+			if (oreGenerationEnabled)
+			{
+				new WorldGenLambdaOre().generate(world, rand, chunkX, 32, chunkZ); 
+			}
+		
+		}
 	}
     
     public static void placeFloorBlock(World world, int x, int y, int z, int block,int roofBlock,int roofHeight){

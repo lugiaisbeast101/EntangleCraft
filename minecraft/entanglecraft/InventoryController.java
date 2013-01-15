@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 
@@ -17,6 +18,7 @@ public class InventoryController {
 	private int[] chest;
 	private TileEntity tileEntity = null;
 	private int[] blockCoords = null;
+	private boolean isChestEnder;
 	
 	public InventoryController(TileEntity te, int[] blockCoords) {
 		this.tileEntity = te;
@@ -31,23 +33,29 @@ public class InventoryController {
 	}
 	
 	public void checkForChest() {
-		int id = Block.chest.blockID;
+		int chestId = Block.chest.blockID;
 		World world = tileEntity.worldObj;
 		int x = this.blockCoords[0];
 		int y = this.blockCoords[1];
 		int z = this.blockCoords[2];
+
+		if (world.getBlockId(x + 1, y, z) == chestId) 
 		{
-			if (world.getBlockId(x + 1, y, z) == id) {
-				setChest(new int[] { x + 1, y, z });
-			} else if (world.getBlockId(x - 1, y, z) == id) {
-				setChest(new int[] { x - 1, y, z });
-			} else if (world.getBlockId(x, y, z + 1) == id) {
-				setChest(new int[] { x, y, z + 1 });
-			} else if (world.getBlockId(x, y, z - 1) == id) {
-				setChest(new int[] { x, y, z - 1 });
-			} else
-				setChest(null);
-		}
+			setChest(new int[] { x + 1, y, z });
+		} 
+		else if (world.getBlockId(x - 1, y, z) == chestId) 
+		{
+			setChest(new int[] { x - 1, y, z });
+		} 
+		else if (world.getBlockId(x, y, z + 1) == chestId)
+		{
+			setChest(new int[] { x, y, z + 1 });
+		} 
+		else if (world.getBlockId(x, y, z - 1) == chestId)
+		{
+			setChest(new int[] { x, y, z - 1 });
+		} else
+			setChest(null);
 	}
 
 	public int[] getChest() {
@@ -147,7 +155,24 @@ public class InventoryController {
 		return result;
 	}
 	
+	public boolean addStackToInventory(ItemStack itemStack) {
+		boolean overFlowed = false;
+		checkForChest();
+		if (getChest() != null) {
+			TileEntityChest theChest = getTileEntityChest();
+			overFlowed = addStackToInventory(theChest, itemStack);
+		}
+
+		else {
+			EntityItem e = new EntityItem(this.tileEntity.worldObj, (double) this.blockCoords[0] + 0.5, (double) this.blockCoords[1] + 1.5,
+					(double) this.blockCoords[2] + 0.5, itemStack);
+			e.dropItem(itemStack.itemID, itemStack.stackSize);
+		}
+		return overFlowed;
+	}
+	
 	public boolean addStackToInventory(TileEntityChest inv, ItemStack itemStack) {
+				
 		this.chestRecursion += 1;
 		int counter = 0;
 		boolean invContainsItem = false;

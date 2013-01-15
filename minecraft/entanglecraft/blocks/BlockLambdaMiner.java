@@ -87,7 +87,6 @@ public class BlockLambdaMiner extends BlockContainer{
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving)
     {
         int facing = MathHelper.floor_double((double)(entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
         if (facing == 0)
         {
             world.setBlockMetadataWithNotify(x, y, z, 2);

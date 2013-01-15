@@ -6,37 +6,82 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
+import net.minecraftforge.common.Configuration;
 import entanglecraft.blocks.EntangleCraftBlocks;
 
 public class EntangleCraftItems {
-	  public static final Item ItemNetherEssence = new ItemLambda(8600).setIconIndex(87).setItemName("ItemNetherEssence");
-	  public static final Item ItemDeviceG = new ItemDevice(8601).setIconIndex(90).setItemName("ItemDeviceG");
-	  public static final Item ItemDeviceR = new ItemDevice(8602).setIconIndex(91).setItemName("ItemDeviceR");
-	  public static final Item ItemDeviceY = new ItemDevice(8603).setIconIndex(92).setItemName("ItemDeviceY");
-	  public static final Item ItemDeviceB = new ItemDevice(8604).setIconIndex(93).setItemName("ItemDeviceB");
-	  public static final Item ItemNethermonicDiamond = new ItemLambda(8605).setIconIndex(88).setItemName("ItemNethermonicDiamond");
-	  public static final Item ItemLambdaCore = new ItemLambda(8606).setIconIndex(89).setItemName("ItemLambdaCore");
-	  public static final Item ItemTransformer = new ItemLambda(8607).setIconIndex(80).setItemName("ItemTransformer");
-	  public static final Item ItemReverseTransformer = new ItemLambda(8608).setIconIndex(81).setItemName("ItemReverseTransformer");
-	  public static final Item ItemTransmitter = new ItemLambda(8609).setIconIndex(82).setItemName("ItemTransmitter");
-	  public static final Item ItemFrShard = new ItemLambda(8610).setIconIndex(86).setItemName("ItemFrShard");
-	  public static final Item ItemBlueShard = new ItemShard(8611,0).setIconIndex(83).setItemName("ItemBlueShard").setMaxDamage(256);
-	  public static final Item ItemRedShard = new ItemShard(8612,1).setIconIndex(84).setItemName("ItemRedShard").setMaxDamage(256);
-	  public static final Item ItemYelShard = new ItemShard(8613,2).setIconIndex(85).setItemName("ItemYelShard").setMaxDamage(256);
-	  public static final Item ItemImbuedShard = new ItemShard(8614,4).setIconIndex(94).setItemName("ItemImbuedShard");
-	  public static final Item ItemInductionCircuit = new ItemLambda(8615).setIconIndex(95).setItemName("ItemInductionCircuit").setMaxStackSize(1);
-	  public static final Item ItemCircuit = new ItemLambda(8616).setIconIndex(96).setItemName("ItemCircuit");
-	  public static final Item ItemInclusiveFilter = new ItemLambda(8617).setIconIndex(97).setItemName("ItemInclusiveFilter").setMaxStackSize(1);
-	  public static final Item ItemExclusiveFilter = new ItemLambda(8618).setIconIndex(98).setItemName("ItemExclusiveFilter").setMaxStackSize(1);
-	  public static final Item ItemDestroyFilter = new ItemLambda(8625).setIconIndex(97+16).setItemName("ItemDestroyFilter").setMaxStackSize(1);
-	  public static final Item ItemDontDestroyFilter = new ItemLambda(8626).setIconIndex(97+17).setItemName("ItemDontDestroyFilter").setMaxStackSize(1);
-	  public static final Item ItemSuperInductionCircuit = new ItemLambda(8619).setIconIndex(99).setItemName("ItemSuperInductionCircuit").setMaxStackSize(1);
-	  public static final Item ItemTPScroll = new ItemShard(8620,3).setIconIndex(101).setItemName("ItemTPScroll").setMaxDamage(1);
-	  public static final Item ItemShardPickG = new ItemShardPick(8621).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(0);
-	  public static final Item ItemShardPickR = new ItemShardPick(8622).setIconIndex(103).setItemName("ItemShardPickR").setMaxDamage(0);
-	  public static final Item ItemShardPickY = new ItemShardPick(8623).setIconIndex(104).setItemName("ItemShardPickY").setMaxDamage(0);
-	  public static final Item ItemShardPickB = new ItemShardPick(8624).setIconIndex(105).setItemName("ItemShardPickB").setMaxDamage(0);
-	  
+	public static final int NetherEssence_ID = 8600;
+	public static final int DeviceG_ID = 8601;
+	public static final int DeviceR_ID = 8602; 
+	public static final int DeviceY_ID = 8603;
+	public static final int DeviceB_ID = 8604;
+	public static final int NethermonicDiamond_ID = 8605;
+	public static final int LambdaCore_ID = 8606;
+	public static final int Transformer_ID = 8607;
+	public static final int ReverseTransformer_ID = 8608;
+	public static final int Transmitter_ID = 8609;
+	public static final int FrShard_ID = 8610;
+	public static final int BlueShard_ID = 8611;
+	public static final int RedShard_ID = 8612;
+	public static final int YelShard_ID = 8613;
+	public static final int ImbuedShard_ID = 8614;
+	public static final int InductionCircuit_ID = 8615;
+	public static final int Circuit_ID = 8616;
+	public static final int InclusiveFilter_ID = 8617;
+	public static final int ExclusiveFilter_ID = 8618;
+	public static final int DestroyFilter_ID = 8625;     // Sorry if this hurts your OCD.
+	public static final int DontDestroyFilter_ID = 8626; //
+	public static final int SuperInductionCircuit_ID = 8619;
+	public static final int TPScroll_ID = 8620;
+	public static final int ShardPickG_ID = 8621;
+	public static final int ShardPickR_ID = 8622;
+	public static final int ShardPickY_ID = 8623;
+	public static final int ShardPickB_ID = 8624;
+		
+	public static final Item ItemNetherEssence = new ItemLambda(NetherEssence_ID).setIconIndex(87).setItemName("ItemNetherEssence");
+	public static final Item ItemDeviceG = new ItemDevice(DeviceG_ID).setIconIndex(90).setItemName("ItemDeviceG");
+	public static final Item ItemDeviceR = new ItemDevice(DeviceR_ID).setIconIndex(91).setItemName("ItemDeviceR");
+	public static final Item ItemDeviceY = new ItemDevice(DeviceY_ID).setIconIndex(92).setItemName("ItemDeviceY");
+	public static final Item ItemDeviceB = new ItemDevice(DeviceB_ID).setIconIndex(93).setItemName("ItemDeviceB");
+	public static final Item ItemNethermonicDiamond = new ItemLambda(NethermonicDiamond_ID).setIconIndex(88).setItemName("ItemNethermonicDiamond");
+	public static final Item ItemLambdaCore = new ItemLambda(LambdaCore_ID).setIconIndex(89).setItemName("ItemLambdaCore");
+	public static final Item ItemTransformer = new ItemLambda(Transformer_ID).setIconIndex(80).setItemName("ItemTransformer");
+	public static final Item ItemReverseTransformer = new ItemLambda(ReverseTransformer_ID).setIconIndex(81).setItemName("ItemReverseTransformer");
+	public static final Item ItemTransmitter = new ItemLambda(Transmitter_ID).setIconIndex(82).setItemName("ItemTransmitter");
+	public static final Item ItemFrShard = new ItemLambda(FrShard_ID).setIconIndex(86).setItemName("ItemFrShard");
+	public static final Item ItemBlueShard = new ItemShard(BlueShard_ID,0).setIconIndex(83).setItemName("ItemBlueShard").setMaxDamage(256);
+	public static final Item ItemRedShard = new ItemShard(RedShard_ID,1).setIconIndex(84).setItemName("ItemRedShard").setMaxDamage(256);
+	public static final Item ItemYelShard = new ItemShard(YelShard_ID,2).setIconIndex(85).setItemName("ItemYelShard").setMaxDamage(256);
+	public static final Item ItemImbuedShard = new ItemShard(ImbuedShard_ID,4).setIconIndex(94).setItemName("ItemImbuedShard");
+	public static final Item ItemInductionCircuit = new ItemLambda(InductionCircuit_ID).setIconIndex(95).setItemName("ItemInductionCircuit").setMaxStackSize(1);
+	public static final Item ItemCircuit = new ItemLambda(Circuit_ID).setIconIndex(96).setItemName("ItemCircuit");
+	public static final Item ItemInclusiveFilter = new ItemLambda(InclusiveFilter_ID).setIconIndex(97).setItemName("ItemInclusiveFilter").setMaxStackSize(1);
+	public static final Item ItemExclusiveFilter = new ItemLambda(ExclusiveFilter_ID).setIconIndex(98).setItemName("ItemExclusiveFilter").setMaxStackSize(1);
+	public static final Item ItemDestroyFilter = new ItemLambda(DestroyFilter_ID).setIconIndex(97+16).setItemName("ItemDestroyFilter").setMaxStackSize(1);
+	public static final Item ItemDontDestroyFilter = new ItemLambda(DontDestroyFilter_ID).setIconIndex(97+17).setItemName("ItemDontDestroyFilter").setMaxStackSize(1);
+	public static final Item ItemSuperInductionCircuit = new ItemLambda(SuperInductionCircuit_ID).setIconIndex(99).setItemName("ItemSuperInductionCircuit").setMaxStackSize(1);
+	public static final Item ItemTPScroll = new ItemShard(TPScroll_ID,3).setIconIndex(101).setItemName("ItemTPScroll").setMaxDamage(1);
+	public static final Item ItemShardPickG = new ItemShardPick(ShardPickG_ID).setIconIndex(102).setItemName("ItemShardPickG").setMaxDamage(0);
+	public static final Item ItemShardPickR = new ItemShardPick(ShardPickR_ID).setIconIndex(103).setItemName("ItemShardPickR").setMaxDamage(0);
+	public static final Item ItemShardPickY = new ItemShardPick(ShardPickY_ID).setIconIndex(104).setItemName("ItemShardPickY").setMaxDamage(0);
+	public static final Item ItemShardPickB = new ItemShardPick(ShardPickB_ID).setIconIndex(105).setItemName("ItemShardPickB").setMaxDamage(0);
+	
+	public static final Item[] itemList = new Item[] {
+		ItemNetherEssence, ItemDeviceG, ItemDeviceR, ItemDeviceY, ItemDeviceB, ItemNethermonicDiamond,
+		ItemLambdaCore, ItemTransformer, ItemReverseTransformer, ItemTransmitter, ItemFrShard,
+		ItemBlueShard, ItemRedShard, ItemYelShard, ItemImbuedShard, ItemInductionCircuit, ItemCircuit,
+		ItemInclusiveFilter, ItemExclusiveFilter, ItemDestroyFilter, ItemDontDestroyFilter, ItemSuperInductionCircuit,
+		ItemTPScroll, ItemShardPickG, ItemShardPickR, ItemShardPickY, ItemShardPickB
+	};
+	
+	public static int[] defaultIdsList = new int[] {
+		NetherEssence_ID, DeviceG_ID, DeviceR_ID, DeviceY_ID, DeviceB_ID, NethermonicDiamond_ID,
+		LambdaCore_ID, Transformer_ID, ReverseTransformer_ID, Transmitter_ID, FrShard_ID, BlueShard_ID,
+		RedShard_ID, YelShard_ID, ImbuedShard_ID, InductionCircuit_ID, Circuit_ID, InclusiveFilter_ID,
+		ExclusiveFilter_ID, DestroyFilter_ID, DontDestroyFilter_ID, SuperInductionCircuit_ID, TPScroll_ID,
+		ShardPickG_ID, ShardPickR_ID, ShardPickY_ID, ShardPickB_ID
+	};
+	
 public static void addItems(){
 	itemInitializing();
 	
@@ -107,7 +152,6 @@ public static void addItems(){
 
 private static void itemInitializing()
 {
-    
     Item[] availableChannelsDevices = new Item[] {
 			EntangleCraftItems.ItemDeviceG, 
 			EntangleCraftItems.ItemDeviceR, 
@@ -134,8 +178,15 @@ private static void itemInitializing()
 	    	i += 1;
 	    }
     }
-  
+}
 
+public static void configureIDs(Configuration config) {
+	int i = 0;
+	for (Item thisItem : itemList)
+	{
+		config.getItem(thisItem.getItemName(), defaultIdsList[i]);
+		i++;
+	}
 }
 
 }
