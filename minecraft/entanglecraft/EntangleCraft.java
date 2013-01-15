@@ -53,7 +53,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = "EntangleCraft", name = "EntangleCraft", version = "1.0.2b")
+@Mod(modid = "EntangleCraft", name = "EntangleCraft", version = "1.0.3b")
 @NetworkMod(
 clientSideRequired = true, 
 serverSideRequired = false, 
