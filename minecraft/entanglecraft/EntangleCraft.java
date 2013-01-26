@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import universalelectricity.core.UniversalElectricity;
+import universalelectricity.core.electricity.ElectricityConnections;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,6 +27,7 @@ import net.minecraft.world.World;
 import entanglecraft.*;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
 import entanglecraft.blocks.*;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
 import entanglecraft.gui.EnumGui;
 import entanglecraft.generation.*;
 import entanglecraft.items.EntangleCraftItems;
@@ -68,6 +72,12 @@ public class EntangleCraft implements IConnectionHandler {
 	@Instance
 	public static EntangleCraft instance;
 	public static final String NAME = "EntangleCraft";
+	public static boolean universalElectricity = true;
+	
+	public static final int MAJOR_VERSION = 1;
+	public static final int MINOR_VERSION = 0;
+	public static final int REVISION = 2;
+	public static final String VERSION = "" + MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION + "b";
 
 	@SidedProxy(clientSide = "entanglecraft.ClientProxy", serverSide = "entanglecraft.CommonProxy")
 	public static CommonProxy proxy;
@@ -93,6 +103,11 @@ public class EntangleCraft implements IConnectionHandler {
 		proxy.registerOnLoad();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		GameRegistry.registerWorldGenerator(new WorldGenFunctions());
+		
+		if (universalElectricity)
+		{
+			UniversalElectricity.register(this, UniversalElectricity.MAJOR_VERSION, UniversalElectricity.MINOR_VERSION, UniversalElectricity.REVISION_VERSION, false);
+		}
 	}
 
 	public void configure(Configuration config) {

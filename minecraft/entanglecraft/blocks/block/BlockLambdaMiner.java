@@ -1,4 +1,4 @@
-package entanglecraft.blocks;
+package entanglecraft.blocks.block;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,6 +19,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import entanglecraft.EntangleCraft;
 import entanglecraft.ServerPacketHandler;
+import entanglecraft.blocks.EntangleCraftBlocks;
+import entanglecraft.blocks.tileEntity.TileEntityLambdaMiner;
 
 public class BlockLambdaMiner extends BlockContainer{
 	public int channel;

@@ -8,11 +8,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.network.IGuiHandler;
-import entanglecraft.blocks.ContainerGenericDestination;
-import entanglecraft.blocks.ContainerLambdaMiner;
 import entanglecraft.blocks.EntangleCraftBlocks;
-import entanglecraft.blocks.TileEntityGenericDestination;
-import entanglecraft.blocks.TileEntityLambdaMiner;
+import entanglecraft.blocks.container.ContainerGenericDestination;
+import entanglecraft.blocks.container.ContainerLambdaMiner;
+import entanglecraft.blocks.container.ContainerPowerHub;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
+import entanglecraft.blocks.tileEntity.TileEntityLambdaMiner;
+import entanglecraft.blocks.tileEntity.TileEntityPowerHub;
 import entanglecraft.gui.EnumGui;
 import entanglecraft.gui.GuiGenericDestination;
 import entanglecraft.gui.GuiLambdaMiner;
@@ -53,7 +55,13 @@ public class CommonProxy implements IGuiHandler {
 		else if (ID == EnumGui.LambdaMiner.getIndex()) {
 			TileEntityLambdaMiner tileEntitylM = (TileEntityLambdaMiner) world.getBlockTileEntity(x, y, z);
 			return new ContainerLambdaMiner(player.inventory, tileEntitylM);
-		} else
+		} 
+		
+		else if (ID == EnumGui.PowerHub.getIndex())
+		{
+			TileEntityPowerHub powerHub = (TileEntityPowerHub) world.getBlockTileEntity(x, y, z);
+			return new ContainerPowerHub(player.inventory, powerHub);
+		}
 			return null;
 	}
 

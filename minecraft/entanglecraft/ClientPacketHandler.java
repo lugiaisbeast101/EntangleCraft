@@ -11,8 +11,8 @@ import net.minecraft.src.ModLoader;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import entanglecraft.blocks.TileEntityGenericDestination;
-import entanglecraft.blocks.TileEntityLambdaMiner;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
+import entanglecraft.blocks.tileEntity.TileEntityLambdaMiner;
 import entanglecraft.gui.EnumGui;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
@@ -34,7 +34,7 @@ public class ClientPacketHandler implements IPacketHandler {
 	public void distanceHandlerUpdate(INetworkManager network, DataInputStream dataStream) {
 		try {
 			int channel = dataStream.readInt();
-			int value = dataStream.readInt();
+			double value = dataStream.readDouble();
 			DistanceHandler.setDistance(channel, value, false);
 		} catch (Exception e) {
 			e.printStackTrace();

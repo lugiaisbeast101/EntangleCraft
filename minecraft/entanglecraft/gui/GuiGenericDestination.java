@@ -12,10 +12,10 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.tileentity.TileEntityFurnace;
 import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
-import entanglecraft.blocks.BlockGenericDestination;
-import entanglecraft.blocks.ContainerGenericDestination;
 import entanglecraft.blocks.EntangleCraftBlocks;
-import entanglecraft.blocks.TileEntityGenericDestination;
+import entanglecraft.blocks.block.BlockGenericDestination;
+import entanglecraft.blocks.container.ContainerGenericDestination;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
 
 public class GuiGenericDestination extends GuiContainer {
 

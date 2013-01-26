@@ -1,4 +1,4 @@
-package entanglecraft.blocks;
+package entanglecraft.blocks.tileEntity;
 
 import java.io.DataInputStream;
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ import entanglecraft.InventoryController;
 import entanglecraft.NBTSaver;
 import entanglecraft.ServerPacketHandler;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
+import entanglecraft.blocks.block.BlockLambdaMiner;
 import entanglecraft.items.EntangleCraftItems;
 
 public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISidedInventory {
@@ -936,12 +937,11 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	 * whenever this TE is freshly sent to a client or marked for update in the world this entire packet will be sent to all tracking player
 	 */
 	@Override
-	public Packet getDescriptionPacket()
-	  {
-	  NBTTagCompound tileTag = new NBTTagCompound();
-	  this.writeToNBT(tileTag);
-	  return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, tileTag);
-	  }
+	public Packet getDescriptionPacket() {
+		NBTTagCompound tileTag = new NBTTagCompound();
+		this.writeToNBT(tileTag);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, tileTag);
+	}
 
 	/**
 	 * Called when you receive a TileEntityData packet for the location this
@@ -953,10 +953,9 @@ public class TileEntityLambdaMiner extends TileEntity implements IInventory, ISi
 	 * @param pkt The data packet
 	 */
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
-	  {
-	  this.readFromNBT(pkt.customParam1);
-	  }
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
+		this.readFromNBT(pkt.customParam1);
+	}
 
 	@Override
 	public String getInvName() {

@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import entanglecraft.EntangleCraft;
 import entanglecraft.blocks.EntangleCraftBlocks;
-import entanglecraft.blocks.TileEntityGenericDestination;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
 import entanglecraft.items.EntangleCraftItems;
 
 public class WorldGenSkyFortress extends WorldGenForerunnerDungeon{

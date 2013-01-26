@@ -1,4 +1,4 @@
-package entanglecraft.blocks;
+package entanglecraft.blocks.container;
 
 import net.minecraft.inventory.Container;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,6 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.tileentity.TileEntityFurnace;
 import entanglecraft.EntangleCraft;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
 import entanglecraft.items.EntangleCraftItems;
 
 public class ContainerGenericDestination extends Container{

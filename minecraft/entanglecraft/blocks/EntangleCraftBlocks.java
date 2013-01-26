@@ -2,8 +2,19 @@ package entanglecraft.blocks;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import entanglecraft.blocks.block.BlockFObsidian;
+import entanglecraft.blocks.block.BlockGenericDestination;
+import entanglecraft.blocks.block.BlockGlowTorch;
+import entanglecraft.blocks.block.BlockLambdaMiner;
+import entanglecraft.blocks.block.BlockLambdaOre;
+import entanglecraft.blocks.block.BlockLitWaterStill;
+import entanglecraft.blocks.block.BlockPowerHub;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
+import entanglecraft.blocks.tileEntity.TileEntityLambdaMiner;
+import entanglecraft.blocks.tileEntity.TileEntityPowerHub;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,6 +36,7 @@ public class EntangleCraftBlocks {
 	public static final int YelShardBlockID = 2611;
 	public static final int RedShardBlockID = 2612;
 	public static final int BluShardBlockID = 2613;
+	public static final int PowerHubGBlockID = 2614;
 	
 	public static final Block BlockGLD = new BlockGenericDestination(GLDBlockID, 0).setHardness(5.0F).setResistance(20.0F).setBlockName("BlockGLD");
 	public static final Block BlockRLD = new BlockGenericDestination(RLDBlockID, 1).setHardness(10.0F).setResistance(20.0F).setBlockName("BlockRLD");
@@ -40,17 +52,20 @@ public class EntangleCraftBlocks {
 	public static final Block BlockYelShard = new BlockLambdaOre(YelShardBlockID,0).setHardness(2F).setResistance(2F).setBlockName("BlockYelShard");
 	public static final Block BlockRedShard = new BlockLambdaOre(RedShardBlockID,1).setHardness(2F).setResistance(2F).setBlockName("BlockRedShard");
 	public static final Block BlockBluShard = new BlockLambdaOre(BluShardBlockID,2).setHardness(2F).setResistance(2F).setBlockName("BlockBluShard");
+	public static final Block BlockPowerHubG = new BlockPowerHub("PowerHub", PowerHubGBlockID, 0, CreativeTabs.tabMisc);
 	
 	public static final Block[] blocksList = new Block[] {BlockGLD, BlockRLD, BlockYLD, BlockBLD,
 								BlockFObsidian, BlockGLM, BlockRLM, BlockYLM, BlockBLM,
-								BlockGlowTorch, BlockLitWater, BlockYelShard, BlockRedShard, BlockBluShard
+								BlockGlowTorch, BlockLitWater, BlockYelShard, BlockRedShard, BlockBluShard,
+								BlockPowerHubG
 	};
 	
 	public static int[] defaultIdsList = new int[] 
 	{
 		GLDBlockID, RLDBlockID, YLDBlockID, BLDBlockID,
 		FObsidianBlockID, GLMBlockID, RLMBlockID, YLMBlockID, BLMBlockID,
-		GlowTorchBlockID, LitWaterBlockID, YelShardBlockID, RedShardBlockID, BluShardBlockID
+		GlowTorchBlockID, LitWaterBlockID, YelShardBlockID, RedShardBlockID, BluShardBlockID,
+		PowerHubGBlockID
 	};
 	
 	public static void addBlocks(){
@@ -68,6 +83,7 @@ public class EntangleCraftBlocks {
 	    
 	    GameRegistry.registerTileEntity(TileEntityGenericDestination.class, "tileEntityGD");
 	    GameRegistry.registerTileEntity(TileEntityLambdaMiner.class, "tileEntitylM");
+	    GameRegistry.registerTileEntity(TileEntityPowerHub.class, TileEntityPowerHub.NAME);
 		
 	    LanguageRegistry.addName(BlockGLD, "G.L.D");
 	    LanguageRegistry.addName(BlockRLD, "R.L.D");
@@ -82,6 +98,7 @@ public class EntangleCraftBlocks {
 	    LanguageRegistry.addName(BlockYelShard,"Mysterious Yellow Shard Fragments");
 	    LanguageRegistry.addName(BlockRedShard,"Mysterious Red Shard Fragments");
 	    LanguageRegistry.addName(BlockBluShard,"Mysterious Blue Shard Fragments");
+	    LanguageRegistry.addName(BlockPowerHubG, "Green Power Hub");
 	}
 	
 	public static void configureIDs(Configuration config) {

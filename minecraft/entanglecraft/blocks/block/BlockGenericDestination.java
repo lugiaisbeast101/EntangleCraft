@@ -1,4 +1,4 @@
-package entanglecraft.blocks;
+package entanglecraft.blocks.block;
 
 import java.util.Random;
 
@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import entanglecraft.Destination;
 import entanglecraft.EntangleCraft;
+import entanglecraft.blocks.EntangleCraftBlocks;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
 import entanglecraft.gui.GuiGenericDestination;
 
 public class BlockGenericDestination extends BlockContainer{

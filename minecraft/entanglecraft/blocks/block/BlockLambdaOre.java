@@ -1,4 +1,4 @@
-package entanglecraft.blocks;
+package entanglecraft.blocks.block;
 
 import java.util.Random;
 

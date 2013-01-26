@@ -1,4 +1,4 @@
-package entanglecraft.blocks;
+package entanglecraft.blocks.tileEntity;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class TileEntityGenericDestination extends TileEntity implements IInvento
 	public double[] destinationCoords = new double[3];
 	
 	private final int DEFAULT_SPEED_MULTIPLIER = 1;
-	private final int TRANSFORM_COST = 32;
+	private final double TRANSFORM_COST = 32.0;
 	private final int TRANSFORM_SLOT = 1;
 	public final String NAME = "TileEntityGenericDestination";
 	

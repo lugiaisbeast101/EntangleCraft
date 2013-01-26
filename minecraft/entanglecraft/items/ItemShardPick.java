@@ -6,7 +6,7 @@ import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
 import entanglecraft.InventoryController;
 import entanglecraft.SoundHandling.LambdaSoundHandler;
-import entanglecraft.blocks.TileEntityGenericDestination;
+import entanglecraft.blocks.tileEntity.TileEntityGenericDestination;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;

@@ -13,9 +13,9 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.tileentity.TileEntityFurnace;
 import entanglecraft.DistanceHandler;
 import entanglecraft.EntangleCraft;
-import entanglecraft.blocks.BlockLambdaMiner;
-import entanglecraft.blocks.ContainerLambdaMiner;
-import entanglecraft.blocks.TileEntityLambdaMiner;
+import entanglecraft.blocks.block.BlockLambdaMiner;
+import entanglecraft.blocks.container.ContainerLambdaMiner;
+import entanglecraft.blocks.tileEntity.TileEntityLambdaMiner;
 
 public class GuiLambdaMiner extends GuiContainer {
 

@@ -1,7 +1,7 @@
 package entanglecraft.gui;
 
 public enum EnumGui {
-	GenericDestination(0), LambdaMiner(1);
+	GenericDestination(0), LambdaMiner(1), PowerHub(2);
 	
 	
 	private int index;
